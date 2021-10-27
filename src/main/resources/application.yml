@@ -60,7 +60,7 @@ spring:
     password:
 
 server:
-  port: 8080
+  port: 9090
 
 ---
 # 개발
@@ -79,7 +79,7 @@ spring:
       connection-test-query: SELECT 1
 
 server:
-  port: 8080
+  port: 9090
 
 ---
 # 배포
@@ -89,4 +89,4 @@ spring:
       on-profile: release
 
 server:
-  port: 8080
+  port: 9090

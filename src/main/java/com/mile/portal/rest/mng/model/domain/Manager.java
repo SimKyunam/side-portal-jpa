@@ -1,12 +1,12 @@
-package com.mile.portal.rest.user.model.domain;
+package com.mile.portal.rest.mng.model.domain;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
-import javax.annotation.Generated;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -16,24 +16,26 @@ import javax.persistence.Id;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class User {
+public class Manager {
 
     @Id
     @GeneratedValue
-    private Long id;
+    private Integer id;
 
-    private String userName;
-
-    private String userType;
-
-    private String icisNo;
-
+    private String manName;
+    private String manType;
     private String loginId;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String loginPwd;
 
-    private String activeYn;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String loginExprDt;
+
+    private String phone;
+    private String email;
+
+    private String status;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String tokenId;
@@ -41,10 +43,12 @@ public class User {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String tokenExprDt;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Integer tokenExprCalc;
-
     private String lastLoginDt;
+    private String lastLoginIp;
+    private String loginFails;
+
     private String created;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String deleted;
 }

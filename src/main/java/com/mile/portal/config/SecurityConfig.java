@@ -15,6 +15,7 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -29,8 +30,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        //return new BCryptPasswordEncoder();
-        return NoOpPasswordEncoder.getInstance(); //비밀번호 암호화 안하는 경우 (기본 BCryptPasswordEncoder 암호화)
+        return new BCryptPasswordEncoder();
+//        return NoOpPasswordEncoder.getInstance(); //비밀번호 암호화 안하는 경우 (기본 BCryptPasswordEncoder 암호화)
     }
 
 //    권한 상속을 부여하고 싶은 경우
@@ -48,12 +49,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .cors().and().csrf().disable()
                 .formLogin().disable()
+
                 .authorizeRequests()
+                .antMatchers("/mng/**").hasRole("ADMIN")
                 .antMatchers(
                         "/exception/**"
-                        , "/auth/**", "/h2-console/**"
+                        , "/common/**", "/h2-console/**"
                 ).permitAll()
                 .anyRequest().authenticated()
+
                 .and().exceptionHandling()
                 .and().headers().frameOptions().disable() // 없으면 h2 console 안됌
                 .and().addFilterBefore(

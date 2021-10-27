@@ -1,5 +1,6 @@
 package com.mile.portal.config;
 
+import com.mile.portal.rest.common.model.dto.LoginUser;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
@@ -20,12 +21,12 @@ public class AuditingConfig {
     public static class AuditorAwareImpl implements AuditorAware<Integer>{
         @Override
         public Optional<Integer> getCurrentAuditor() {
-//            if(SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof Integer) {
-//                return Optional.of(1);
-//            }else{
-//                return Optional.empty();
-//            }
-            return Optional.of(1);
+            if(SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof LoginUser) {
+                LoginUser loginUse = (LoginUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+                return Optional.of(loginUse.getId());
+            }else{
+                return Optional.empty();
+            }
         }
     }
 }

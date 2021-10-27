@@ -60,14 +60,14 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
         if (token != null && jwtTokenProvider.validateToken(token)) {   // token 검증
             Claims claims = jwtTokenProvider.getTokenClaims(token.replaceAll("^Bearer( )*", ""));
 
-            if( needRefresh(claims, 1000L * 60 * 60 * 12) ) { // 12시간
+            if( needRefresh(claims, JwtTokenProvider.TOKEN_VALID_MILISECOND) ) { // 12시간
                 log.info("[JwtAuthenticationTokenFilter] refresh token");
 
                 ObjectMapper mapper = new ObjectMapper();
                 LoginUser loginUser = mapper.convertValue(claims.get("user", Map.class), LoginUser.class);
 
                 token = jwtTokenProvider.createToken(loginUser);
-                response.setHeader("Authorization", token);
+                response.setHeader(JwtTokenProvider.AUTHORITIES_KEY, token);
             }
 
             UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =

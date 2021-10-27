@@ -1,6 +1,7 @@
 package com.mile.portal.rest.common.service;
 
-import com.mile.portal.rest.common.repository.UserRepository;
+import com.mile.portal.rest.common.model.dto.LoginUser;
+import com.mile.portal.rest.user.repository.UserRepository;
 import com.mile.portal.rest.user.model.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -33,10 +34,13 @@ public class CustomUserDetailsService implements UserDetailsService {
     private UserDetails createUserDetails(User user) {
         GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(user.getUserType());
 
-        return new org.springframework.security.core.userdetails.User(
-                user.getLoginId(),
-                user.getLoginPwd(),
-                Collections.singleton(grantedAuthority)
-        );
+        return LoginUser.builder()
+                .id(user.getId())
+                .loginId(user.getLoginId())
+                .password(user.getLoginPwd())
+                .username(user.getUserName())
+                .type(user.getUserType())
+                .authorities(Collections.singleton(grantedAuthority))
+                .build();
     }
 }

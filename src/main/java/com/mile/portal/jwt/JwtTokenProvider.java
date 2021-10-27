@@ -1,6 +1,7 @@
 package com.mile.portal.jwt;
 
 import com.mile.portal.rest.common.model.dto.LoginUser;
+import com.mile.portal.rest.common.model.dto.ReqToken;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
@@ -26,16 +27,16 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class JwtTokenProvider {
 
-    private final long TOKEN_VALID_MILISECOND = 1000L * 60 * 60 * 12; // 10시간
-    private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 7;  // 7일
+    public static final long TOKEN_VALID_MILISECOND = 1000L * 60 * 60 * 12; // 12시간
+    public static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 7;  // 7일
 
-    private static final String AUTHORITIES_KEY = "Authorization";
-    private static final String USER_KEY = "user";
-    private static final String BEARER_TYPE = "bearer";
+    public static final String AUTHORITIES_KEY = "Authorization";
+    public static final String USER_KEY = "user";
+    public static final String BEARER_TYPE = "bearer";
 
     private Key key;
 
-    @Value("spring.jwt.secret")
+    @Value("${jwt.key}")
     private String secretKey;
 
     @PostConstruct
@@ -75,6 +76,38 @@ public class JwtTokenProvider {
                 .getSubject();
     }
 
+    public ReqToken generateTokenDto(Authentication authentication) {
+        // 권한들 가져오기
+        String authorities = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(","));
+
+        long now = (new Date()).getTime();
+
+        // Access Token 생성
+        Date accessTokenExpiresIn = new Date(now + TOKEN_VALID_MILISECOND);
+        String accessToken = Jwts.builder()
+                .setSubject(authentication.getName())       // payload "sub": "name"
+                .claim(AUTHORITIES_KEY, authorities)        // payload "auth": "ROLE_USER"
+                .setExpiration(accessTokenExpiresIn)        // payload "exp": 1516239022 (예시)
+                .signWith(key, SignatureAlgorithm.HS256)    // header "alg": "HS512"
+                .compact();
+
+        // Refresh Token 생성
+        String refreshToken = Jwts.builder()
+                .setExpiration(new Date(now + REFRESH_TOKEN_EXPIRE_TIME))
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+
+        return ReqToken.builder()
+                .grantType(BEARER_TYPE)
+                .accessToken(accessToken)
+                .accessTokenExpiresIn(new Date(now + TOKEN_VALID_MILISECOND).getTime())
+                .refreshToken(refreshToken)
+                .build();
+    }
+
+
     public String resolveToken(HttpServletRequest req) {
         return req.getHeader(AUTHORITIES_KEY);
     }
@@ -82,7 +115,6 @@ public class JwtTokenProvider {
     public Authentication getAuthentication(String accessToken) {
         // 토큰 복호화
         Claims claims = getTokenClaims(accessToken);
-
 //        if (claims.get(AUTHORITIES_KEY) == null) {
 //            throw new RuntimeException("권한 정보가 없는 토큰입니다.");
 //        }
