@@ -54,7 +54,7 @@ spring:
 
   datasource:
     #    url: jdbc:h2:~/test; #메모리
-    url: jdbc:h2:file:./memoryDb #상대경로 파일저장(memoryDb.mv.db)
+    url: jdbc:h2:file:./memoryDb;AUTO_SERVER=true #상대경로 파일저장(memoryDb.mv.db)
     driver-class-name: org.h2.Driver
     username: sa
     password:

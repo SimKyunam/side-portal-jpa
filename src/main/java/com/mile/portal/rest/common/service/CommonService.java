@@ -35,10 +35,10 @@ public class CommonService {
     @Transactional
     public User createUser(ReqCommon.UserLogin userLogin) {
         User user = User.builder()
-                .userName(userLogin.getUserName())
-                .userType(userLogin.getUserType())
                 .loginId(userLogin.getLoginId())
                 .loginPwd(passwordEncoder.encode(userLogin.getLoginPwd()))
+                .userName(userLogin.getUserName())
+                .userType(userLogin.getUserType())
                 .icisNo(userLogin.getIcisNo())
                 .activeYn(userLogin.getActiveYn())
                 .build();

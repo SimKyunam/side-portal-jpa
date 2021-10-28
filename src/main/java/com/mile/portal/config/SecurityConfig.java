@@ -20,7 +20,7 @@ import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-@EnableWebSecurity(debug = true)
+@EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -51,10 +51,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin().disable()
 
                 .authorizeRequests()
-                .antMatchers("/mng/**").hasRole("ADMIN")
+                .antMatchers("/api/v1/mng/**").hasRole("ADMIN")
                 .antMatchers(
-                        "/exception/**"
-                        , "/common/**", "/h2-console/**"
+                        "/exception/**", "/common/**", "/h2-console/**"
+                        , "/api/v1/common/**"
                 ).permitAll()
                 .anyRequest().authenticated()
 

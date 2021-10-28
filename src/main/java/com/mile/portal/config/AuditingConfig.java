@@ -14,13 +14,13 @@ import java.util.Optional;
 public class AuditingConfig {
 
     @Bean
-    public AuditorAware<Integer> auditorProvider(){
+    public AuditorAware<Long> auditorProvider(){
         return new AuditorAwareImpl();
     }
 
-    public static class AuditorAwareImpl implements AuditorAware<Integer>{
+    public static class AuditorAwareImpl implements AuditorAware<Long>{
         @Override
-        public Optional<Integer> getCurrentAuditor() {
+        public Optional<Long> getCurrentAuditor() {
             if(SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof LoginUser) {
                 LoginUser loginUse = (LoginUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
                 return Optional.of(loginUse.getId());
