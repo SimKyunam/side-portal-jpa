@@ -15,6 +15,7 @@ configurations {
     compileOnly {
         extendsFrom annotationProcessor
     }
+    querydsl.extendsFrom compileClasspath
 }
 
 repositories {
@@ -56,6 +57,7 @@ test {
 }
 
 def querydslDir = "src/main/generated"
+
 
 querydsl {
     jpa = true
