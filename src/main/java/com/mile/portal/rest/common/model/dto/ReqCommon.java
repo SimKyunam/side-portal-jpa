@@ -1,16 +1,19 @@
 package com.mile.portal.rest.common.model.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
-@Data
 public class ReqCommon {
 
     @Data
     @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class UserLogin {
         @NotBlank
         private String loginId;
@@ -26,6 +29,8 @@ public class ReqCommon {
 
     @Data
     @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class SsoLogin {
         private String loginEmail;
         private String userName;
@@ -34,6 +39,8 @@ public class ReqCommon {
 
     @Data
     @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class Tag {
         private String providerCd;
         private String resourceCd;
@@ -46,6 +53,8 @@ public class ReqCommon {
 
     @Data
     @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class MyInfo {
         private Integer exchangeDay;
         private String smsKey;

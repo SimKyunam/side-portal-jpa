@@ -16,8 +16,8 @@ spring:
         format_sql: true
     database-platform: org.hibernate.dialect.H2Dialect
 
-  jackson:
-    property-naming-strategy: SNAKE_CASE
+#  jackson:
+#    property-naming-strategy: SNAKE_CASE
 
 server:
   servlet:

@@ -1,6 +1,7 @@
 package com.mile.portal.rest.mng.model.domain;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.mile.portal.rest.common.model.domain.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,7 +17,7 @@ import javax.persistence.Id;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Manager {
+public class Manager extends BaseEntity{
 
     @Id
     @GeneratedValue
@@ -46,8 +47,6 @@ public class Manager {
     private String lastLoginDt;
     private String lastLoginIp;
     private String loginFails;
-
-    private String created;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String deleted;

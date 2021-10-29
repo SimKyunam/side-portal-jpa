@@ -1,6 +1,7 @@
 package com.mile.portal.rest.user.model.domain;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.mile.portal.rest.common.model.domain.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,7 +17,7 @@ import javax.persistence.Id;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class User {
+public class User extends BaseEntity {
 
     @Id
     @GeneratedValue
@@ -45,6 +46,6 @@ public class User {
     private Integer tokenExprCalc;
 
     private String lastLoginDt;
-    private String created;
+
     private String deleted;
 }

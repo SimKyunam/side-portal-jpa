@@ -4,6 +4,7 @@ import com.mile.portal.jwt.JwtTokenProvider;
 import com.mile.portal.rest.common.model.domain.RefreshToken;
 import com.mile.portal.rest.common.model.dto.LoginUser;
 import com.mile.portal.rest.common.model.dto.ReqCommon;
+import com.mile.portal.rest.common.model.dto.ReqLogin;
 import com.mile.portal.rest.common.model.dto.ReqToken;
 import com.mile.portal.rest.common.repository.RefreshTokenRepository;
 import com.mile.portal.rest.mng.repository.ManagerRepository;
@@ -28,12 +29,11 @@ public class CommonService {
     private final JwtTokenProvider jwtTokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
 
-
     private final UserRepository userRepository;
     private final ManagerRepository managerRepository;
 
     @Transactional
-    public User createUser(ReqCommon.UserLogin userLogin) {
+    public User createUser(ReqLogin userLogin) {
         User user = User.builder()
                 .loginId(userLogin.getLoginId())
                 .loginPwd(passwordEncoder.encode(userLogin.getLoginPwd()))

@@ -1,6 +1,7 @@
 package com.mile.portal.rest.common.controller;
 
 import com.mile.portal.rest.common.model.dto.ReqCommon;
+import com.mile.portal.rest.common.model.dto.ReqLogin;
 import com.mile.portal.rest.common.model.dto.ReqToken;
 import com.mile.portal.rest.common.model.dto.ResBody;
 import com.mile.portal.rest.common.service.CommonService;
@@ -23,12 +24,12 @@ public class CommonController {
 //    }
 
     @PostMapping("/common/createUser")
-    public ResBody createUser(@RequestBody ReqCommon.UserLogin userLogin){
+    public ResBody createUser(@RequestBody ReqLogin userLogin){
         commonService.createUser(userLogin);
         return new ResBody(ResBody.CODE_SUCCESS, "", null);
     }
 
-    @GetMapping("/common/loginUser")
+    @PostMapping("/common/loginUser")
     public ResBody loginUser(@RequestBody ReqCommon.UserLogin userLogin){
         ReqToken reqToken = commonService.loginUser(userLogin);
 
