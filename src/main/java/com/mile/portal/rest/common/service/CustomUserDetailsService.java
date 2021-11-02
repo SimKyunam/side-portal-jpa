@@ -1,8 +1,7 @@
 package com.mile.portal.rest.common.service;
 
-import com.mile.portal.rest.common.model.dto.LoginUser;
+import com.mile.portal.rest.user.model.domain.Client;
 import com.mile.portal.rest.user.repository.UserRepository;
-import com.mile.portal.rest.user.model.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -31,8 +30,8 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     // DB 에 User 값이 존재한다면 UserDetails 객체로 만들어서 리턴
-    private UserDetails createUserDetails(User user) {
-        GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(user.getUserType().getAuthority());
+    private UserDetails createUserDetails(Client user) {
+        GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(user.getPermission().getAuthority());
 
         return new org.springframework.security.core.userdetails.User(
                 user.getLoginId(),

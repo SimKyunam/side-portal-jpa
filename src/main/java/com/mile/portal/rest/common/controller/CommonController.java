@@ -35,4 +35,17 @@ public class CommonController {
 
         return new ResBody(ResBody.CODE_SUCCESS, "", reqToken);
     }
+
+    @PostMapping("/common/createMng")
+    public ResBody createMng(@RequestBody ReqLogin userLogin){
+        commonService.createMng(userLogin);
+        return new ResBody(ResBody.CODE_SUCCESS, "", null);
+    }
+
+    @PostMapping("/common/loginMng")
+    public ResBody loginMng(@RequestBody ReqCommon.UserLogin userLogin){
+        ReqToken reqToken = commonService.loginMng(userLogin);
+
+        return new ResBody(ResBody.CODE_SUCCESS, "", reqToken);
+    }
 }

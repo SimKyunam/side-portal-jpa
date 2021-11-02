@@ -24,4 +24,9 @@ public class ReqLogin {
     private Authority userType;
     private String activeYn;
     private String icisNo;
+
+    //관리자용
+    private String phone;
+    private String email;
+    private String status;
 }

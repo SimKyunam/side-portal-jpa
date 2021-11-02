@@ -25,7 +25,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final CustomUserDetailsService userDetailsService;
     private final JwtTokenProvider jwtTokenProvider;
 
     @Bean
@@ -66,15 +65,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 ).sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
-
-    @Bean
-    public DaoAuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setUserDetailsService(userDetailsService);
-        authenticationProvider.setPasswordEncoder(passwordEncoder());
-        return authenticationProvider;
-    }
-
 
     @Override
     public void configure(WebSecurity web) {

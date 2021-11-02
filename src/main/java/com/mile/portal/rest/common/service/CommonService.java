@@ -8,8 +8,9 @@ import com.mile.portal.rest.common.model.dto.ReqLogin;
 import com.mile.portal.rest.common.model.dto.ReqToken;
 import com.mile.portal.rest.common.model.enums.Authority;
 import com.mile.portal.rest.common.repository.RefreshTokenRepository;
+import com.mile.portal.rest.mng.model.domain.Manager;
 import com.mile.portal.rest.mng.repository.ManagerRepository;
-import com.mile.portal.rest.user.model.domain.User;
+import com.mile.portal.rest.user.model.domain.Client;
 import com.mile.portal.rest.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,9 +20,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Arrays;
-import java.util.Set;
 
 @Slf4j
 @Service
@@ -37,29 +35,66 @@ public class CommonService {
     private final ManagerRepository managerRepository;
 
     @Transactional
-    public User createUser(ReqLogin userLogin) {
-        User user = User.builder()
+    public Client createUser(ReqLogin userLogin) {
+        Client user = Client.builder()
                 .loginId(userLogin.getLoginId())
                 .loginPwd(passwordEncoder.encode(userLogin.getLoginPwd()))
-                .userName(userLogin.getUserName())
-                .userType(userLogin.getUserType())
+                .name(userLogin.getUserName())
+                .type(userLogin.getUserType())
                 .icisNo(userLogin.getIcisNo())
-                .activeYn(userLogin.getActiveYn())
+                .status(userLogin.getStatus())
                 .build();
 
         return userRepository.save(user);
     }
 
+    @Transactional
     public ReqToken loginUser(ReqCommon.UserLogin userLogin) {
         LoginUser user = LoginUser.builder()
                 .loginId(userLogin.getLoginId())
                 .password(userLogin.getLoginPwd())
-                .type(Authority.ROLE_USER)
+                .permission(Authority.ROLE_USER)
                 .build();
 
         // 1. Login ID/PW 를 기반으로 AuthenticationToken 생성
         UsernamePasswordAuthenticationToken authenticationToken = user.toAuthentication();
 
+        // 2-4 단게 처리
+        return loginAuthenticate(authenticationToken);
+    }
+
+    @Transactional
+    public Manager createMng(ReqLogin userLogin) {
+        Manager manager = Manager.builder()
+                .loginId(userLogin.getLoginId())
+                .loginPwd(passwordEncoder.encode(userLogin.getLoginPwd()))
+                .name(userLogin.getUserName())
+                .type(userLogin.getUserType())
+                .email(userLogin.getEmail())
+                .phone(userLogin.getPhone())
+                .status(userLogin.getStatus())
+                .build();
+
+        return managerRepository.save(manager);
+    }
+
+    @Transactional
+    public ReqToken loginMng(ReqCommon.UserLogin userLogin) {
+        LoginUser user = LoginUser.builder()
+                .loginId(userLogin.getLoginId())
+                .password(userLogin.getLoginPwd())
+                .permission(Authority.ROLE_ADMIN)
+                .build();
+
+        // 1. Login ID/PW 를 기반으로 AuthenticationToken 생성
+        UsernamePasswordAuthenticationToken authenticationToken = user.toAuthentication();
+
+        // 2-4 단게 처리
+        return loginAuthenticate(authenticationToken);
+    }
+
+    /** 공통 처리 */
+    public ReqToken loginAuthenticate(UsernamePasswordAuthenticationToken authenticationToken) {
         // 2. 실제로 검증 (사용자 비밀번호 체크) 이 이루어지는 부분
         //    authenticate 메서드가 실행이 될 때 CustomUserDetailsService 에서 만들었던 loadUserByUsername 메서드가 실행됨
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
@@ -77,4 +112,5 @@ public class CommonService {
 
         return tokenDto;
     }
+
 }

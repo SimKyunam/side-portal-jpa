@@ -31,7 +31,7 @@ public class LoginUser {
     private String loginId;
 
     @Enumerated(EnumType.STRING)
-    private Authority type;
+    private Authority permission;
 
     // 로그인 사용자 기본정보
     private String icisNo;
@@ -58,7 +58,7 @@ public class LoginUser {
     private boolean enabled;
 
     public UsernamePasswordAuthenticationToken toAuthentication() {
-        GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(type.getAuthority());
+        GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(permission.getAuthority());
         return new UsernamePasswordAuthenticationToken(loginId, password, Collections.singleton(grantedAuthority));
     }
 }

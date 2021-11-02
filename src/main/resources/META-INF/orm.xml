@@ -6,9 +6,9 @@
 
     <named-query name="User.findById">
         <query>
-            SELECT u.id, u.userName, u.userType, u.icisNo
-            FROM User u
-            WHERE u.id = :id
+            SELECT c.id, c.name, c.permission, c.icisNo
+            FROM Client c
+            WHERE c.id = :id
         </query>
     </named-query>
 

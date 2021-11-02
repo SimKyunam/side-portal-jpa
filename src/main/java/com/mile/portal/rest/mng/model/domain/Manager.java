@@ -2,52 +2,39 @@ package com.mile.portal.rest.mng.model.domain;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.mile.portal.rest.common.model.domain.BaseEntity;
+import com.mile.portal.rest.common.model.domain.User;
+import com.mile.portal.rest.common.model.enums.Authority;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class Manager extends BaseEntity{
-
-    @Id
-    @GeneratedValue
-    private Integer id;
-
-    private String manName;
-    private String manType;
-    private String loginId;
-
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private String loginPwd;
-
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private String loginExprDt;
+@DiscriminatorValue("A")
+public class Manager extends User {
 
     private String phone;
     private String email;
 
-    private String status;
+    @Builder
+    public Manager(Integer id, String name, String loginPwd,
+                   String loginId, Authority type, String status,
+                   String tokenId, String tokenExprDt, String lastLoginDt,
+                   String lastLoginIp, String loginFails, String deleted,
+                   String loginExprDt, String phone, String email) {
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private String tokenId;
+        super(id, name, loginPwd,
+                loginId, type, status,
+                tokenId, tokenExprDt, lastLoginDt,
+                lastLoginIp, loginFails, deleted, loginExprDt);
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private String tokenExprDt;
-
-    private String lastLoginDt;
-    private String lastLoginIp;
-    private String loginFails;
-
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private String deleted;
+        this.phone = phone;
+        this.email = email;
+    }
 }
