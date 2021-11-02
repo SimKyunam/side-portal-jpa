@@ -32,15 +32,12 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     // DB 에 User 값이 존재한다면 UserDetails 객체로 만들어서 리턴
     private UserDetails createUserDetails(User user) {
-        GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(user.getUserType());
+        GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(user.getUserType().getAuthority());
 
-        return LoginUser.builder()
-                .id(user.getId())
-                .loginId(user.getLoginId())
-                .password(user.getLoginPwd())
-                .username(user.getUserName())
-                .type(user.getUserType())
-                .authorities(Collections.singleton(grantedAuthority))
-                .build();
+        return new org.springframework.security.core.userdetails.User(
+                user.getLoginId(),
+                user.getLoginPwd(),
+                Collections.singleton(grantedAuthority)
+        );
     }
 }

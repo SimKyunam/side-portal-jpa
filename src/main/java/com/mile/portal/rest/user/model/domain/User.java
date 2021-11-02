@@ -2,15 +2,14 @@ package com.mile.portal.rest.user.model.domain;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.mile.portal.rest.common.model.domain.BaseEntity;
+import com.mile.portal.rest.common.model.enums.Authority;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.annotation.Generated;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Data
@@ -25,7 +24,8 @@ public class User extends BaseEntity {
 
     private String userName;
 
-    private String userType;
+    @Enumerated(EnumType.STRING)
+    private Authority userType;
 
     private String icisNo;
 

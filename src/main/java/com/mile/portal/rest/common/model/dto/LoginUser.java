@@ -1,5 +1,6 @@
 package com.mile.portal.rest.common.model.dto;
 
+import com.mile.portal.rest.common.model.enums.Authority;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,6 +11,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -18,14 +21,17 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginUser implements UserDetails {
+//public class LoginUser implements UserDetails {
+public class LoginUser {
     // 토큰 만료일 확인
     private Integer tokenExprCalc;
 
     // 로그인 공통 순번 정보
     private Long id;
     private String loginId;
-    private String type;
+
+    @Enumerated(EnumType.STRING)
+    private Authority type;
 
     // 로그인 사용자 기본정보
     private String icisNo;
@@ -44,8 +50,6 @@ public class LoginUser implements UserDetails {
 
     private Long actionLogId;
 
-    //UserDetails 인터페이스 정보
-    private Collection<? extends GrantedAuthority> authorities;
     private String password;
     private String username;
     private boolean accountNonExpired;
@@ -54,7 +58,7 @@ public class LoginUser implements UserDetails {
     private boolean enabled;
 
     public UsernamePasswordAuthenticationToken toAuthentication() {
-        GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(authorities.toString());
+        GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(type.getAuthority());
         return new UsernamePasswordAuthenticationToken(loginId, password, Collections.singleton(grantedAuthority));
     }
 }

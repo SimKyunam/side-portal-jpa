@@ -1,5 +1,6 @@
 package com.mile.portal.rest.common.model.dto;
 
+import com.mile.portal.rest.common.model.enums.Authority;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,7 +21,7 @@ public class ReqLogin {
 
     private Long userId;
     private String userName;
-    private String userType;
+    private Authority userType;
     private String activeYn;
     private String icisNo;
 }

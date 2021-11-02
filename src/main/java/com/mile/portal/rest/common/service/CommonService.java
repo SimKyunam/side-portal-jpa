@@ -6,6 +6,7 @@ import com.mile.portal.rest.common.model.dto.LoginUser;
 import com.mile.portal.rest.common.model.dto.ReqCommon;
 import com.mile.portal.rest.common.model.dto.ReqLogin;
 import com.mile.portal.rest.common.model.dto.ReqToken;
+import com.mile.portal.rest.common.model.enums.Authority;
 import com.mile.portal.rest.common.repository.RefreshTokenRepository;
 import com.mile.portal.rest.mng.repository.ManagerRepository;
 import com.mile.portal.rest.user.model.domain.User;
@@ -18,6 +19,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Arrays;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -50,6 +54,7 @@ public class CommonService {
         LoginUser user = LoginUser.builder()
                 .loginId(userLogin.getLoginId())
                 .password(userLogin.getLoginPwd())
+                .type(Authority.ROLE_USER)
                 .build();
 
         // 1. Login ID/PW 를 기반으로 AuthenticationToken 생성
