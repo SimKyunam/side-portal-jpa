@@ -11,15 +11,21 @@ import com.mile.portal.rest.common.repository.RefreshTokenRepository;
 import com.mile.portal.rest.mng.model.domain.Manager;
 import com.mile.portal.rest.mng.repository.ManagerRepository;
 import com.mile.portal.rest.user.model.domain.Client;
-import com.mile.portal.rest.user.repository.UserRepository;
+import com.mile.portal.rest.user.repository.ClientRepository;
+import com.mile.portal.util.DateTimeUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.text.SimpleDateFormat;
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -31,7 +37,7 @@ public class CommonService {
     private final JwtTokenProvider jwtTokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
 
-    private final UserRepository userRepository;
+    private final ClientRepository clientRepository;
     private final ManagerRepository managerRepository;
 
     @Transactional
@@ -45,7 +51,7 @@ public class CommonService {
                 .status(userLogin.getStatus())
                 .build();
 
-        return userRepository.save(user);
+        return clientRepository.save(user);
     }
 
     @Transactional
@@ -102,6 +108,28 @@ public class CommonService {
         // 3. 인증 정보를 기반으로 JWT 토큰 생성
         ReqToken tokenDto = jwtTokenProvider.generateTokenDto(authentication);
 
+        String authorities = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(","));
+
+        String loginId = jwtTokenProvider.getTokenId(tokenDto.getAccessToken());
+        String format = DateTimeUtil.millisToDate(tokenDto.getAccessTokenExpiresIn(),
+                "YYYY-MM-DD HH:mm:ss.SSS");
+
+        if(authorities.contains(Authority.ROLE_USER.getAuthority())){
+            Client client = clientRepository.findByLoginId(loginId).orElseThrow(RuntimeException::new);
+
+            client.setTokenId(tokenDto.getAccessToken());
+            client.setTokenExprDt(format);
+            clientRepository.save(client);
+        }else{
+            Manager manager = managerRepository.findByLoginId(loginId).orElseThrow(RuntimeException::new);
+
+            manager.setTokenId(tokenDto.getAccessToken());
+            manager.setTokenExprDt(format);
+            managerRepository.save(manager);
+        }
+
         // 4. RefreshToken 저장
         RefreshToken refreshToken = RefreshToken.builder()
                 .key(authentication.getName())
@@ -112,5 +140,6 @@ public class CommonService {
 
         return tokenDto;
     }
+
 
 }
