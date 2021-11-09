@@ -1,6 +1,7 @@
 package com.mile.portal.jwt;
 
 import com.mile.portal.rest.common.model.dto.LoginUser;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -45,6 +46,19 @@ class JwtTokenProviderTest {
 
         assertEquals("ssss", token);
     }
+
+    @DisplayName("2. 토큰 정보")
+    @Test
+    void test_2(){
+        Claims body = Jwts.parserBuilder()
+                .setSigningKey(SECRETKEY)
+                .build()
+                .parseClaimsJws("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0IiwiQXV0aG9yaXphdGlvbiI6IlJPTEVfVVNFUiIsImV4cCI6MTYzNjQyNTg5Mn0.fvQA6aASPiGTsJ_FDCwhULW9RsztJOxpICXKYEpkgo4")
+                .getBody();
+
+        System.out.println(body.getSubject());
+    }
+
 
     //LoginUser 계정 생성
     LoginUser createLoginUser() {

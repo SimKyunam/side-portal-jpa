@@ -4,7 +4,7 @@ import com.mile.portal.rest.common.model.dto.ReqCommon;
 import com.mile.portal.rest.common.model.dto.ReqLogin;
 import com.mile.portal.rest.common.model.dto.ReqToken;
 import com.mile.portal.rest.common.model.dto.ResBody;
-import com.mile.portal.rest.common.service.CommonService;
+import com.mile.portal.rest.common.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
-public class CommonController {
+public class AuthController {
 
-    private final CommonService commonService;
+    private final AuthService authService;
 
 //    @PostMapping("/common/createUser")
 //    public ResBody createUser(@AuthenticationPrincipal LoginUser loginUser, @RequestBody ReqCommBody reqCommBody){
@@ -25,26 +25,26 @@ public class CommonController {
 
     @PostMapping("/common/createUser")
     public ResBody createUser(@RequestBody ReqLogin userLogin){
-        commonService.createUser(userLogin);
+        authService.createUser(userLogin);
         return new ResBody(ResBody.CODE_SUCCESS, "", null);
     }
 
     @PostMapping("/common/loginUser")
     public ResBody loginUser(@RequestBody ReqCommon.UserLogin userLogin){
-        ReqToken reqToken = commonService.loginUser(userLogin);
+        ReqToken reqToken = authService.loginUser(userLogin);
 
         return new ResBody(ResBody.CODE_SUCCESS, "", reqToken);
     }
 
     @PostMapping("/common/createMng")
     public ResBody createMng(@RequestBody ReqLogin userLogin){
-        commonService.createMng(userLogin);
+        authService.createMng(userLogin);
         return new ResBody(ResBody.CODE_SUCCESS, "", null);
     }
 
     @PostMapping("/common/loginMng")
     public ResBody loginMng(@RequestBody ReqCommon.UserLogin userLogin){
-        ReqToken reqToken = commonService.loginMng(userLogin);
+        ReqToken reqToken = authService.loginMng(userLogin);
 
         return new ResBody(ResBody.CODE_SUCCESS, "", reqToken);
     }

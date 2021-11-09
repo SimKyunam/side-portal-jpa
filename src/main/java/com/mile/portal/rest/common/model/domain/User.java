@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 @Data
@@ -21,11 +22,14 @@ public abstract class User extends BaseEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @NotBlank
     private String name;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
+    @NotBlank
     private String loginPwd;
 
+    @NotBlank
     private String loginId;
 
     @Enumerated(EnumType.STRING)

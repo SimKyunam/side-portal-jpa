@@ -22,11 +22,10 @@ public class ReqLogin {
     private Long userId;
     private String userName;
     private Authority userType;
-    private String activeYn;
     private String icisNo;
+    private String status;
 
     //관리자용
     private String phone;
     private String email;
-    private String status;
 }
