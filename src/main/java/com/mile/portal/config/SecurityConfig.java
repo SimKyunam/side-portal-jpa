@@ -4,6 +4,7 @@ import com.mile.portal.jwt.JwtAuthenticationFilter;
 import com.mile.portal.jwt.JwtTokenProvider;
 import com.mile.portal.rest.common.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
@@ -22,10 +23,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-@RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final JwtTokenProvider jwtTokenProvider;
+    @Value("${jwt.key}")
+    private String secretKey;
+
+//    private final JwtTokenProvider jwtTokenProvider;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -43,7 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager(), jwtTokenProvider);
+        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager(), jwtTokenProvider());
 
         http
                 .cors().and().csrf().disable()
@@ -70,11 +73,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) {
         web.ignoring()
                 .requestMatchers(
-                        PathRequest.toStaticResources().atCommonLocations(),
-                        PathRequest.toH2Console()
+                        PathRequest.toStaticResources().atCommonLocations()
                 ).antMatchers(
             "/v2/api-docs", "/swagger-resources/**", "/swagger-ui.html",
-                        "/webjars/**", "/swagger/**"
+                        "/webjars/**", "/swagger/**", "/h2-console"
                 );
+    }
+
+    @Bean
+    public JwtTokenProvider jwtTokenProvider() {
+        return new JwtTokenProvider(secretKey);
     }
 }

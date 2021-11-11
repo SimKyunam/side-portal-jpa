@@ -25,7 +25,6 @@ import java.util.Date;
 import java.util.stream.Collectors;
 
 @Slf4j
-@Component
 @RequiredArgsConstructor
 public class JwtTokenProvider {
 
@@ -38,12 +37,8 @@ public class JwtTokenProvider {
 
     private Key key;
 
-    @Value("${jwt.key}")
-    private String secretKey;
-
-    @PostConstruct
-    protected void init() {
-        key = Keys.hmacShaKeyFor(secretKey.getBytes());
+    public JwtTokenProvider(String secret) {
+        this.key = Keys.hmacShaKeyFor(secret.getBytes());
     }
 
     public String createToken(LoginUser loginUser) {
@@ -62,7 +57,7 @@ public class JwtTokenProvider {
     // Jwt Token에서 User PK 추출
     public Claims getTokenClaims(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(secretKey.getBytes(StandardCharsets.UTF_8))
+                .setSigningKey(key)
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
@@ -71,7 +66,7 @@ public class JwtTokenProvider {
     // Jwt Token에서 id 추출
     public String getTokenId(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(secretKey.getBytes(StandardCharsets.UTF_8))
+                .setSigningKey(key)
                 .build()
                 .parseClaimsJws(token)
                 .getBody()
