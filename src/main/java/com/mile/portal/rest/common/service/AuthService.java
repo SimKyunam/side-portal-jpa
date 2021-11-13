@@ -8,6 +8,7 @@ import com.mile.portal.rest.common.model.dto.ReqLogin;
 import com.mile.portal.rest.common.model.dto.ReqToken;
 import com.mile.portal.rest.common.model.enums.Authority;
 import com.mile.portal.rest.common.repository.RefreshTokenRepository;
+import com.mile.portal.rest.common.repository.UserRepository;
 import com.mile.portal.rest.mng.model.domain.Manager;
 import com.mile.portal.rest.mng.repository.ManagerRepository;
 import com.mile.portal.rest.user.model.domain.Client;
@@ -28,18 +29,22 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 public class AuthService {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
 
     private final RefreshTokenRepository refreshTokenRepository;
+    private final UserRepository userRepository;
     private final ClientRepository clientRepository;
     private final ManagerRepository managerRepository;
 
-    @Transactional
     public Client createUser(ReqLogin userLogin) {
+        if(userRepository.existsByLoginId(userLogin.getLoginId())){
+            throw new RuntimeException("이미 가입되어 있는 유저입니다.");
+        }
+
         Client user = Client.builder()
                 .loginId(userLogin.getLoginId())
                 .loginPwd(passwordEncoder.encode(userLogin.getLoginPwd()))
@@ -52,7 +57,6 @@ public class AuthService {
         return clientRepository.save(user);
     }
 
-    @Transactional
     public ReqToken loginUser(ReqCommon.UserLogin userLogin) {
         LoginUser user = LoginUser.builder()
                 .loginId(userLogin.getLoginId())
@@ -67,8 +71,11 @@ public class AuthService {
         return loginAuthenticate(authenticationToken);
     }
 
-    @Transactional
     public Manager createMng(ReqLogin userLogin) {
+        if(userRepository.existsByLoginId(userLogin.getLoginId())){
+            throw new RuntimeException("이미 가입되어 있는 유저입니다.");
+        }
+
         Manager manager = Manager.builder()
                 .loginId(userLogin.getLoginId())
                 .loginPwd(passwordEncoder.encode(userLogin.getLoginPwd()))
@@ -82,7 +89,6 @@ public class AuthService {
         return managerRepository.save(manager);
     }
 
-    @Transactional
     public ReqToken loginMng(ReqCommon.UserLogin userLogin) {
         LoginUser user = LoginUser.builder()
                 .loginId(userLogin.getLoginId())
@@ -96,6 +102,7 @@ public class AuthService {
         // 2-4 단게 처리
         return loginAuthenticate(authenticationToken);
     }
+
 
     /** 공통 처리 */
     public ReqToken loginAuthenticate(UsernamePasswordAuthenticationToken authenticationToken) {
