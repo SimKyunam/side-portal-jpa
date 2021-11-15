@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 
 import javax.annotation.Generated;
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Data
@@ -19,19 +20,23 @@ import javax.persistence.*;
 @DiscriminatorValue("C")
 public class Client extends User {
 
+    @Column(length = 100)
     private String icisNo;
 
+    @OneToMany(mappedBy = "client", fetch = FetchType.LAZY)
+    private List<BoardQna> boardFaqs;
+
     @Builder
-    public Client(Integer id, String name, String loginPwd,
+    public Client(Long id, String name, String loginPwd,
                   String loginId, Authority type, String status,
                   String tokenId, String tokenExprDt, String lastLoginDt,
-                  String lastLoginIp, String loginFails, String deleted,
+                  String lastLoginIp, String loginFails,
                   String loginExprDt, String icisNo) {
 
         super(id, name, loginPwd,
                 loginId, type, status,
                 tokenId, tokenExprDt, lastLoginDt,
-                lastLoginIp, loginFails, deleted,
+                lastLoginIp, loginFails,
                 loginExprDt);
 
         this.icisNo = icisNo;

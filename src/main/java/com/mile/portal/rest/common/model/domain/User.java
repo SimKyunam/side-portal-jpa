@@ -14,27 +14,31 @@ import javax.validation.constraints.NotBlank;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "DTYPE")
 public abstract class User extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @NotBlank
+    @Column(length = 20)
     private String name;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @NotBlank
+    @Column(length = 100)
     private String loginPwd;
 
     @NotBlank
+    @Column(length = 20)
     private String loginId;
 
     @Enumerated(EnumType.STRING)
     private Authority permission;
 
+    @Column(length = 5)
     private String status;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -45,9 +49,8 @@ public abstract class User extends BaseEntity{
 
     private String lastLoginDt;
     private String lastLoginIp;
+    @Column(columnDefinition = "int(11) default 0")
     private String loginFails;
-
-    private String deleted;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String loginExprDt;

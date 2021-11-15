@@ -21,4 +21,6 @@ public abstract class BaseTimeEntity {
 
     @LastModifiedDate
     private LocalDateTime updated;
+
+    private LocalDateTime deleted;
 }
