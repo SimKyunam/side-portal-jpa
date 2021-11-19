@@ -1,0 +1,31 @@
+<config
+        xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+        xmlns='http://www.ehcache.org/v3'
+        xmlns:jsr107="http://www.ehcache.org/v3/jsr107"
+        xsi:schemaLocation="http://www.ehcache.org/v3 http://www.ehcache.org/schema/ehcache-core.xsd
+http://www.ehcache.org/v3/jsr107 http://www.ehcache.org/schema/ehcache-107-ext-3.0.xsd">
+
+    <service>
+        <jsr107:defaults enable-management="true" enable-statistics="true"/>
+    </service>
+
+    <persistence directory="java.io.tmpdir"/>
+
+    <cache-template name="defaultTemplate">
+        <key-type>java.lang.String</key-type>
+        <value-type>java.lang.String</value-type>
+        <expiry>
+            <ttl unit="hours">1</ttl>
+        </expiry>
+        <resources>
+            <heap unit="entries">1000</heap>
+            <disk unit="MB" persistent="false">20</disk>
+        </resources>
+    </cache-template>
+
+    <cache alias="menuCache" uses-template="defaultTemplate"/>
+    <cache alias="codeCache" uses-template="defaultTemplate"/>
+
+<!--    https://stove99.github.io/java/2019/08/01/springboot-with-ehcache/-->
+<!--    https://chati.tistory.com/147-->
+</config>
