@@ -6,16 +6,45 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 public class ReqBoard {
 
     @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
     @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class BoardFaq {
         private Long id;
         private String faqType;
         private String title;
         private String content;
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class BoardNotice {
+        private Long id;
+        private String ntcType;
+        private String title;
+        private String content;
+        private LocalDateTime beginDate;
+        private LocalDateTime endDate;
+        private String hotYn;
+        private String pubYn;
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class BoardQna {
+        private Long id;
+        private String qnaType;
+        private String qstTitle;
+        private String qstContent;
+        private String answerContent;
     }
 }

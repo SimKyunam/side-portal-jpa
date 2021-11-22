@@ -23,6 +23,7 @@ http://www.ehcache.org/v3/jsr107 http://www.ehcache.org/schema/ehcache-107-ext-3
         </resources>
     </cache-template>
 
+    <cache alias="boardCache" uses-template="defaultTemplate"/>
     <cache alias="menuCache" uses-template="defaultTemplate"/>
     <cache alias="codeCache" uses-template="defaultTemplate"/>
 
