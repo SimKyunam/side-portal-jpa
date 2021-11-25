@@ -3,6 +3,7 @@ package com.mile.portal.rest.user.model.domain;
 import com.mile.portal.rest.common.model.domain.BaseEntity;
 import com.mile.portal.rest.mng.model.domain.Manager;
 import lombok.*;
+import lombok.experimental.Accessors;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 @Entity
 @Data
 @Builder
+@Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)

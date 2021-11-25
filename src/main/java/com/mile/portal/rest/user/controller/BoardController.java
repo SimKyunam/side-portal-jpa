@@ -29,7 +29,26 @@ public class BoardController {
 
     @PostMapping("/notice/create")
     public ResBody createBoardNotice(@Valid @RequestBody ReqBoard.BoardNotice reqBoardNotice) {
-        BoardNotice boardNotice = boardService.createBoardNotice(reqBoardNotice);
+        boardService.createBoardNotice(reqBoardNotice);
         return new ResBody(ResBody.CODE_SUCCESS, "", null);
     }
+
+    @PostMapping("/notice/update")
+    public ResBody updateBoardNotice(@Valid @RequestBody ReqBoard.BoardNotice reqBoardNotice) {
+        boardService.updateBoardNotice(reqBoardNotice);
+        return new ResBody(ResBody.CODE_SUCCESS, "", null);
+    }
+
+    @GetMapping("/notice/select/{id}")
+    public ResBody selectBoardNotice(@PathVariable(name = "id") Long id) {
+        BoardNotice boardNotice = boardService.selectBoardNotice(id);
+        return new ResBody(ResBody.CODE_SUCCESS, "", boardNotice);
+    }
+
+    @DeleteMapping("/notice/delete/{id}")
+    public ResBody deleteBoardNotice(@PathVariable(name = "id") Long id) {
+        boardService.deleteBoardNotice(id);
+        return new ResBody(ResBody.CODE_SUCCESS, "", null);
+    }
+
 }
