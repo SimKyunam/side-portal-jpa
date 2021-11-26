@@ -1,6 +1,7 @@
 package com.mile.portal.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mile.portal.rest.common.model.domain.User;
 import com.mile.portal.rest.common.model.dto.LoginUser;
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
@@ -46,18 +47,22 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
     }
 
     private Authentication getAuthentication(HttpServletRequest request, HttpServletResponse response){
-        String token = jwtTokenProvider.resolveToken((HttpServletRequest) request);
+        String headerAuth = jwtTokenProvider.resolveToken((HttpServletRequest) request);
+        String token = null;
+        if(headerAuth != null) {
+            token = headerAuth.replaceAll("^Bearer( )*", "");
+        }
 
         if (token != null && jwtTokenProvider.validateToken(token)) {   // token 검증
-            Claims claims = jwtTokenProvider.getTokenClaims(token.replaceAll("^Bearer( )*", ""));
+            Claims claims = jwtTokenProvider.getTokenClaims(token);
 
-            if( needRefresh(claims, JwtTokenProvider.TOKEN_VALID_MILISECOND) ) { // 12시간
+            if( needRefresh(claims, JwtTokenProvider.TOKEN_VALID_MILISECOND) ) { // Access 토큰 측정 (12시간)
                 log.info("[JwtAuthenticationTokenFilter] refresh token");
 
                 ObjectMapper mapper = new ObjectMapper();
-                LoginUser loginUser = mapper.convertValue(claims.get("user", Map.class), LoginUser.class);
+                LoginUser user = mapper.convertValue(claims.get("user", Map.class), LoginUser.class);
 
-                token = jwtTokenProvider.createToken(loginUser);
+                token = jwtTokenProvider.createToken(user);
                 response.setHeader(JwtTokenProvider.AUTHORITIES_KEY, token);
             }
 
@@ -73,7 +78,7 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
         return null;
     }
 
-    //시간 측정
+    //Access 토큰 시간 측정
     private boolean needRefresh(Claims claims, long rangeOfRefreshMillis) {
         long exp = claims.getExpiration().getTime();
         if( exp > 0 ) {

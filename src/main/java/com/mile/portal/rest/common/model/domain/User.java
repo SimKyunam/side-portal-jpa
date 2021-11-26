@@ -42,6 +42,7 @@ public abstract class User extends BaseEntity{
     private String status;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
+    @Column(length = 1000)
     private String tokenId;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)

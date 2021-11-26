@@ -45,9 +45,6 @@ public class LoginUser {
     // 로그인 사용자 삭제 여부
     private String deleted;
 
-    // 로그인 관리자 기본정보
-    private String manName;
-
     private Long actionLogId;
 
     private String password;

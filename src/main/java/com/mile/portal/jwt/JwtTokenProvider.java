@@ -1,5 +1,6 @@
 package com.mile.portal.jwt;
 
+import com.mile.portal.rest.common.model.domain.User;
 import com.mile.portal.rest.common.model.dto.LoginUser;
 import com.mile.portal.rest.common.model.dto.ReqToken;
 import io.jsonwebtoken.*;
@@ -41,14 +42,14 @@ public class JwtTokenProvider {
         this.key = Keys.hmacShaKeyFor(secret.getBytes());
     }
 
-    public String createToken(LoginUser loginUser) {
+    public String createToken(LoginUser user) {
         Date now = new Date();
 
         JwtBuilder builder = Jwts.builder()
-                .setSubject(loginUser.getId().toString())
-                .claim(USER_KEY, loginUser); //계정
+                .setSubject(user.getId().toString())
+                .claim(AUTHORITIES_KEY, user.getPermission())
+                .claim(USER_KEY, user); //계정
         return builder
-                .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + TOKEN_VALID_MILISECOND)) // set Expire Time
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
@@ -73,7 +74,15 @@ public class JwtTokenProvider {
                 .getSubject();
     }
 
-    public ReqToken generateTokenDto(Authentication authentication) {
+    public ReqToken generateTokenDto(Authentication authentication, User user) {
+        // User -> LoginUser 컨버팅
+        LoginUser loginUser = LoginUser.builder()
+                .id(user.getId())
+                .loginId(user.getLoginId())
+                .username(user.getName())
+                .permission(user.getPermission())
+                .build();
+
         // 권한들 가져오기
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
@@ -86,6 +95,7 @@ public class JwtTokenProvider {
         String accessToken = Jwts.builder()
                 .setSubject(authentication.getName())       // payload "sub": "name"
                 .claim(AUTHORITIES_KEY, authorities)        // payload "auth": "ROLE_USER"
+                .claim(USER_KEY, loginUser)
                 .setExpiration(accessTokenExpiresIn)        // payload "exp": 1516239022 (예시)
                 .signWith(key, SignatureAlgorithm.HS256)    // header "alg": "HS512"
                 .compact();

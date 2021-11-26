@@ -1,6 +1,7 @@
 package com.mile.portal.config.exception;
 
 import com.mile.portal.config.exception.exceptions.BadRequestException;
+import com.mile.portal.config.exception.exceptions.ResultNotFoundException;
 import com.mile.portal.rest.common.model.dto.ResBody;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -20,7 +21,7 @@ import java.util.List;
 
 @Slf4j
 @RestControllerAdvice
-public class GlobalExceptionConfiguration {
+public class GlobalExceptionConfig {
 
     @ExceptionHandler(value = Exception.class)
     public ResponseEntity exception(Exception e,
@@ -70,11 +71,25 @@ public class GlobalExceptionConfiguration {
     }
 
     @ExceptionHandler(value = BadRequestException.class)
-    public ResponseEntity<ResBody> badRequestExceptionHandler(HttpServletRequest httpServletRequest,
-                                                              BadRequestException exception) {
+    public ResponseEntity<ResBody> badRequestException(BadRequestException exception,
+                                                       HttpServletRequest httpServletRequest) {
 
         ErrorResponse errorResponse = createErrorResponse(null,
-                "badRequestExceptionHandler",
+                "badRequestException",
+                httpServletRequest.getRequestURI(),
+                HttpStatus.BAD_REQUEST.toString()
+        );
+
+        ResBody resbody = new ResBody(ResBody.CODE_ERROR, exception.getMessage(),errorResponse);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(resbody);
+    }
+
+    @ExceptionHandler(value = ResultNotFoundException.class)
+    public ResponseEntity<ResBody> resultNotFoundException(ResultNotFoundException exception,
+                                                           HttpServletRequest httpServletRequest) {
+
+        ErrorResponse errorResponse = createErrorResponse(null,
+                "resultNotFoundException",
                 httpServletRequest.getRequestURI(),
                 HttpStatus.BAD_REQUEST.toString()
         );
