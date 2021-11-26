@@ -2,11 +2,11 @@ package com.mile.portal.config.exception;
 
 import com.mile.portal.config.exception.exceptions.BadRequestException;
 import com.mile.portal.config.exception.exceptions.ResultNotFoundException;
+import com.mile.portal.config.exception.exceptions.TokenExpireException;
+import com.mile.portal.config.exception.exceptions.message.ExceptionMessage;
 import com.mile.portal.rest.common.model.dto.ResBody;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +27,7 @@ public class GlobalExceptionConfig {
                                     HttpServletRequest httpServletRequest){
 
         ErrorResponse errorResponse = createErrorResponse(null,
-                "exception",
+                ExceptionMessage.EXCEPTION_MESSAGE,
                 httpServletRequest.getRequestURI(),
                 HttpStatus.BAD_REQUEST.toString()
         );
@@ -61,12 +60,12 @@ public class GlobalExceptionConfig {
         });
 
         ErrorResponse errorResponse = createErrorResponse(errorList,
-                "methodArgumentNotValidException",
+                ExceptionMessage.ARGUMENT_NOT_VALID_MESSAGE,
                 httpServletRequest.getRequestURI(),
                 HttpStatus.BAD_REQUEST.toString()
         );
 
-        ResBody resbody = new ResBody(ResBody.CODE_ERROR, e.getMessage(),errorResponse);
+        ResBody resbody = new ResBody(ResBody.CODE_ERROR, e.getMessage(), errorResponse);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(resbody);
     }
 
@@ -75,12 +74,26 @@ public class GlobalExceptionConfig {
                                                        HttpServletRequest httpServletRequest) {
 
         ErrorResponse errorResponse = createErrorResponse(null,
-                "badRequestException",
+                ExceptionMessage.BAD_REQUEST_MESSAGE,
                 httpServletRequest.getRequestURI(),
                 HttpStatus.BAD_REQUEST.toString()
         );
 
-        ResBody resbody = new ResBody(ResBody.CODE_ERROR, exception.getMessage(),errorResponse);
+        ResBody resbody = new ResBody(ResBody.CODE_ERROR, exception.getMessage(), errorResponse);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(resbody);
+    }
+
+    @ExceptionHandler(value = TokenExpireException.class)
+    public ResponseEntity<ResBody> tokenExpireException(TokenExpireException exception,
+                                                        HttpServletRequest httpServletRequest) {
+
+        ErrorResponse errorResponse = createErrorResponse(null,
+                ExceptionMessage.TOKEN_EXPIRE_MESSAGE,
+                httpServletRequest.getRequestURI(),
+                HttpStatus.BAD_REQUEST.toString()
+        );
+
+        ResBody resbody = new ResBody(ResBody.CODE_ERROR, exception.getMessage(), errorResponse);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(resbody);
     }
 
@@ -89,7 +102,7 @@ public class GlobalExceptionConfig {
                                                            HttpServletRequest httpServletRequest) {
 
         ErrorResponse errorResponse = createErrorResponse(null,
-                "resultNotFoundException",
+                ExceptionMessage.RESULT_NOT_FOUND_MESSAGE,
                 httpServletRequest.getRequestURI(),
                 HttpStatus.BAD_REQUEST.toString()
         );

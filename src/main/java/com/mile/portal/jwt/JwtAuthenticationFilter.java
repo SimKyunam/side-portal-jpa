@@ -1,7 +1,7 @@
 package com.mile.portal.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mile.portal.rest.common.model.domain.User;
+import com.mile.portal.config.exception.exceptions.TokenExpireException;
 import com.mile.portal.rest.common.model.dto.LoginUser;
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
@@ -53,11 +53,11 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
             String token = headerAuth.replaceAll("^Bearer( )*", "");
             if (jwtTokenProvider.validateToken(token)) {  // token 검증
                 Claims claims = jwtTokenProvider.getTokenClaims(token);
-                if (needRefresh(claims, JwtTokenProvider.TOKEN_VALID_MILISECOND)) { //access가 만료된 경우
+                if (needRefresh(claims)) { //access가 만료된 경우
                     log.info("[JwtAuthenticationTokenFilter] access expire");
 
                     //리프레시 토큰 확인
-                    this.refreshTokenProc(request, response, claims);
+                    this.refreshTokenProc(request, response);
                 }
 
                 //인증 처리
@@ -74,13 +74,16 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
         return null;
     }
 
-    private void refreshTokenProc(HttpServletRequest request, HttpServletResponse response, Claims claims) {
+    private void refreshTokenProc(HttpServletRequest request, HttpServletResponse response) {
         String refreshTokenStr = jwtTokenProvider.resolveRefreshToken((HttpServletRequest) request);
         String refreshToken = refreshTokenStr.replaceAll("^Bearer( )*", "");
 
         if (jwtTokenProvider.validateToken(refreshToken)) {  // token 검증
-            if (needRefresh(claims, JwtTokenProvider.TOKEN_VALID_MILISECOND)) { //access가 만료된 경우
+            Claims claims = jwtTokenProvider.getTokenClaims(refreshToken);
+
+            if (needRefresh(claims)) { //access가 만료된 경우
                 log.info("[JwtAuthenticationTokenFilter] refresh expire");
+                throw new TokenExpireException("refresh token expire");
             } else {
                 log.info("[JwtAuthenticationTokenFilter] access token create");
                 ObjectMapper mapper = new ObjectMapper();
@@ -92,12 +95,10 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
         }
     }
 
-
-
     //Access 토큰 시간 측정
-    private boolean needRefresh(Claims claims, long rangeOfRefreshMillis) {
+    private boolean needRefresh(Claims claims) {
         long exp = claims.getExpiration().getTime();
-        if( exp > 0 ) {
+        if (exp > 0) {
             long remain = exp - System.currentTimeMillis();
             return remain <= 0 ? true : false;
         }

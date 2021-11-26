@@ -15,8 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -26,13 +24,13 @@ public class BoardService {
     private final BoardQnaRepository boardQnaRepository;
     private final BoardFaqRepository boardFaqRepository;
 
-    @Cacheable(cacheNames = "boardCache")
+    @Cacheable(value = "boardCache")
     @Transactional(readOnly = true)
-    public Page<BoardNotice> listBoardNotice(Pageable pageable) {
+    public Page<BoardNotice> listBoardNotice(ReqBoard.BoardNotice boardNotice, Pageable pageable) {
         return boardNoticeRepository.findAll(pageable);
     }
 
-    @CacheEvict(cacheNames = "boardCache")
+    @CacheEvict(value = "boardCache")
     public BoardNotice createBoardNotice(ReqBoard.BoardNotice reqBoardNotice) {
         BoardNotice boardNotice = BoardNotice.builder()
                 .title(reqBoardNotice.getTitle())
@@ -47,7 +45,7 @@ public class BoardService {
         return boardNoticeRepository.save(boardNotice);
     }
 
-    @CacheEvict(cacheNames = "boardCache")
+    @CacheEvict(value = "boardCache")
     public BoardNotice updateBoardNotice(ReqBoard.BoardNotice reqBoardNotice) {
         BoardNotice boardNotice = boardNoticeRepository.findById(reqBoardNotice.getId()).orElseThrow(ResultNotFoundException::new);
         boardNotice.setTitle(reqBoardNotice.getTitle())
@@ -65,7 +63,7 @@ public class BoardService {
         return boardNoticeRepository.findById(id).orElseThrow(ResultNotFoundException::new);
     }
 
-    @CacheEvict(cacheNames = "boardCache")
+    @CacheEvict(value = "boardCache")
     public void deleteBoardNotice(Long id) {
         boardNoticeRepository.deleteById(id);
     }
