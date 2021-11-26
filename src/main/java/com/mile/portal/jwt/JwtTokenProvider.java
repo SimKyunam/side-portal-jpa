@@ -33,6 +33,7 @@ public class JwtTokenProvider {
     public static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 7;  // 7일
 
     public static final String AUTHORITIES_KEY = "Authorization";
+    public static final String REFRESH_TOKEN_KEY = "REFRESH_TOKEN";
     public static final String USER_KEY = "user";
     public static final String BEARER_TYPE = "bearer";
 
@@ -117,6 +118,10 @@ public class JwtTokenProvider {
 
     public String resolveToken(HttpServletRequest req) {
         return req.getHeader(AUTHORITIES_KEY);
+    }
+
+    public String resolveRefreshToken(HttpServletRequest req) {
+        return req.getHeader(REFRESH_TOKEN_KEY);
     }
 
     public Authentication getAuthentication(String accessToken) {

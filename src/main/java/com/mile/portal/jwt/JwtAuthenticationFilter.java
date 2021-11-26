@@ -48,42 +48,58 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
 
     private Authentication getAuthentication(HttpServletRequest request, HttpServletResponse response){
         String headerAuth = jwtTokenProvider.resolveToken((HttpServletRequest) request);
-        String token = null;
-        if(headerAuth != null) {
-            token = headerAuth.replaceAll("^Bearer( )*", "");
-        }
 
-        if (token != null && jwtTokenProvider.validateToken(token)) {   // token 검증
-            Claims claims = jwtTokenProvider.getTokenClaims(token);
+        if (headerAuth != null) { //토큰이 존재하는 경우
+            String token = headerAuth.replaceAll("^Bearer( )*", "");
+            if (jwtTokenProvider.validateToken(token)) {  // token 검증
+                Claims claims = jwtTokenProvider.getTokenClaims(token);
+                if (needRefresh(claims, JwtTokenProvider.TOKEN_VALID_MILISECOND)) { //access가 만료된 경우
+                    log.info("[JwtAuthenticationTokenFilter] access expire");
 
-            if( needRefresh(claims, JwtTokenProvider.TOKEN_VALID_MILISECOND) ) { // Access 토큰 측정 (12시간)
-                log.info("[JwtAuthenticationTokenFilter] refresh token");
+                    //리프레시 토큰 확인
+                    this.refreshTokenProc(request, response, claims);
+                }
 
-                ObjectMapper mapper = new ObjectMapper();
-                LoginUser user = mapper.convertValue(claims.get("user", Map.class), LoginUser.class);
+                //인증 처리
+                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
+                        (UsernamePasswordAuthenticationToken) jwtTokenProvider.getAuthentication(token);
 
-                token = jwtTokenProvider.createToken(user);
-                response.setHeader(JwtTokenProvider.AUTHORITIES_KEY, token);
+                usernamePasswordAuthenticationToken
+                        .setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+                return usernamePasswordAuthenticationToken;
             }
-
-            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
-                    (UsernamePasswordAuthenticationToken) jwtTokenProvider.getAuthentication(token);
-
-            usernamePasswordAuthenticationToken
-                    .setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-            return usernamePasswordAuthenticationToken;
         }
 
         return null;
     }
+
+    private void refreshTokenProc(HttpServletRequest request, HttpServletResponse response, Claims claims) {
+        String refreshTokenStr = jwtTokenProvider.resolveRefreshToken((HttpServletRequest) request);
+        String refreshToken = refreshTokenStr.replaceAll("^Bearer( )*", "");
+
+        if (jwtTokenProvider.validateToken(refreshToken)) {  // token 검증
+            if (needRefresh(claims, JwtTokenProvider.TOKEN_VALID_MILISECOND)) { //access가 만료된 경우
+                log.info("[JwtAuthenticationTokenFilter] refresh expire");
+            } else {
+                log.info("[JwtAuthenticationTokenFilter] access token create");
+                ObjectMapper mapper = new ObjectMapper();
+                LoginUser user = mapper.convertValue(claims.get("user", Map.class), LoginUser.class);
+
+                String token = jwtTokenProvider.createToken(user);
+                response.setHeader(JwtTokenProvider.AUTHORITIES_KEY, token);
+            }
+        }
+    }
+
+
 
     //Access 토큰 시간 측정
     private boolean needRefresh(Claims claims, long rangeOfRefreshMillis) {
         long exp = claims.getExpiration().getTime();
         if( exp > 0 ) {
             long remain = exp - System.currentTimeMillis();
-            return remain < rangeOfRefreshMillis ? true : false;
+            return remain <= 0 ? true : false;
         }
         return false;
     }

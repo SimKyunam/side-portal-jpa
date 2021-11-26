@@ -55,6 +55,7 @@ public class LoginService {
         } else {
             userDomain = managerRepository.findByLoginId(loginId).orElseThrow(RuntimeException::new);
         }
+
         ReqToken tokenDto = jwtTokenProvider.generateTokenDto(authentication, userDomain);
         String format = DateTimeUtil.millisToDate(tokenDto.getAccessTokenExpiresIn(),
                 "YYYY-MM-DD HH:mm:ss.SSS");
