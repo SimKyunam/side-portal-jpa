@@ -28,7 +28,6 @@ public class BoardController {
     public ResBody listBoardNotice(@AuthenticationPrincipal LoginUser loginUser,
                                    @RequestParam(required = false) ReqBoard.BoardNotice reqBoardNotice,
                                    @PageableDefault(sort = "id", size = 100, direction = Sort.Direction.DESC) Pageable pageable) {
-        log.info(loginUser.toString());
 
         Page<BoardNotice> boardNoticeList = boardService.listBoardNotice(reqBoardNotice, pageable);
         return new ResBody(ResBody.CODE_SUCCESS, "", boardNoticeList);
