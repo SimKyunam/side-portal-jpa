@@ -26,8 +26,8 @@ public class AuditingConfig {
 
             if(authentication != null) {
                 if(authentication.getPrincipal() instanceof LoginUser) {
-                    LoginUser loginUse = (LoginUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-                    return Optional.of(loginUse.getId());
+                    LoginUser loginUser = (LoginUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+                    return Optional.of(loginUser.getId());
                 }
             }
 
