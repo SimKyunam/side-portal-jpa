@@ -1,7 +1,6 @@
 package com.mile.portal.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mile.portal.config.exception.exceptions.TokenExpireException;
 import com.mile.portal.rest.common.model.dto.LoginUser;
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
@@ -52,10 +51,13 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
         if (headerAuth != null) { //토큰이 존재하는 경우
             String token = headerAuth.replaceAll("^Bearer( )*", "");
             if (jwtTokenProvider.validateToken(token)) {  // token 검증
-            } else { //만료나 잘못된 경우
-                log.info("[JwtAuthenticationTokenFilter] access expire");
-                //리프레시 토큰 확인
-                token = this.refreshTokenProc(request);
+                Claims claims = jwtTokenProvider.getTokenClaims(token);
+
+                ObjectMapper mapper = new ObjectMapper();
+                LoginUser user = mapper.convertValue(claims.get("user", Map.class), LoginUser.class);
+
+                token = jwtTokenProvider.createToken(user);
+                response.setHeader(JwtTokenProvider.AUTHORITIES_KEY, token);
             }
 
             //인증 처리
@@ -70,22 +72,12 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
         return null;
     }
 
-    private String refreshTokenProc(HttpServletRequest request) {
-        String refreshTokenStr = jwtTokenProvider.resolveRefreshToken((HttpServletRequest) request);
-        String refreshToken = refreshTokenStr.replaceAll("^Bearer( )*", "");
-        String token = "";
-        if (jwtTokenProvider.validateToken(refreshToken)) {  // token 검증
-            Claims claims = jwtTokenProvider.getTokenClaims(refreshToken);
-
-            log.info("[JwtAuthenticationTokenFilter] access token create");
-            ObjectMapper mapper = new ObjectMapper();
-            LoginUser user = mapper.convertValue(claims.get("user", Map.class), LoginUser.class);
-
-            token = jwtTokenProvider.createToken(user);
-        } else {
-            throw new TokenExpireException("리프레시 토큰 만료");
+    private boolean needRefresh(Claims claims, long rangeOfRefreshMillis) {
+        long exp = claims.getExpiration().getTime();
+        if (exp > 0) {
+            long remain = exp - System.currentTimeMillis();
+            return remain < rangeOfRefreshMillis ? true : false;
         }
-
-        return token;
+        return false;
     }
 }
