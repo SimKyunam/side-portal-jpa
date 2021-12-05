@@ -12,9 +12,6 @@ import com.mile.portal.rest.user.model.domain.Client;
 import com.mile.portal.rest.user.repository.ClientRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.retry.annotation.Backoff;
-import org.springframework.retry.annotation.Retryable;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,23 +46,19 @@ public class AuthService {
         return clientRepository.save(user);
     }
 
-//    @Retryable(
-//        value = {BadCredentialsException.class},
-//        backoff = @Backoff(delay = 1000)
-//    )
-public ReqToken loginUser(ReqCommon.UserLogin userLogin) {
-    LoginUser user = LoginUser.builder()
-            .loginId(userLogin.getLoginId())
-            .password(userLogin.getLoginPwd())
-            .permission(Authority.ROLE_USER)
-            .build();
+    public ReqToken loginUser(ReqCommon.UserLogin userLogin) {
+        LoginUser user = LoginUser.builder()
+                .loginId(userLogin.getLoginId())
+                .password(userLogin.getLoginPwd())
+                .permission(Authority.ROLE_USER)
+                .build();
 
-    // 로그인 처리
-    return loginService.loginAuthenticate(user);
-}
+        // 로그인 처리
+        return loginService.loginAuthenticate(user);
+    }
 
     public Manager createMng(ReqLogin userLogin) {
-        if(userRepository.existsByLoginId(userLogin.getLoginId())){
+        if (userRepository.existsByLoginId(userLogin.getLoginId())) {
             throw new RuntimeException("이미 가입되어 있는 유저입니다.");
         }
 
@@ -82,10 +75,6 @@ public ReqToken loginUser(ReqCommon.UserLogin userLogin) {
         return managerRepository.save(manager);
     }
 
-    @Retryable(
-            value = {BadCredentialsException.class},
-            backoff = @Backoff(delay = 1000)
-    )
     public ReqToken loginMng(ReqCommon.UserLogin userLogin) {
         LoginUser user = LoginUser.builder()
                 .loginId(userLogin.getLoginId())

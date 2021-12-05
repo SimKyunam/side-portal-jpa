@@ -1,18 +1,18 @@
 package com.mile.portal.rest.common.model.domain;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class RefreshToken extends BaseEntity {
+public class RefreshToken extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,6 +20,7 @@ public class RefreshToken extends BaseEntity {
 
     private String key;
 
+    @Column(length = 1000)
     private String value;
 
     public RefreshToken updateValue(String token) {

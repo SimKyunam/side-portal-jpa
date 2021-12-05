@@ -87,17 +87,19 @@ public static final long TOKEN_VALID_MILISECOND = 1000L * 60 * 2; // 2분
         long now = (new Date()).getTime();
 
         // Access Token 생성
-        Date accessTokenExpiresIn = new Date(now + TOKEN_VALID_MILISECOND);
         String accessToken = Jwts.builder()
                 .setSubject(authentication.getName())       // payload "sub": "name"
                 .claim(AUTHORITIES_KEY, authorities)        // payload "auth": "ROLE_USER"
                 .claim(USER_KEY, loginUser)
-                .setExpiration(accessTokenExpiresIn)        // payload "exp": 1516239022 (예시)
+                .setExpiration(new Date(now + TOKEN_VALID_MILISECOND))        // payload "exp": 1516239022 (예시)
                 .signWith(key, SignatureAlgorithm.HS256)    // header "alg": "HS512"
                 .compact();
 
         // Refresh Token 생성
         String refreshToken = Jwts.builder()
+                .setSubject(authentication.getName())       // payload "sub": "name"
+                .claim(AUTHORITIES_KEY, authorities)        // payload "auth": "ROLE_USER"
+                .claim(USER_KEY, loginUser)
                 .setExpiration(new Date(now + REFRESH_TOKEN_EXPIRE_TIME))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
@@ -113,10 +115,6 @@ public static final long TOKEN_VALID_MILISECOND = 1000L * 60 * 2; // 2분
 
     public String resolveToken(HttpServletRequest req) {
         return req.getHeader(AUTHORITIES_KEY);
-    }
-
-    public String resolveRefreshToken(HttpServletRequest req) {
-        return req.getHeader(REFRESH_TOKEN_KEY);
     }
 
     public Authentication getAuthentication(String accessToken) {
@@ -141,18 +139,20 @@ public static final long TOKEN_VALID_MILISECOND = 1000L * 60 * 2; // 2분
 
     // Jwt Token의 유효성 및 만료 기간 검사
     public boolean validateToken(String token) {
+        String exceptionMessage = "";
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
-            log.info("잘못된 JWT 서명입니다.");
+            exceptionMessage = "잘못된 JWT 서명입니다.";
         } catch (ExpiredJwtException e) {
-            log.info("만료된 JWT 토큰입니다.");
+            exceptionMessage = "만료된 JWT 토큰입니다.";
         } catch (UnsupportedJwtException e) {
-            log.info("지원되지 않는 JWT 토큰입니다.");
+            exceptionMessage = "지원되지 않는 JWT 토큰입니다.";
         } catch (IllegalArgumentException e) {
-            log.info("JWT 토큰이 잘못되었습니다.");
+            exceptionMessage = "JWT 토큰이 잘못되었습니다.";
         }
+        log.info(exceptionMessage);
         return false;
     }
 

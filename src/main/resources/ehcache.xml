@@ -21,10 +21,20 @@ http://www.ehcache.org/v3/jsr107 http://www.ehcache.org/schema/ehcache-107-ext-3
         </resources>
     </cache-template>
 
-    <cache alias="boardCache" uses-template="defaultTemplate"/>
+    <cache-template name="boardTemplate">
+        <expiry>
+            <ttl unit="minutes">10</ttl>
+        </expiry>
+        <resources>
+            <heap unit="entries">1000</heap>
+            <disk unit="MB" persistent="false">20</disk>
+        </resources>
+    </cache-template>
+
+    <cache alias="boardCache" uses-template="boardTemplate"/>
     <cache alias="menuCache" uses-template="defaultTemplate"/>
     <cache alias="codeCache" uses-template="defaultTemplate"/>
 
-<!--    https://stove99.github.io/java/2019/08/01/springboot-with-ehcache/-->
-<!--    https://chati.tistory.com/147-->
+    <!--    https://stove99.github.io/java/2019/08/01/springboot-with-ehcache/-->
+    <!--    https://chati.tistory.com/147-->
 </config>

@@ -53,11 +53,14 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
             if (jwtTokenProvider.validateToken(token)) {  // token 검증
                 Claims claims = jwtTokenProvider.getTokenClaims(token);
 
-                ObjectMapper mapper = new ObjectMapper();
-                LoginUser user = mapper.convertValue(claims.get("user", Map.class), LoginUser.class);
+                //리프레시 토큰인 경우 Access 토큰 재발급
+                if (needRefresh(claims, jwtTokenProvider.TOKEN_VALID_MILISECOND)) {
+                    ObjectMapper mapper = new ObjectMapper();
+                    LoginUser user = mapper.convertValue(claims.get("user", Map.class), LoginUser.class);
 
-                token = jwtTokenProvider.createToken(user);
-                response.setHeader(JwtTokenProvider.AUTHORITIES_KEY, token);
+                    token = jwtTokenProvider.createToken(user);
+                    response.setHeader(JwtTokenProvider.AUTHORITIES_KEY, token);
+                }
             }
 
             //인증 처리
@@ -76,7 +79,7 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
         long exp = claims.getExpiration().getTime();
         if (exp > 0) {
             long remain = exp - System.currentTimeMillis();
-            return remain < rangeOfRefreshMillis ? true : false;
+            return remain > rangeOfRefreshMillis ? true : false;
         }
         return false;
     }

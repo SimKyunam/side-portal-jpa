@@ -83,18 +83,18 @@ public class GlobalExceptionConfig {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(resbody);
     }
 
-    @ExceptionHandler(value = TokenExpireException.class)
+    @ExceptionHandler(value = {TokenExpireException.class})
     public ResponseEntity<ResBody> tokenExpireException(TokenExpireException exception,
                                                         HttpServletRequest httpServletRequest) {
 
         ErrorResponse errorResponse = createErrorResponse(null,
                 ExceptionMessage.TOKEN_EXPIRE_MESSAGE,
                 httpServletRequest.getRequestURI(),
-                HttpStatus.BAD_REQUEST.toString()
+                HttpStatus.UNAUTHORIZED.toString()
         );
 
         ResBody resbody = new ResBody(ResBody.CODE_ERROR, exception.getMessage(), errorResponse);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(resbody);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(resbody);
     }
 
     @ExceptionHandler(value = ResultNotFoundException.class)

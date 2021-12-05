@@ -19,12 +19,14 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class LoginService {
 
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
@@ -66,7 +68,7 @@ public class LoginService {
             Client client = (Client) userDomain;
 
             clientRepository.save(client);
-        }else{
+        } else {
             userDomain.setTokenId(tokenDto.getAccessToken());
             userDomain.setTokenExprDt(format);
             Manager manager = (Manager) userDomain;
@@ -75,10 +77,11 @@ public class LoginService {
         }
 
         // 4. RefreshToken 저장
-        RefreshToken refreshToken = RefreshToken.builder()
-                .key(authentication.getName())
-                .value(tokenDto.getRefreshToken())
-                .build();
+        RefreshToken refreshToken = refreshTokenRepository.findByKey(authentication.getName())
+                .orElseGet(RefreshToken::new);
+
+        refreshToken.setKey(authentication.getName());
+        refreshToken.setValue(tokenDto.getRefreshToken());
 
         refreshTokenRepository.save(refreshToken);
 
