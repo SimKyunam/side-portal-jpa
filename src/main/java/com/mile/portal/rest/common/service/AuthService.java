@@ -85,9 +85,4 @@ public class AuthService {
         // 로그인 처리
         return loginService.loginAuthenticate(user);
     }
-
-
-    
-
-
 }

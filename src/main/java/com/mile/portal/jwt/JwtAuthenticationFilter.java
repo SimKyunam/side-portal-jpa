@@ -54,7 +54,7 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
                 Claims claims = jwtTokenProvider.getTokenClaims(token);
 
                 //리프레시 토큰인 경우 Access 토큰 재발급
-                if (needRefresh(claims, jwtTokenProvider.TOKEN_VALID_MILISECOND)) {
+                if (needRefresh(claims, jwtTokenProvider.TOKEN_VALID_TIME)) {
                     ObjectMapper mapper = new ObjectMapper();
                     LoginUser user = mapper.convertValue(claims.get("user", Map.class), LoginUser.class);
 

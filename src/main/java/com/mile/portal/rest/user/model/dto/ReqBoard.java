@@ -1,10 +1,10 @@
 package com.mile.portal.rest.user.model.dto;
 
-import com.mile.portal.rest.user.model.domain.BoardFaq;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
@@ -30,7 +30,9 @@ public class ReqBoard {
         private String ntcType;
         private String title;
         private String content;
+        @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
         private LocalDateTime beginDate;
+        @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
         private LocalDateTime endDate;
         private String hotYn;
         private String pubYn;

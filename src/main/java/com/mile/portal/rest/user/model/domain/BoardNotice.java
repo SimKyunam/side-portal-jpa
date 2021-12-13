@@ -4,7 +4,6 @@ import com.mile.portal.rest.common.model.domain.BaseEntity;
 import com.mile.portal.rest.mng.model.domain.Manager;
 import lombok.*;
 import lombok.experimental.Accessors;
-import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -33,8 +32,10 @@ public class BoardNotice extends BaseEntity {
     @Column(columnDefinition = "int(11) default 0")
     private int readCnt;
 
-    private LocalDateTime beginDate;
+//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
+private LocalDateTime beginDate;
 
+    //    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime endDate;
 
     @Column(length = 1)
@@ -43,6 +44,6 @@ public class BoardNotice extends BaseEntity {
     @Column(length = 1)
     private String pubYn;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Manager manager;
 }

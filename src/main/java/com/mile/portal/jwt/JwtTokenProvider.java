@@ -24,8 +24,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class JwtTokenProvider {
 
-//    public static final long TOKEN_VALID_MILISECOND = 1000L * 60 * 60 * 12; // 12시간
-public static final long TOKEN_VALID_MILISECOND = 1000L * 60 * 2; // 2분
+    public static final long TOKEN_VALID_TIME = 1000L * 60 * 60 * 12; // 12시간
+    //    public static final long TOKEN_VALID_TIME = 1000L * 60 * 2; // 2분
     public static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 7;  // 7일
 
     public static final String AUTHORITIES_KEY = "Authorization";
@@ -46,7 +46,7 @@ public static final long TOKEN_VALID_MILISECOND = 1000L * 60 * 2; // 2분
                 .setSubject(user.getId().toString())
                 .claim(AUTHORITIES_KEY, user.getPermission())
                 .claim(USER_KEY, user) //계정
-                .setExpiration(new Date(now.getTime() + TOKEN_VALID_MILISECOND)) // set Expire Time
+                .setExpiration(new Date(now.getTime() + TOKEN_VALID_TIME)) // set Expire Time
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -91,7 +91,7 @@ public static final long TOKEN_VALID_MILISECOND = 1000L * 60 * 2; // 2분
                 .setSubject(authentication.getName())       // payload "sub": "name"
                 .claim(AUTHORITIES_KEY, authorities)        // payload "auth": "ROLE_USER"
                 .claim(USER_KEY, loginUser)
-                .setExpiration(new Date(now + TOKEN_VALID_MILISECOND))        // payload "exp": 1516239022 (예시)
+                .setExpiration(new Date(now + TOKEN_VALID_TIME))        // payload "exp": 1516239022 (예시)
                 .signWith(key, SignatureAlgorithm.HS256)    // header "alg": "HS512"
                 .compact();
 
@@ -107,7 +107,7 @@ public static final long TOKEN_VALID_MILISECOND = 1000L * 60 * 2; // 2분
         return ReqToken.builder()
                 .grantType(BEARER_TYPE)
                 .accessToken(accessToken)
-                .accessTokenExpiresIn(new Date(now + TOKEN_VALID_MILISECOND).getTime())
+                .accessTokenExpiresIn(new Date(now + TOKEN_VALID_TIME).getTime())
                 .refreshToken(refreshToken)
                 .build();
     }
