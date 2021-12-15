@@ -9,6 +9,8 @@ import com.mile.portal.rest.user.repository.BoardFaqRepository;
 import com.mile.portal.rest.user.repository.BoardNoticeRepository;
 import com.mile.portal.rest.user.repository.BoardQnaRepository;
 import com.querydsl.core.QueryResults;
+import com.querydsl.core.Tuple;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +19,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,6 +45,7 @@ public class BoardService {
 
         // 페이징 첫번째 방법
         // 페이징 데이터가 많지않거나 접속량이 중요하지 않은 곳이라면  해당 방법을 사용해도 문제 없음
+        /*
         QueryResults<BoardNotice> results = jpaQueryFactory.select(qBoardNotice)
                 .from(qBoardNotice)
                 .leftJoin(qBoardNotice.manager, manager)
@@ -53,6 +57,23 @@ public class BoardService {
         long total = results.getTotal();
 
         return new PageImpl<>(boardNoticeList, pageable, total);
+        */
+
+        // 페이징 두번째 방법
+        // 컨텐츠 쿼리
+        List<BoardNotice> boardNoticeList = jpaQueryFactory.select(qBoardNotice)
+                .from(qBoardNotice)
+                .leftJoin(qBoardNotice.manager, manager)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        // count만 하는 쿼리
+        long total = jpaQueryFactory.selectFrom(qBoardNotice)
+                .leftJoin(qBoardNotice.manager, manager)
+                .fetchCount();
+
+        return PageableExecutionUtils.getPage(boardNoticeList, pageable, () -> total);
     }
 
     @CacheEvict(value = "boardCache", allEntries = true)

@@ -5,6 +5,7 @@ import com.mile.portal.rest.common.model.dto.ResBody;
 import com.mile.portal.rest.user.model.domain.BoardNotice;
 import com.mile.portal.rest.user.model.dto.ReqBoard;
 import com.mile.portal.rest.user.service.BoardService;
+import com.querydsl.core.Tuple;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
