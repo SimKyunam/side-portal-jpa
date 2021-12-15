@@ -5,7 +5,6 @@ import com.mile.portal.rest.common.model.dto.ResBody;
 import com.mile.portal.rest.user.model.domain.BoardNotice;
 import com.mile.portal.rest.user.model.dto.ReqBoard;
 import com.mile.portal.rest.user.service.BoardService;
-import com.querydsl.core.Tuple;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -25,7 +24,7 @@ public class BoardController {
 
     private final BoardService boardService;
 
-    @GetMapping("/notice/list")
+    @GetMapping("/notice")
     public ResBody listBoardNotice(@AuthenticationPrincipal LoginUser loginUser,
                                    @RequestParam(required = false) ReqBoard.BoardNotice reqBoardNotice,
                                    @PageableDefault(sort = "id", size = 100, direction = Sort.Direction.DESC) Pageable pageable) {
@@ -46,15 +45,15 @@ public class BoardController {
         return new ResBody(ResBody.CODE_SUCCESS, "", null);
     }
 
-    @GetMapping("/notice/select/{id}")
+    @GetMapping("/notice/{id}")
     public ResBody selectBoardNotice(@PathVariable(name = "id") Long id) {
         BoardNotice boardNotice = boardService.selectBoardNotice(id);
         return new ResBody(ResBody.CODE_SUCCESS, "", boardNotice);
     }
 
-    @DeleteMapping("/notice/delete/{id}")
-    public ResBody deleteBoardNotice(@PathVariable(name = "id") Long id) {
-        boardService.deleteBoardNotice(id);
+    @DeleteMapping("/notice/{ids}")
+    public ResBody deleteBoardNotice(@PathVariable(name = "ids") String ids) {
+        boardService.deleteBoardNotice(ids);
         return new ResBody(ResBody.CODE_SUCCESS, "", null);
     }
 

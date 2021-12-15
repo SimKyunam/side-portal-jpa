@@ -8,21 +8,17 @@ import com.mile.portal.rest.user.model.dto.ReqBoard;
 import com.mile.portal.rest.user.repository.BoardFaqRepository;
 import com.mile.portal.rest.user.repository.BoardNoticeRepository;
 import com.mile.portal.rest.user.repository.BoardQnaRepository;
-import com.querydsl.core.QueryResults;
-import com.querydsl.core.Tuple;
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
@@ -37,7 +33,6 @@ public class BoardService {
     private final BoardQnaRepository boardQnaRepository;
     private final BoardFaqRepository boardFaqRepository;
 
-    @Cacheable(value = "boardCache", key = "#pageable.pageNumber")
     @Transactional(readOnly = true)
     public Page<BoardNotice> listBoardNotice(ReqBoard.BoardNotice boardNotice, Pageable pageable) {
         QBoardNotice qBoardNotice = QBoardNotice.boardNotice;
@@ -76,7 +71,6 @@ public class BoardService {
         return PageableExecutionUtils.getPage(boardNoticeList, pageable, () -> total);
     }
 
-    @CacheEvict(value = "boardCache", allEntries = true)
     public BoardNotice createBoardNotice(ReqBoard.BoardNotice reqBoardNotice) {
         BoardNotice boardNotice = BoardNotice.builder()
                 .title(reqBoardNotice.getTitle())
@@ -91,7 +85,6 @@ public class BoardService {
         return boardNoticeRepository.save(boardNotice);
     }
 
-    @CacheEvict(value = "boardCache")
     public BoardNotice updateBoardNotice(ReqBoard.BoardNotice reqBoardNotice) {
         BoardNotice boardNotice = boardNoticeRepository.findById(reqBoardNotice.getId()).orElseThrow(ResultNotFoundException::new);
         boardNotice.setTitle(reqBoardNotice.getTitle())
@@ -110,7 +103,8 @@ public class BoardService {
     }
 
     @CacheEvict(value = "boardCache")
-    public void deleteBoardNotice(Long id) {
-        boardNoticeRepository.deleteById(id);
+    public void deleteBoardNotice(String ids) {
+        //TODO 여러개 삭제를 할 때 어떻게 할지 고민해봐야겠다.
+        boardNoticeRepository.deleteAllById(Arrays.asList(1L, 2L));
     }
 }

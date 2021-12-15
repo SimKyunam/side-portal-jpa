@@ -1,6 +1,5 @@
 package com.mile.portal.rest.user.model.domain;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.mile.portal.rest.common.model.domain.BaseEntity;
 import com.mile.portal.rest.mng.model.domain.Manager;
 import lombok.*;
@@ -19,6 +18,7 @@ import java.time.LocalDateTime;
 public class BoardNotice extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "board_notice_id")
     private Long id;
 
     @Column(length = 5)

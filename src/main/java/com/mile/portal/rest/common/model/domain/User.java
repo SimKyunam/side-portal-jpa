@@ -3,7 +3,6 @@ package com.mile.portal.rest.common.model.domain;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.mile.portal.rest.common.model.enums.Authority;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -20,6 +19,7 @@ public abstract class User extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private Long id;
 
     @NotBlank
