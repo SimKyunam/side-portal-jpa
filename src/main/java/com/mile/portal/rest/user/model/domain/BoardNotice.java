@@ -1,5 +1,6 @@
 package com.mile.portal.rest.user.model.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.mile.portal.rest.common.model.domain.BaseEntity;
 import com.mile.portal.rest.mng.model.domain.Manager;
 import lombok.*;
@@ -32,10 +33,8 @@ public class BoardNotice extends BaseEntity {
     @Column(columnDefinition = "int(11) default 0")
     private int readCnt;
 
-//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
-private LocalDateTime beginDate;
+    private LocalDateTime beginDate;
 
-    //    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime endDate;
 
     @Column(length = 1)

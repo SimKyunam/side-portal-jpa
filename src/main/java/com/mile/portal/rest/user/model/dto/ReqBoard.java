@@ -30,9 +30,7 @@ public class ReqBoard {
         private String ntcType;
         private String title;
         private String content;
-        @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
         private LocalDateTime beginDate;
-        @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
         private LocalDateTime endDate;
         private String hotYn;
         private String pubYn;

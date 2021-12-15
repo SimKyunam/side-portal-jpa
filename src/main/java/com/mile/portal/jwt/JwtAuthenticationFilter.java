@@ -21,7 +21,7 @@ import java.util.Map;
 @Slf4j
 public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
 
-    private JwtTokenProvider jwtTokenProvider;
+    private final JwtTokenProvider jwtTokenProvider;
 
     public JwtAuthenticationFilter(AuthenticationManager authenticationManager,
                                    JwtTokenProvider jwtTokenProvider) {
@@ -54,32 +54,34 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
                 Claims claims = jwtTokenProvider.getTokenClaims(token);
 
                 //리프레시 토큰인 경우 Access 토큰 재발급
-                if (needRefresh(claims, jwtTokenProvider.TOKEN_VALID_TIME)) {
+                if (needRefresh(claims)) {
                     ObjectMapper mapper = new ObjectMapper();
-                    LoginUser user = mapper.convertValue(claims.get("user", Map.class), LoginUser.class);
+                    LoginUser user = mapper.convertValue(claims.get(JwtTokenProvider.USER_KEY, Map.class), LoginUser.class);
 
                     token = jwtTokenProvider.createToken(user);
                     response.setHeader(JwtTokenProvider.AUTHORITIES_KEY, token);
                 }
+
+                //인증 처리
+                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
+                        (UsernamePasswordAuthenticationToken) jwtTokenProvider.getAuthentication(token);
+                usernamePasswordAuthenticationToken
+                        .setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+                return usernamePasswordAuthenticationToken;
+            } else {
+                response.setHeader(JwtTokenProvider.AUTHORITIES_KEY, "invalidation Token");
             }
-
-            //인증 처리
-            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
-                    (UsernamePasswordAuthenticationToken) jwtTokenProvider.getAuthentication(token);
-            usernamePasswordAuthenticationToken
-                    .setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-            return usernamePasswordAuthenticationToken;
         }
 
         return null;
     }
 
-    private boolean needRefresh(Claims claims, long rangeOfRefreshMillis) {
+    private boolean needRefresh(Claims claims) {
         long exp = claims.getExpiration().getTime();
         if (exp > 0) {
             long remain = exp - System.currentTimeMillis();
-            return remain > rangeOfRefreshMillis ? true : false;
+            return remain > JwtTokenProvider.TOKEN_VALID_TIME;
         }
         return false;
     }

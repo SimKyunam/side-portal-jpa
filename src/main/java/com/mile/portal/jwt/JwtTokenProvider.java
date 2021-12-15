@@ -1,5 +1,6 @@
 package com.mile.portal.jwt;
 
+import com.mile.portal.config.exception.exceptions.TokenExpireException;
 import com.mile.portal.rest.common.model.domain.User;
 import com.mile.portal.rest.common.model.dto.LoginUser;
 import com.mile.portal.rest.common.model.dto.ReqToken;
@@ -24,12 +25,12 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class JwtTokenProvider {
 
-    public static final long TOKEN_VALID_TIME = 1000L * 60 * 60 * 12; // 12시간
-    //    public static final long TOKEN_VALID_TIME = 1000L * 60 * 2; // 2분
-    public static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 7;  // 7일
+    // 12시간
+    public static final long TOKEN_VALID_TIME = 1000L * 60 * 60 * 12;
+    // 7일
+    public static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 7;
 
     public static final String AUTHORITIES_KEY = "Authorization";
-    public static final String REFRESH_TOKEN_KEY = "REFRESH_TOKEN";
     public static final String USER_KEY = "user";
     public static final String BEARER_TYPE = "bearer";
 
@@ -120,9 +121,6 @@ public class JwtTokenProvider {
     public Authentication getAuthentication(String accessToken) {
         // 토큰 복호화
         Claims claims = getTokenClaims(accessToken);
-//        if (claims.get(AUTHORITIES_KEY) == null) {
-//            throw new RuntimeException("권한 정보가 없는 토큰입니다.");
-//        }
 
         // 클레임에서 권한 정보 가져오기
         Collection<? extends GrantedAuthority> authorities =
@@ -152,6 +150,7 @@ public class JwtTokenProvider {
         } catch (IllegalArgumentException e) {
             exceptionMessage = "JWT 토큰이 잘못되었습니다.";
         }
+
         log.info(exceptionMessage);
         return false;
     }
