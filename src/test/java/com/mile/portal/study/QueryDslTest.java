@@ -1,7 +1,7 @@
 package com.mile.portal.study;
 
 import com.mile.portal.rest.common.model.domain.Account;
-import com.mile.portal.rest.common.model.domain.QUser;
+import com.mile.portal.rest.common.model.domain.QAccount;
 import com.mile.portal.rest.user.model.domain.BoardNotice;
 import com.querydsl.core.QueryResults;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import static com.mile.portal.rest.common.model.domain.QUser.user;
+import static com.mile.portal.rest.common.model.domain.QAccount.account;
 import static com.mile.portal.rest.mng.model.domain.QManager.manager;
 import static com.mile.portal.rest.user.model.domain.QBoardNotice.boardNotice;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -37,16 +37,16 @@ class QueryDslTest {
     @Test
     @DisplayName("1. User 목록 조회")
     void test1() {
-        List<Account> fetch = jpaQueryFactory.selectFrom(user).fetch();
+        List<Account> fetch = jpaQueryFactory.selectFrom(account).fetch();
         System.out.println(fetch);
     }
 
     @Test
     @DisplayName("2. User 상세 조회")
     void test2() {
-        QUser user1 = new QUser("user1");
+        QAccount user = new QAccount("user1");
 
-        Account account = jpaQueryFactory.selectFrom(user1).fetchOne();
+        Account account = jpaQueryFactory.selectFrom(user).fetchOne();
         System.out.println(account);
     }
 

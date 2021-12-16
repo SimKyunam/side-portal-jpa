@@ -53,7 +53,7 @@ class ClientRepositoryTest {
                 .loginId("test")
                 .loginPwd(passwordEncoder.encode("1111"))
                 .name("홍길동")
-                .type(Authority.ROLE_USER)
+                .permission(Authority.ROLE_USER)
                 .icisNo("A12345678")
                 .status("ACT")
                 .build();

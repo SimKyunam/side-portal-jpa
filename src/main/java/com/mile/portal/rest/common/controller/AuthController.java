@@ -13,37 +13,37 @@ import javax.validation.Valid;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 public class AuthController {
 
     private final AuthService authService;
 
-    @PostMapping("/common/createUser")
+    @PostMapping("/createUser")
     public ResBody createUser(@Valid @RequestBody ReqLogin userLogin){
         authService.createUser(userLogin);
         return new ResBody(ResBody.CODE_SUCCESS, "", null);
     }
 
-    @PostMapping("/common/loginUser")
+    @PostMapping("/loginUser")
     public ResBody loginUser(@Valid @RequestBody ReqCommon.UserLogin userLogin){
         ReqToken reqToken = authService.loginUser(userLogin);
         return new ResBody(ResBody.CODE_SUCCESS, "", reqToken);
     }
 
-    @PostMapping("/common/createMng")
+    @PostMapping("/createMng")
     public ResBody createMng(@Valid @RequestBody ReqLogin userLogin) {
         authService.createMng(userLogin);
         return new ResBody(ResBody.CODE_SUCCESS, "", null);
     }
 
-    @PostMapping("/common/loginMng")
+    @PostMapping("/loginMng")
     public ResBody loginMng(@Valid @RequestBody ReqCommon.UserLogin userLogin) {
         ReqToken reqToken = authService.loginMng(userLogin);
         return new ResBody(ResBody.CODE_SUCCESS, "", reqToken);
     }
 
-    @GetMapping("/common/getAccessToken")
+    @GetMapping("/getAccessToken")
     public ResBody getAccessToken() {
         return new ResBody(ResBody.CODE_SUCCESS, "", null);
     }

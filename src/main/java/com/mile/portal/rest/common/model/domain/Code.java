@@ -17,11 +17,15 @@ public class Code {
 
     @Id
     @Column(name = "code_id")
-    private String code;
+    private Long id;
+
+    private String codeCd;
 
     private String codeName;
 
     private String codeValue;
+
+    private int ord;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")

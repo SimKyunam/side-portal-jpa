@@ -18,11 +18,11 @@ import static com.mile.portal.rest.user.model.domain.QBoardNotice.boardNotice;
 @RequiredArgsConstructor
 public class BoardNoticeRepositoryImpl implements BoardNoticeRepositoryCustom{
 
-    private final JPAQueryFactory jpaQueryFactory;
+    private final JPAQueryFactory query;
 
     @Override
     public List<BoardNotice> noticeSearchList(ReqBoard.BoardNotice reqBoardNotice, Pageable pageable) {
-        return jpaQueryFactory.select(boardNotice)
+        return query.select(boardNotice)
                 .from(boardNotice)
                 .leftJoin(boardNotice.manager, manager)
                 .offset(pageable.getOffset())
@@ -32,7 +32,7 @@ public class BoardNoticeRepositoryImpl implements BoardNoticeRepositoryCustom{
 
     @Override
     public Long noticeSearchListCnt(ReqBoard.BoardNotice reqBoardNotice) {
-        return jpaQueryFactory.selectFrom(boardNotice)
+        return query.selectFrom(boardNotice)
                 .leftJoin(boardNotice.manager, manager)
                 .fetchCount();
     }
@@ -41,7 +41,7 @@ public class BoardNoticeRepositoryImpl implements BoardNoticeRepositoryCustom{
     public BoardDto noticeSelect(BoardNotice reqBoardNotice) {
         Long id = reqBoardNotice.getId();
 
-        return jpaQueryFactory.select(Projections.fields(BoardDto.class,
+        return query.select(Projections.fields(BoardDto.class,
                 boardNotice.id, boardNotice.title, boardNotice.content, boardNotice.hotYn,
                 boardNotice.pubYn, boardNotice.beginDate, boardNotice.endDate, manager.name.as("managerName")
         ))

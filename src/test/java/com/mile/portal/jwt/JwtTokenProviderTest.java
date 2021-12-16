@@ -56,13 +56,10 @@ class JwtTokenProviderTest {
         System.out.println(body.getSubject());
     }
 
-
     //Account 계정 생성
     Account createAccount() {
-        return Account.builder()
-                .loginId("testUser")
-                .id(1L)
-                .build();
+        return new Account().setLoginId("testUser")
+                .setId(1L);
     }
 
 }
