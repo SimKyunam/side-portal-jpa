@@ -19,12 +19,6 @@ public class AuthController {
 
     private final AuthService authService;
 
-//    @PostMapping("/common/createUser")
-//    public ResBody createUser(@AuthenticationPrincipal LoginUser loginUser, @RequestBody ReqCommBody reqCommBody){
-////        commonService.createUser(reqCommBody);
-//        return new ResBody(ResBody.CODE_SUCCESS, "", null);
-//    }
-
     @PostMapping("/common/createUser")
     public ResBody createUser(@Valid @RequestBody ReqLogin userLogin){
         authService.createUser(userLogin);

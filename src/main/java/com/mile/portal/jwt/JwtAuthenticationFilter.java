@@ -1,7 +1,7 @@
 package com.mile.portal.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mile.portal.rest.common.model.dto.LoginUser;
+import com.mile.portal.rest.common.model.domain.Account;
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -56,15 +56,16 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
                 //리프레시 토큰인 경우 Access 토큰 재발급
                 if (needRefresh(claims)) {
                     ObjectMapper mapper = new ObjectMapper();
-                    LoginUser user = mapper.convertValue(claims.get(JwtTokenProvider.USER_KEY, Map.class), LoginUser.class);
+                    Account account = mapper.convertValue(claims.get(JwtTokenProvider.USER_KEY, Map.class), Account.class);
 
-                    token = jwtTokenProvider.createToken(user);
+                    token = jwtTokenProvider.createToken(account);
                     response.setHeader(JwtTokenProvider.AUTHORITIES_KEY, token);
                 }
 
                 //인증 처리
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
                         (UsernamePasswordAuthenticationToken) jwtTokenProvider.getAuthentication(token);
+
                 usernamePasswordAuthenticationToken
                         .setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 

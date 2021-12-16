@@ -2,8 +2,7 @@ package com.mile.portal.rest.common.service;
 
 import com.mile.portal.jwt.JwtTokenProvider;
 import com.mile.portal.rest.common.model.domain.RefreshToken;
-import com.mile.portal.rest.common.model.domain.User;
-import com.mile.portal.rest.common.model.dto.LoginUser;
+import com.mile.portal.rest.common.model.domain.Account;
 import com.mile.portal.rest.common.model.dto.ReqToken;
 import com.mile.portal.rest.common.model.enums.Authority;
 import com.mile.portal.rest.common.repository.RefreshTokenRepository;
@@ -37,7 +36,7 @@ public class LoginService {
     private final ManagerRepository managerRepository;
 
     /** 공통 처리 */
-    public ReqToken loginAuthenticate(LoginUser user) {
+    public ReqToken loginAuthenticate(Account user) {
         // 1. Login ID/PW 를 기반으로 AuthenticationToken 생성
         UsernamePasswordAuthenticationToken authenticationToken = user.toAuthentication();
 
@@ -51,27 +50,27 @@ public class LoginService {
                 .collect(Collectors.joining(","));
 
         String loginId = authentication.getName();
-        User userDomain;
+        Account accountDomain;
         if(authorities.contains(Authority.ROLE_USER.getAuthority())){
-            userDomain = clientRepository.findByLoginId(loginId).orElseThrow(RuntimeException::new);
+            accountDomain = clientRepository.findByLoginId(loginId).orElseThrow(RuntimeException::new);
         } else {
-            userDomain = managerRepository.findByLoginId(loginId).orElseThrow(RuntimeException::new);
+            accountDomain = managerRepository.findByLoginId(loginId).orElseThrow(RuntimeException::new);
         }
 
-        ReqToken tokenDto = jwtTokenProvider.generateTokenDto(authentication, userDomain);
+        ReqToken tokenDto = jwtTokenProvider.generateTokenDto(authentication, accountDomain);
         String format = DateTimeUtil.millisToDate(tokenDto.getAccessTokenExpiresIn(),
                 "YYYY-MM-DD HH:mm:ss.SSS");
 
         if(authorities.contains(Authority.ROLE_USER.getAuthority())){
-            userDomain.setTokenId(tokenDto.getAccessToken());
-            userDomain.setTokenExprDt(format);
-            Client client = (Client) userDomain;
+            accountDomain.setTokenId(tokenDto.getAccessToken());
+            accountDomain.setTokenExprDt(format);
+            Client client = (Client) accountDomain;
 
             clientRepository.save(client);
         } else {
-            userDomain.setTokenId(tokenDto.getAccessToken());
-            userDomain.setTokenExprDt(format);
-            Manager manager = (Manager) userDomain;
+            accountDomain.setTokenId(tokenDto.getAccessToken());
+            accountDomain.setTokenExprDt(format);
+            Manager manager = (Manager) accountDomain;
 
             managerRepository.save(manager);
         }

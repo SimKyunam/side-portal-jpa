@@ -25,9 +25,6 @@ class BoardServiceTest {
     BoardService boardService;
 
     @MockBean
-    JPAQueryFactory jpaQueryFactory;
-
-    @MockBean
     BoardNoticeRepository boardNoticeRepository;
 
     @DisplayName("1. 공지사항 생성")

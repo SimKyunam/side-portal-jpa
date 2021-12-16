@@ -1,8 +1,6 @@
 package com.mile.portal.jwt;
 
-import com.mile.portal.config.exception.exceptions.TokenExpireException;
-import com.mile.portal.rest.common.model.domain.User;
-import com.mile.portal.rest.common.model.dto.LoginUser;
+import com.mile.portal.rest.common.model.domain.Account;
 import com.mile.portal.rest.common.model.dto.ReqToken;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -12,7 +10,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Key;
@@ -40,13 +37,13 @@ public class JwtTokenProvider {
         this.key = Keys.hmacShaKeyFor(secret.getBytes());
     }
 
-    public String createToken(LoginUser user) {
+    public String createToken(Account account) {
         Date now = new Date();
 
         return Jwts.builder()
-                .setSubject(user.getId().toString())
-                .claim(AUTHORITIES_KEY, user.getPermission())
-                .claim(USER_KEY, user) //계정
+                .setSubject(account.getId().toString())
+                .claim(AUTHORITIES_KEY, account.getPermission())
+                .claim(USER_KEY, account) //계정
                 .setExpiration(new Date(now.getTime() + TOKEN_VALID_TIME)) // set Expire Time
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
@@ -71,14 +68,13 @@ public class JwtTokenProvider {
                 .getSubject();
     }
 
-    public ReqToken generateTokenDto(Authentication authentication, User user) {
-        // User -> LoginUser 컨버팅
-        LoginUser loginUser = LoginUser.builder()
-                .id(user.getId())
-                .loginId(user.getLoginId())
-                .username(user.getName())
-                .permission(user.getPermission())
-                .build();
+    public ReqToken generateTokenDto(Authentication authentication, Account account) {
+        // User -> Account 컨버팅
+        Account accountInfo = new Account()
+                .setId(account.getId())
+                .setLoginId(account.getLoginId())
+                .setName(account.getName())
+                .setPermission(account.getPermission());
 
         // 권한들 가져오기
         String authorities = authentication.getAuthorities().stream()
@@ -91,7 +87,7 @@ public class JwtTokenProvider {
         String accessToken = Jwts.builder()
                 .setSubject(authentication.getName())       // payload "sub": "name"
                 .claim(AUTHORITIES_KEY, authorities)        // payload "auth": "ROLE_USER"
-                .claim(USER_KEY, loginUser)
+                .claim(USER_KEY, accountInfo)
                 .setExpiration(new Date(now + TOKEN_VALID_TIME))        // payload "exp": 1516239022 (예시)
                 .signWith(key, SignatureAlgorithm.HS256)    // header "alg": "HS512"
                 .compact();
@@ -100,7 +96,7 @@ public class JwtTokenProvider {
         String refreshToken = Jwts.builder()
                 .setSubject(authentication.getName())       // payload "sub": "name"
                 .claim(AUTHORITIES_KEY, authorities)        // payload "auth": "ROLE_USER"
-                .claim(USER_KEY, loginUser)
+                .claim(USER_KEY, accountInfo)
                 .setExpiration(new Date(now + REFRESH_TOKEN_EXPIRE_TIME))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
@@ -128,11 +124,7 @@ public class JwtTokenProvider {
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
 
-        // UserDetails 객체를 만들어서 Authentication 리턴
-        UserDetails principal = new org.springframework.security.core.userdetails
-                .User(claims.getSubject(), "", authorities);
-
-        return new UsernamePasswordAuthenticationToken(principal, "", authorities);
+        return new UsernamePasswordAuthenticationToken(new Account(claims), "", authorities);
     }
 
     // Jwt Token의 유효성 및 만료 기간 검사

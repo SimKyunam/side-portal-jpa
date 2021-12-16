@@ -1,7 +1,7 @@
 package com.mile.portal.study;
 
+import com.mile.portal.rest.common.model.domain.Account;
 import com.mile.portal.rest.common.model.domain.QUser;
-import com.mile.portal.rest.common.model.domain.User;
 import com.mile.portal.rest.user.model.domain.BoardNotice;
 import com.querydsl.core.QueryResults;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -37,7 +37,7 @@ class QueryDslTest {
     @Test
     @DisplayName("1. User 목록 조회")
     void test1() {
-        List<User> fetch = jpaQueryFactory.selectFrom(user).fetch();
+        List<Account> fetch = jpaQueryFactory.selectFrom(user).fetch();
         System.out.println(fetch);
     }
 
@@ -46,8 +46,8 @@ class QueryDslTest {
     void test2() {
         QUser user1 = new QUser("user1");
 
-        User user = jpaQueryFactory.selectFrom(user1).fetchOne();
-        System.out.println(user);
+        Account account = jpaQueryFactory.selectFrom(user1).fetchOne();
+        System.out.println(account);
     }
 
     @Test

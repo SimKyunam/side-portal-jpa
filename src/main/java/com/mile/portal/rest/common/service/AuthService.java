@@ -1,6 +1,5 @@
 package com.mile.portal.rest.common.service;
 
-import com.mile.portal.rest.common.model.dto.LoginUser;
 import com.mile.portal.rest.common.model.dto.ReqCommon;
 import com.mile.portal.rest.common.model.dto.ReqLogin;
 import com.mile.portal.rest.common.model.dto.ReqToken;
@@ -38,18 +37,18 @@ public class AuthService {
                 .loginId(userLogin.getLoginId())
                 .loginPwd(passwordEncoder.encode(userLogin.getLoginPwd()))
                 .name(userLogin.getUserName())
-                .type(userLogin.getUserType())
-                .icisNo(userLogin.getIcisNo())
+                .permission(userLogin.getUserType())
                 .status(userLogin.getStatus())
+                .icisNo(userLogin.getIcisNo())
                 .build();
 
         return clientRepository.save(user);
     }
 
     public ReqToken loginUser(ReqCommon.UserLogin userLogin) {
-        LoginUser user = LoginUser.builder()
+        Client user = Client.builder()
                 .loginId(userLogin.getLoginId())
-                .password(userLogin.getLoginPwd())
+                .loginPwd(userLogin.getLoginPwd())
                 .permission(Authority.ROLE_USER)
                 .build();
 
@@ -62,27 +61,28 @@ public class AuthService {
             throw new RuntimeException("이미 가입되어 있는 유저입니다.");
         }
 
-        Manager manager = Manager.builder()
+        Manager manager = (Manager) Manager.builder()
                 .loginId(userLogin.getLoginId())
                 .loginPwd(passwordEncoder.encode(userLogin.getLoginPwd()))
                 .name(userLogin.getUserName())
-                .type(userLogin.getUserType())
-                .email(userLogin.getEmail())
-                .phone(userLogin.getPhone())
+                .permission(userLogin.getUserType())
                 .status(userLogin.getStatus())
                 .build();
+
+        manager.setEmail(userLogin.getEmail());
+        manager.setPhone(userLogin.getPhone());
 
         return managerRepository.save(manager);
     }
 
     public ReqToken loginMng(ReqCommon.UserLogin userLogin) {
-        LoginUser user = LoginUser.builder()
+        Manager manager = Manager.builder()
                 .loginId(userLogin.getLoginId())
-                .password(userLogin.getLoginPwd())
+                .loginPwd(userLogin.getLoginPwd())
                 .permission(Authority.ROLE_ADMIN)
                 .build();
 
         // 로그인 처리
-        return loginService.loginAuthenticate(user);
+        return loginService.loginAuthenticate(manager);
     }
 }

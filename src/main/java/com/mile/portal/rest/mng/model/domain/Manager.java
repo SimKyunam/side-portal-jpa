@@ -1,27 +1,23 @@
 package com.mile.portal.rest.mng.model.domain;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.mile.portal.rest.common.model.domain.BaseEntity;
-import com.mile.portal.rest.common.model.domain.User;
+import com.mile.portal.rest.common.model.domain.Account;
 import com.mile.portal.rest.common.model.enums.Authority;
 import com.mile.portal.rest.user.model.domain.BoardFaq;
 import com.mile.portal.rest.user.model.domain.BoardNotice;
 import com.mile.portal.rest.user.model.domain.BoardQna;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
+
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @DiscriminatorValue("A")
-public class Manager extends User {
+@EqualsAndHashCode(callSuper = true)
+public class Manager extends Account {
 
     @Column(length = 20)
     private String phone;
@@ -39,13 +35,13 @@ public class Manager extends User {
 
     @Builder
     public Manager(Long id, String name, String loginPwd,
-                   String loginId, Authority type, String status,
+                   String loginId, Authority permission, String status,
                    String tokenId, String tokenExprDt, String lastLoginDt,
                    String lastLoginIp, String loginFails,
                    String loginExprDt, String phone, String email) {
 
         super(id, name, loginPwd,
-                loginId, type, status,
+                loginId, permission, status,
                 tokenId, tokenExprDt, lastLoginDt,
                 lastLoginIp, loginFails, loginExprDt);
 

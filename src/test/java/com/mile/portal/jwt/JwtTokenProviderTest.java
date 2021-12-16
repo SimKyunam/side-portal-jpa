@@ -1,6 +1,6 @@
 package com.mile.portal.jwt;
 
-import com.mile.portal.rest.common.model.dto.LoginUser;
+import com.mile.portal.rest.common.model.domain.Account;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
@@ -9,9 +9,6 @@ import io.jsonwebtoken.security.Keys;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-
-import javax.annotation.PostConstruct;
 
 import java.security.Key;
 import java.util.Date;
@@ -32,11 +29,11 @@ class JwtTokenProviderTest {
     @DisplayName("1. 토큰 생성")
     void test1() {
         Date now = new Date();
-        LoginUser loginUser = createLoginUser();
+        Account account = createAccount();
 
         JwtBuilder builder = Jwts.builder()
-                .setSubject(loginUser.getId().toString())
-                .claim("user", loginUser); //계정
+                .setSubject(account.getId().toString())
+                .claim("user", account); //계정
 
         String token = builder
                 .setIssuedAt(now)
@@ -60,9 +57,9 @@ class JwtTokenProviderTest {
     }
 
 
-    //LoginUser 계정 생성
-    LoginUser createLoginUser() {
-        return LoginUser.builder()
+    //Account 계정 생성
+    Account createAccount() {
+        return Account.builder()
                 .loginId("testUser")
                 .id(1L)
                 .build();

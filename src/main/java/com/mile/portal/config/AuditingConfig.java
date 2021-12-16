@@ -1,6 +1,6 @@
 package com.mile.portal.config;
 
-import com.mile.portal.rest.common.model.dto.LoginUser;
+import com.mile.portal.rest.common.model.domain.Account;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
@@ -25,9 +25,9 @@ public class AuditingConfig {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
             if(authentication != null) {
-                if(authentication.getPrincipal() instanceof LoginUser) {
-                    LoginUser loginUser = (LoginUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-                    return Optional.of(loginUser.getId());
+                if(authentication.getPrincipal() instanceof Account) {
+                    Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+                    return Optional.of(account.getId());
                 }
             }
 
