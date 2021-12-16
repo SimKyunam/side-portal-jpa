@@ -4,6 +4,7 @@ import com.mile.portal.rest.common.model.domain.BaseEntity;
 import com.mile.portal.rest.mng.model.domain.Manager;
 import lombok.*;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
+@Where(clause = "deleted is null")
 public class BoardNotice extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -3,6 +3,7 @@ package com.mile.portal.rest.user.controller;
 import com.mile.portal.rest.common.model.dto.LoginUser;
 import com.mile.portal.rest.common.model.dto.ResBody;
 import com.mile.portal.rest.user.model.domain.BoardNotice;
+import com.mile.portal.rest.user.model.dto.BoardDto;
 import com.mile.portal.rest.user.model.dto.ReqBoard;
 import com.mile.portal.rest.user.service.BoardService;
 import lombok.RequiredArgsConstructor;
@@ -47,7 +48,7 @@ public class BoardController {
 
     @GetMapping("/notice/{id}")
     public ResBody selectBoardNotice(@PathVariable(name = "id") Long id) {
-        BoardNotice boardNotice = boardService.selectBoardNotice(id);
+        BoardDto boardNotice = boardService.selectBoardNotice(id);
         return new ResBody(ResBody.CODE_SUCCESS, "", boardNotice);
     }
 

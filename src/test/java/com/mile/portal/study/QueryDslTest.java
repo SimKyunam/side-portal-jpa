@@ -9,10 +9,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -76,7 +74,26 @@ class QueryDslTest {
     @Test
     @DisplayName("4. 페이징 쿼리 - 컨텐츠, 카운트 따로")
     void test4() {
+        Pageable pageable = PageRequest.of(0, 5, Sort.Direction.DESC, "id");
+        IntStream.range(0, 5).forEach(i -> entityManager.persist(createNotice()));
 
+        // 페이징 두번째 방법
+        // 컨텐츠 쿼리
+        List<BoardNotice> boardNoticeList = jpaQueryFactory.select(boardNotice)
+                .from(boardNotice)
+                .leftJoin(boardNotice.manager, manager)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        // count만 하는 쿼리
+        long total = jpaQueryFactory.selectFrom(boardNotice)
+                .leftJoin(boardNotice.manager, manager)
+                .fetchCount();
+
+        Page<BoardNotice> page = PageableExecutionUtils.getPage(boardNoticeList, pageable, () -> total);
+
+        assertEquals(page.getSize(), 5);
     }
 
     BoardNotice createNotice() {

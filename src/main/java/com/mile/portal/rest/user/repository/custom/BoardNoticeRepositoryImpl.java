@@ -1,0 +1,53 @@
+package com.mile.portal.rest.user.repository.custom;
+
+import com.mile.portal.rest.user.model.domain.BoardNotice;
+import com.mile.portal.rest.user.model.dto.BoardDto;
+import com.mile.portal.rest.user.model.dto.ReqBoard;
+import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+import static com.mile.portal.rest.mng.model.domain.QManager.manager;
+import static com.mile.portal.rest.user.model.domain.QBoardNotice.boardNotice;
+
+@Repository
+@RequiredArgsConstructor
+public class BoardNoticeRepositoryImpl implements BoardNoticeRepositoryCustom{
+
+    private final JPAQueryFactory jpaQueryFactory;
+
+    @Override
+    public List<BoardNotice> noticeSearchList(ReqBoard.BoardNotice reqBoardNotice, Pageable pageable) {
+        return jpaQueryFactory.select(boardNotice)
+                .from(boardNotice)
+                .leftJoin(boardNotice.manager, manager)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+    }
+
+    @Override
+    public Long noticeSearchListCnt(ReqBoard.BoardNotice reqBoardNotice) {
+        return jpaQueryFactory.selectFrom(boardNotice)
+                .leftJoin(boardNotice.manager, manager)
+                .fetchCount();
+    }
+
+    @Override
+    public BoardDto noticeSelect(BoardNotice reqBoardNotice) {
+        Long id = reqBoardNotice.getId();
+
+        return jpaQueryFactory.select(Projections.fields(BoardDto.class,
+                boardNotice.id, boardNotice.title, boardNotice.content, boardNotice.hotYn,
+                boardNotice.pubYn, boardNotice.beginDate, boardNotice.endDate, manager.name.as("managerName")
+        ))
+                .from(boardNotice)
+                .where(boardNotice.id.eq(id))
+                .leftJoin(boardNotice.manager, manager)
+                .fetchOne();
+    }
+}

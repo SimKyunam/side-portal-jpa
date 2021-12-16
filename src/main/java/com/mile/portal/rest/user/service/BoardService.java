@@ -4,10 +4,12 @@ import com.mile.portal.config.exception.exceptions.ResultNotFoundException;
 import com.mile.portal.rest.mng.model.domain.QManager;
 import com.mile.portal.rest.user.model.domain.BoardNotice;
 import com.mile.portal.rest.user.model.domain.QBoardNotice;
+import com.mile.portal.rest.user.model.dto.BoardDto;
 import com.mile.portal.rest.user.model.dto.ReqBoard;
 import com.mile.portal.rest.user.repository.BoardFaqRepository;
 import com.mile.portal.rest.user.repository.BoardNoticeRepository;
 import com.mile.portal.rest.user.repository.BoardQnaRepository;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,8 +20,12 @@ import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.mile.portal.rest.user.model.domain.QBoardNotice.boardNotice;
+import static com.mile.portal.rest.mng.model.domain.QManager.manager;
+
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -27,46 +33,18 @@ import java.util.List;
 @Transactional
 public class BoardService {
 
-    private final JPAQueryFactory jpaQueryFactory;
-
     private final BoardNoticeRepository boardNoticeRepository;
     private final BoardQnaRepository boardQnaRepository;
     private final BoardFaqRepository boardFaqRepository;
 
     @Transactional(readOnly = true)
-    public Page<BoardNotice> listBoardNotice(ReqBoard.BoardNotice boardNotice, Pageable pageable) {
-        QBoardNotice qBoardNotice = QBoardNotice.boardNotice;
-        QManager manager = QManager.manager;
+    public Page<BoardNotice> listBoardNotice(ReqBoard.BoardNotice reqBoardNotice, Pageable pageable) {
 
-        // 페이징 첫번째 방법
-        // 페이징 데이터가 많지않거나 접속량이 중요하지 않은 곳이라면  해당 방법을 사용해도 문제 없음
-        /*
-        QueryResults<BoardNotice> results = jpaQueryFactory.select(qBoardNotice)
-                .from(qBoardNotice)
-                .leftJoin(qBoardNotice.manager, manager)
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetchResults();
-
-        List<BoardNotice> boardNoticeList = results.getResults();
-        long total = results.getTotal();
-
-        return new PageImpl<>(boardNoticeList, pageable, total);
-        */
-
-        // 페이징 두번째 방법
         // 컨텐츠 쿼리
-        List<BoardNotice> boardNoticeList = jpaQueryFactory.select(qBoardNotice)
-                .from(qBoardNotice)
-                .leftJoin(qBoardNotice.manager, manager)
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
+        List<BoardNotice> boardNoticeList = boardNoticeRepository.noticeSearchList(reqBoardNotice, pageable);
 
-        // count만 하는 쿼리
-        long total = jpaQueryFactory.selectFrom(qBoardNotice)
-                .leftJoin(qBoardNotice.manager, manager)
-                .fetchCount();
+        // count 하는 쿼리
+        long total = boardNoticeRepository.noticeSearchListCnt(reqBoardNotice);
 
         return PageableExecutionUtils.getPage(boardNoticeList, pageable, () -> total);
     }
@@ -98,13 +76,19 @@ public class BoardService {
         return boardNoticeRepository.save(boardNotice);
     }
 
-    public BoardNotice selectBoardNotice(Long id) {
-        return boardNoticeRepository.findById(id).orElseThrow(ResultNotFoundException::new);
+    @Transactional(readOnly = true)
+    public BoardDto selectBoardNotice(Long id) {
+        BoardNotice boardNotice = boardNoticeRepository.findById(id).orElseThrow(ResultNotFoundException::new);
+        return boardNoticeRepository.noticeSelect(boardNotice);
     }
 
-    @CacheEvict(value = "boardCache")
     public void deleteBoardNotice(String ids) {
-        //TODO 여러개 삭제를 할 때 어떻게 할지 고민해봐야겠다.
-        boardNoticeRepository.deleteAllById(Arrays.asList(1L, 2L));
+        List<Long> idList = Arrays.stream(ids.split(","))
+                .map(String::trim)
+                .filter(str -> !str.isEmpty())
+                .map(Long::parseLong)
+                .collect(Collectors.toList());
+
+        boardNoticeRepository.deleteAllById(idList);
     }
 }

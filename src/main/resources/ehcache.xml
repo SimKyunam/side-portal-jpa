@@ -9,7 +9,7 @@
         <jsr107:defaults enable-management="true" enable-statistics="true"/>
     </service>
 
-    <persistence directory="cacheDir/file"/>
+    <persistence directory="cacheDir"/>
 
     <cache-template name="defaultTemplate">
         <expiry>
