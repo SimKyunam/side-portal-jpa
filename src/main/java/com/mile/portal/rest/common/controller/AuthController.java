@@ -1,9 +1,9 @@
 package com.mile.portal.rest.common.controller;
 
-import com.mile.portal.rest.common.model.dto.ReqCommon;
-import com.mile.portal.rest.common.model.dto.ReqLogin;
-import com.mile.portal.rest.common.model.dto.ReqToken;
-import com.mile.portal.rest.common.model.dto.ResBody;
+import com.mile.portal.rest.common.model.comm.ReqCommon;
+import com.mile.portal.rest.common.model.comm.ReqLogin;
+import com.mile.portal.rest.common.model.comm.ReqToken;
+import com.mile.portal.rest.common.model.comm.ResBody;
 import com.mile.portal.rest.common.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

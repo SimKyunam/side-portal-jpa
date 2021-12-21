@@ -1,7 +1,7 @@
 package com.mile.portal.rest.user.controller;
 
 import com.mile.portal.rest.common.model.domain.Account;
-import com.mile.portal.rest.common.model.dto.ResBody;
+import com.mile.portal.rest.common.model.comm.ResBody;
 import com.mile.portal.rest.user.model.domain.BoardNotice;
 import com.mile.portal.rest.user.model.dto.BoardDto;
 import com.mile.portal.rest.user.model.dto.ReqBoard;

@@ -1,18 +1,14 @@
 package com.mile.portal.rest.common.service;
 
 import com.mile.portal.rest.common.model.domain.Account;
-import com.mile.portal.rest.common.model.dto.AccountAdaptor;
+import com.mile.portal.rest.common.model.comm.AccountAdaptor;
 import com.mile.portal.rest.common.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Collections;
 
 @Service
 @RequiredArgsConstructor

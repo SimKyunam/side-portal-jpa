@@ -3,7 +3,7 @@ package com.mile.portal.rest.common.service;
 import com.mile.portal.jwt.JwtTokenProvider;
 import com.mile.portal.rest.common.model.domain.RefreshToken;
 import com.mile.portal.rest.common.model.domain.Account;
-import com.mile.portal.rest.common.model.dto.ReqToken;
+import com.mile.portal.rest.common.model.comm.ReqToken;
 import com.mile.portal.rest.common.model.enums.Authority;
 import com.mile.portal.rest.common.repository.RefreshTokenRepository;
 import com.mile.portal.rest.mng.model.domain.Manager;

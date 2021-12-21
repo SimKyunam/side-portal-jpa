@@ -4,7 +4,7 @@ import com.mile.portal.config.exception.exceptions.BadRequestException;
 import com.mile.portal.config.exception.exceptions.ResultNotFoundException;
 import com.mile.portal.config.exception.exceptions.TokenExpireException;
 import com.mile.portal.config.exception.exceptions.message.ExceptionMessage;
-import com.mile.portal.rest.common.model.dto.ResBody;
+import com.mile.portal.rest.common.model.comm.ResBody;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,4 +1,4 @@
-package com.mile.portal.rest.common.model.dto;
+package com.mile.portal.rest.common.model.comm;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -61,5 +61,17 @@ public class ReqCommon {
         private String smsSecret;
         private String smsId;
         private String smsPwd;
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Code {
+        private Long codeId;
+        private String codeCd;
+        private String codeValue;
+        private int ord;
+        private Long parentId;
     }
 }

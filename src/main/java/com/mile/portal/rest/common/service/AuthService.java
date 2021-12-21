@@ -1,8 +1,8 @@
 package com.mile.portal.rest.common.service;
 
-import com.mile.portal.rest.common.model.dto.ReqCommon;
-import com.mile.portal.rest.common.model.dto.ReqLogin;
-import com.mile.portal.rest.common.model.dto.ReqToken;
+import com.mile.portal.rest.common.model.comm.ReqCommon;
+import com.mile.portal.rest.common.model.comm.ReqLogin;
+import com.mile.portal.rest.common.model.comm.ReqToken;
 import com.mile.portal.rest.common.model.enums.Authority;
 import com.mile.portal.rest.common.repository.UserRepository;
 import com.mile.portal.rest.mng.model.domain.Manager;

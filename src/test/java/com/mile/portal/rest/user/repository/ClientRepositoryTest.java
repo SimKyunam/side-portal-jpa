@@ -1,8 +1,6 @@
 package com.mile.portal.rest.user.repository;
 
-import com.mile.portal.rest.common.model.dto.ReqLogin;
 import com.mile.portal.rest.common.model.enums.Authority;
-import com.mile.portal.rest.common.repository.UserRepository;
 import com.mile.portal.rest.user.model.domain.Client;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

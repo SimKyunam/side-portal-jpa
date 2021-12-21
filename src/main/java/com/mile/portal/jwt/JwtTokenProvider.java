@@ -1,7 +1,7 @@
 package com.mile.portal.jwt;
 
 import com.mile.portal.rest.common.model.domain.Account;
-import com.mile.portal.rest.common.model.dto.ReqToken;
+import com.mile.portal.rest.common.model.comm.ReqToken;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
