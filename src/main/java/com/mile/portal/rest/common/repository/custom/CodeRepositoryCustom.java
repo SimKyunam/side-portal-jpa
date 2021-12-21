@@ -10,4 +10,6 @@ import java.util.List;
 public interface CodeRepositoryCustom {
     List<Code> findTreeAll();
     List<Code> findTreeCode(String code, String childCode);
+
+    CodeDto findParentCode(String parentCode);
 }

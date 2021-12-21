@@ -2,8 +2,13 @@ package com.mile.portal.study;
 
 import com.mile.portal.rest.common.model.domain.Account;
 import com.mile.portal.rest.common.model.domain.QAccount;
+import com.mile.portal.rest.common.model.domain.QCode;
+import com.mile.portal.rest.common.model.dto.CodeDto;
 import com.mile.portal.rest.user.model.domain.BoardNotice;
 import com.querydsl.core.QueryResults;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,6 +27,7 @@ import java.util.stream.IntStream;
 import static com.mile.portal.rest.common.model.domain.QAccount.account;
 import static com.mile.portal.rest.mng.model.domain.QManager.manager;
 import static com.mile.portal.rest.user.model.domain.QBoardNotice.boardNotice;
+import static com.querydsl.core.types.ExpressionUtils.count;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
@@ -94,6 +100,28 @@ class QueryDslTest {
         Page<BoardNotice> page = PageableExecutionUtils.getPage(boardNoticeList, pageable, () -> total);
 
         assertEquals(page.getSize(), 5);
+    }
+
+    @Test
+    @DisplayName("5. 서브 쿼리")
+    void test5() {
+        QCode parent = new QCode("parent");
+        QCode child = new QCode("child");
+
+        CodeDto codeDto = jpaQueryFactory
+                .select(Projections.fields(CodeDto.class,
+                        parent.code, parent.codeName, parent.codeValue,
+                        ExpressionUtils.as(
+                                JPAExpressions.select(count(child.code))
+                                        .from(child)
+                                        .where(child.parent.eq(parent)),
+                                "childCount")
+                ))
+                .from(parent)
+                .where(parent.code.eq("resourceCd"))
+                .fetchOne();
+
+        assertEquals(codeDto.getChildCount(), 3);
     }
 
     BoardNotice createNotice() {

@@ -68,10 +68,11 @@ public class ReqCommon {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Code {
-        private Long codeId;
-        private String codeCd;
+        @NotBlank
+        private String codeId;
+        @NotBlank
+        private String codeName;
         private String codeValue;
-        private int ord;
-        private Long parentId;
+        private String parentId;
     }
 }

@@ -14,12 +14,13 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Getter @Setter
-public class Code {
+public class Code extends BaseEntity{
 
     @Id
     @Column(name = "code_id")
     private String code;
 
+    @Column(nullable = false)
     private String codeName;
 
     private String codeValue;

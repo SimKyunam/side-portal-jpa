@@ -29,9 +29,6 @@ public class BoardController {
     public ResBody listBoardNotice(@AuthenticationPrincipal Account account,
                                    @RequestParam(required = false) ReqBoard.BoardNotice reqBoardNotice,
                                    @PageableDefault(sort = "id", size = 100, direction = Sort.Direction.DESC) Pageable pageable) {
-
-        log.info(String.valueOf(account));
-
         Page<BoardNotice> boardNoticeList = boardService.listBoardNotice(reqBoardNotice, pageable);
         return new ResBody(ResBody.CODE_SUCCESS, "", boardNoticeList);
     }
@@ -39,8 +36,6 @@ public class BoardController {
     @PostMapping("/notice/create")
     public ResBody createBoardNotice(@AuthenticationPrincipal Account account,
                                      @Valid @RequestBody ReqBoard.BoardNotice reqBoardNotice) {
-        log.info(String.valueOf(account));
-
         boardService.createBoardNotice(reqBoardNotice);
         return new ResBody(ResBody.CODE_SUCCESS, "", null);
     }
@@ -48,8 +43,6 @@ public class BoardController {
     @PostMapping("/notice/update")
     public ResBody updateBoardNotice(@AuthenticationPrincipal Account account,
                                      @Valid @RequestBody ReqBoard.BoardNotice reqBoardNotice) {
-        log.info(String.valueOf(account));
-
         boardService.updateBoardNotice(reqBoardNotice);
         return new ResBody(ResBody.CODE_SUCCESS, "", null);
     }
@@ -57,8 +50,6 @@ public class BoardController {
     @GetMapping("/notice/{id}")
     public ResBody selectBoardNotice(@AuthenticationPrincipal Account account,
                                      @PathVariable(name = "id") Long id) {
-        log.info(String.valueOf(account));
-
         BoardDto boardNotice = boardService.selectBoardNotice(id);
         return new ResBody(ResBody.CODE_SUCCESS, "", boardNotice);
     }
@@ -66,8 +57,6 @@ public class BoardController {
     @DeleteMapping("/notice/{ids}")
     public ResBody deleteBoardNotice(@AuthenticationPrincipal Account account,
                                      @PathVariable(name = "ids") String ids) {
-        log.info(String.valueOf(account));
-
         boardService.deleteBoardNotice(ids);
         return new ResBody(ResBody.CODE_SUCCESS, "", null);
     }

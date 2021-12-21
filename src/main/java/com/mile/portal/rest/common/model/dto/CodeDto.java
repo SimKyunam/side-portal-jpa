@@ -14,10 +14,13 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CodeDto {
-    private Long codeId;
-    private String codeCd;
+    private String code;
+    private String codeName;
     private String codeValue;
     private int ord;
-    private Long parentId;
+    private int depth;
+
     private List<Code> child = new ArrayList<>();
+
+    private Long childCount;
 }

@@ -4,6 +4,7 @@ import com.mile.portal.rest.common.model.domain.BaseEntity;
 import com.mile.portal.rest.mng.model.domain.Manager;
 import lombok.*;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
@@ -32,7 +33,7 @@ public class BoardNotice extends BaseEntity {
     @Lob
     private String content;
 
-    @Column(columnDefinition = "int(11) default 0")
+    @ColumnDefault(value = "0")
     private int readCnt;
 
     private LocalDateTime beginDate;

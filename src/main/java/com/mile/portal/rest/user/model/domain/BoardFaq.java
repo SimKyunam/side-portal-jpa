@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
@@ -32,7 +33,7 @@ public class BoardFaq extends BaseEntity {
     @Lob
     private String content;
 
-    @Column(columnDefinition = "int(11) default 0")
+    @ColumnDefault(value = "0")
     private int readCnt;
 
     @ManyToOne
