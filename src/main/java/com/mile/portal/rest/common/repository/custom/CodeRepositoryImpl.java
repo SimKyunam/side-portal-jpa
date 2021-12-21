@@ -21,7 +21,7 @@ public class CodeRepositoryImpl implements CodeRepositoryCustom{
 
         return query.selectFrom(parent)
                 .distinct()
-                .leftJoin(parent, child.parent)
+                .leftJoin(parent.child, child)
                 .where(parent.parent.isNull())
                 .fetch();
     }

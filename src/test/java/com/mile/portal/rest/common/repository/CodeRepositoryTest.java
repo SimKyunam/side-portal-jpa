@@ -21,4 +21,10 @@ class CodeRepositoryTest {
     void test1() {
         System.out.println(codeRepository.findTreeAll());
     }
+
+    @Test
+    @DisplayName("2. 목록")
+    void test2() {
+        System.out.println(codeRepository.findTreeAll());
+    }
 }

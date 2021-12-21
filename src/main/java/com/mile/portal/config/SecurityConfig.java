@@ -48,7 +48,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/v1/mng/**").hasRole("ADMIN")
                 .antMatchers(
                         "/exception/**", "/common/**", "/h2-console/**"
-                        , "/api/v1/common/**"
+                        , "/api/v1/common/**", "/api/v1/auth/**"
                 ).permitAll()
                 .anyRequest().authenticated()
 

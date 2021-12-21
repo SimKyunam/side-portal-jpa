@@ -1,11 +1,10 @@
 package com.mile.portal.rest.common.model.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -13,6 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode
 public class Code {
 
     @Id
@@ -27,10 +27,11 @@ public class Code {
 
     private int ord;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "parent_id")
     private Code parent;
 
     @OneToMany(mappedBy = "parent")
-    private List<Code> child;
+    @ToString.Exclude
+    private List<Code> child = new ArrayList<>();
 }
