@@ -48,7 +48,7 @@ public class CodeRepositoryImpl implements CodeRepositoryCustom {
     }
 
     @Override
-    public CodeDto findParentCode(String parentCode) {
+    public CodeDto findParentCode(String parentId, String codeId) {
         QCode parent = new QCode("parent");
         QCode child = new QCode("child");
 
@@ -58,16 +58,21 @@ public class CodeRepositoryImpl implements CodeRepositoryCustom {
                         ExpressionUtils.as(
                                 JPAExpressions.select(count(child.code))
                                         .from(child)
-                                        .where(child.parent.eq(parent)),
+                                        .where(child.parent.eq(parent), childCodeCdNe(codeId)),
                                 "childCount")
                 ))
                 .from(parent)
-                .where(parent.code.eq(parentCode))
+                .where(parent.code.eq(parentId))
                 .fetchOne();
     }
 
     private BooleanExpression childCodeCdEq(String childCode) {
         QCode child = new QCode("child");
         return childCode != null ? child.code.eq(childCode) : null;
+    }
+
+    private BooleanExpression childCodeCdNe(String childCode) {
+        QCode child = new QCode("child");
+        return childCode != null ? child.code.ne(childCode) : null;
     }
 }

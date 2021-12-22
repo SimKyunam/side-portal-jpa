@@ -61,18 +61,18 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
                     token = jwtTokenProvider.createToken(account);
                     response.setHeader(JwtTokenProvider.AUTHORITIES_KEY, token);
                 }
-
-                //인증 처리
-                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
-                        (UsernamePasswordAuthenticationToken) jwtTokenProvider.getAuthentication(token);
-
-                usernamePasswordAuthenticationToken
-                        .setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-                return usernamePasswordAuthenticationToken;
             } else {
                 response.setHeader(JwtTokenProvider.AUTHORITIES_KEY, "invalidation Token");
             }
+
+            //인증 처리
+            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
+                    (UsernamePasswordAuthenticationToken) jwtTokenProvider.getAuthentication(token);
+
+            usernamePasswordAuthenticationToken
+                    .setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+            return usernamePasswordAuthenticationToken;
         }
 
         return null;

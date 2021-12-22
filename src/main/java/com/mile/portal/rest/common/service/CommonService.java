@@ -1,5 +1,6 @@
 package com.mile.portal.rest.common.service;
 
+import com.mile.portal.config.exception.exceptions.ResultNotFoundException;
 import com.mile.portal.rest.common.model.comm.ReqCommon;
 import com.mile.portal.rest.common.model.domain.Code;
 import com.mile.portal.rest.common.model.dto.CodeDto;
@@ -26,27 +27,27 @@ public class CommonService {
         return codeRepository.findTreeCode(codeId, childCode);
     }
 
-    public void createCode(ReqCommon.Code reqCode) {
+    public Code createCode(ReqCommon.Code reqCode) {
         int depth = 1, ord = 1;
         String parentId = reqCode.getParentId();
+        String codeId = reqCode.getCodeId();
         Code parentCode = null;
 
         if(parentId != null) {
-            CodeDto parent = codeRepository.findParentCode(reqCode.getParentId());
-            if(parent != null) {
-                depth = parent.getDepth() + 1;
-                ord = parent.getChildCount().intValue() + 1;
+            CodeDto parent = Optional.ofNullable(codeRepository.findParentCode(parentId, codeId)).orElseThrow(ResultNotFoundException::new);
 
-                parentCode = Code.builder()
-                        .code(parent.getCode())
-                        .codeValue(parent.getCodeValue())
-                        .codeName(parent.getCodeName())
-                        .depth(parent.getDepth())
-                        .ord(parent.getOrd())
-                        .build();
-            }
+            depth = parent.getDepth() + 1;
+            ord = parent.getChildCount().intValue() + 1;
+
+            parentCode = Code.builder()
+                    .code(parent.getCode())
+                    .codeValue(parent.getCodeValue())
+                    .codeName(parent.getCodeName())
+                    .depth(parent.getDepth())
+                    .ord(parent.getOrd())
+                    .build();
         } else {
-            long parentCnt = codeRepository.countByParentIsNull();
+            long parentCnt = codeRepository.countByParentIsNullAndCodeNot(codeId);
             ord = (int) parentCnt + 1;
         }
 
@@ -59,12 +60,22 @@ public class CommonService {
                 .parent(parentCode)
                 .build();
 
-        codeRepository.save(code);
+        return codeRepository.save(code);
     }
 
-    public void updateCode(ReqCommon.Code reqCode) {
+    public Code updateCode(ReqCommon.Code reqCode) {
+        String codeName = reqCode.getCodeName();
+        String codeValue = reqCode.getCodeValue();
+        String codeId = reqCode.getCodeId();
+
+        Code code = codeRepository.findById(codeId).orElseThrow(ResultNotFoundException::new);
+        code.setCodeName(codeName);
+        code.setCodeValue(codeValue);
+
+        return codeRepository.save(code);
     }
 
     public void deleteCode(String codeId) {
+        codeRepository.deleteById(codeId);
     }
 }

@@ -11,5 +11,5 @@ public interface CodeRepositoryCustom {
     List<Code> findTreeAll();
     List<Code> findTreeCode(String code, String childCode);
 
-    CodeDto findParentCode(String parentCode);
+    CodeDto findParentCode(String parentId, String codeId);
 }

@@ -35,7 +35,7 @@ class CodeRepositoryTest {
     @Test
     @DisplayName("3. 부모 코드")
     void test3() {
-        CodeDto code = codeRepository.findParentCode("resourceCd");
+        CodeDto code = codeRepository.findParentCode("resourceCd", null);
         assertEquals(code.getChildCount(), 3);
         System.out.println(code);
     }
@@ -46,7 +46,7 @@ class CodeRepositoryTest {
         long count = codeRepository.count();
         System.out.println(count);
         
-        long parentCount = codeRepository.countByParentIsNull();
+        long parentCount = codeRepository.countByParentIsNullAndCodeNot("resourceCd");
         System.out.println(parentCount);
     }
 }

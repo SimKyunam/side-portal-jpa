@@ -40,14 +40,13 @@ public class CommonController {
 
     @PostMapping("/code/create")
     public ResBody createCode(@Valid @RequestBody ReqCommon.Code reqCode) {
-
-        commonService.createCode(reqCode);
+        Code code = commonService.createCode(reqCode);
         return new ResBody(ResBody.CODE_SUCCESS, "", null);
     }
 
     @PutMapping("/code/update")
     public ResBody updateCode(@Valid @RequestBody ReqCommon.Code reqCode) {
-        commonService.updateCode(reqCode);
+        Code code = commonService.updateCode(reqCode);
         return new ResBody(ResBody.CODE_SUCCESS, "", null);
     }
 

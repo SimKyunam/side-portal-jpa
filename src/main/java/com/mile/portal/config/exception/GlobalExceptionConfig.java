@@ -6,6 +6,7 @@ import com.mile.portal.config.exception.exceptions.TokenExpireException;
 import com.mile.portal.config.exception.exceptions.message.ExceptionMessage;
 import com.mile.portal.rest.common.model.comm.ResBody;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -29,7 +30,7 @@ public class GlobalExceptionConfig {
         ErrorResponse errorResponse = createErrorResponse(null,
                 ExceptionMessage.EXCEPTION_MESSAGE,
                 httpServletRequest.getRequestURI(),
-                HttpStatus.BAD_REQUEST.toString()
+                HttpStatus.INTERNAL_SERVER_ERROR.toString()
         );
 
         ResBody resbody = new ResBody(ResBody.CODE_ERROR, e.getMessage(), errorResponse);
@@ -97,7 +98,21 @@ public class GlobalExceptionConfig {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(resbody);
     }
 
-    @ExceptionHandler(value = ResultNotFoundException.class)
+    @ExceptionHandler(value = {EmptyResultDataAccessException.class})
+    public ResponseEntity<ResBody> EmptyResultDataAccessException(EmptyResultDataAccessException exception,
+                                                           HttpServletRequest httpServletRequest) {
+
+        ErrorResponse errorResponse = createErrorResponse(null,
+                ExceptionMessage.RESULT_NOT_FOUND_MESSAGE,
+                httpServletRequest.getRequestURI(),
+                HttpStatus.BAD_REQUEST.toString()
+        );
+
+        ResBody resbody = new ResBody(ResBody.CODE_ERROR, exception.getMessage(),errorResponse);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(resbody);
+    }
+
+    @ExceptionHandler({ResultNotFoundException.class})
     public ResponseEntity<ResBody> resultNotFoundException(ResultNotFoundException exception,
                                                            HttpServletRequest httpServletRequest) {
 
@@ -114,13 +129,13 @@ public class GlobalExceptionConfig {
 
     public ErrorResponse createErrorResponse(List errorList, String message, String url, String statusCode){
         String requestUri = url;
-        String[] deps = requestUri.split("/");
-        String lastURL = deps[deps.length-1];
+//        String[] deps = requestUri.split("/");
+//        String lastURL = deps[deps.length-1];
 
         return ErrorResponse.builder()
                 .errorList(errorList)
                 .message(message)
-                .requestUrl(lastURL)
+                .requestUrl(requestUri)
                 .statusCode(statusCode)
                 .build();
     }
