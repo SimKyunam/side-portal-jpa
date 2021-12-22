@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Getter @Setter
-public class Code extends BaseEntity{
+public class Code extends BaseEntity implements Serializable {
 
     @Id
     @Column(name = "code_id")
@@ -35,5 +36,5 @@ public class Code extends BaseEntity{
     private Code parent;
 
     @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY, orphanRemoval = true)
-    private final List<Code> child = new ArrayList<>();
+    private List<Code> child = new ArrayList<>();
 }

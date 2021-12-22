@@ -54,8 +54,9 @@ dependencies {
 
     // Ehcache
     implementation 'org.springframework.boot:spring-boot-starter-cache'
-    implementation 'org.ehcache:ehcache:3.8.0'
-    implementation 'javax.cache:cache-api:1.1.0'
+
+    // Ehcache
+    implementation group: 'net.sf.ehcache', name: 'ehcache', version: '2.10.6'
 
     annotationProcessor group: 'com.querydsl', name: 'querydsl-apt', version: querydslVersion
     annotationProcessor group: 'com.querydsl', name: 'querydsl-apt', version: querydslVersion, classifier: 'jpa'

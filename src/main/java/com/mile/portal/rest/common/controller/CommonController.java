@@ -32,9 +32,9 @@ public class CommonController {
 
     @GetMapping("/code/{codeId}")
     public ResBody selectCode(@PathVariable String codeId,
-                              @RequestParam(required = false) String childCode){
+                              @RequestParam(required = false, defaultValue = "") String childCode){
 
-        List<Code> codeList = commonService.selectCode(codeId, childCode);
+        Code codeList = commonService.selectCode(codeId, childCode);
         return new ResBody(ResBody.CODE_SUCCESS, "", codeList);
     }
 

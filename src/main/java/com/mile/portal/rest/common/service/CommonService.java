@@ -7,7 +7,10 @@ import com.mile.portal.rest.common.model.dto.CodeDto;
 import com.mile.portal.rest.common.repository.CodeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,18 +18,24 @@ import java.util.Optional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class CommonService {
     
     private final CodeRepository codeRepository;
 
+    @Transactional(readOnly = true)
+    @Cacheable(value = "codeCache")
     public List<Code> listCode() {
         return codeRepository.findTreeAll();
     }
 
-    public List<Code> selectCode(String codeId, String childCode) {
+    @Transactional(readOnly = true)
+    @Cacheable(value = "codeCache", key = "#codeId.concat(':').concat(#childCode)", unless = "#result == null")
+    public Code selectCode(String codeId, String childCode) {
         return codeRepository.findTreeCode(codeId, childCode);
     }
 
+    @CacheEvict(value = "codeCache", allEntries = true)
     public Code createCode(ReqCommon.Code reqCode) {
         int depth = 1, ord = 1;
         String parentId = reqCode.getParentId();
@@ -63,6 +72,7 @@ public class CommonService {
         return codeRepository.save(code);
     }
 
+    @CacheEvict(value = "codeCache", allEntries = true)
     public Code updateCode(ReqCommon.Code reqCode) {
         String codeName = reqCode.getCodeName();
         String codeValue = reqCode.getCodeValue();
@@ -75,6 +85,7 @@ public class CommonService {
         return codeRepository.save(code);
     }
 
+    @CacheEvict(value = "codeCache", allEntries = true)
     public void deleteCode(String codeId) {
         codeRepository.deleteById(codeId);
     }

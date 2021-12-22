@@ -27,6 +27,7 @@ public class CodeRepositoryImpl implements CodeRepositoryCustom {
         QCode child = new QCode("child");
 
         return query.selectFrom(parent)
+                .distinct()
                 .leftJoin(parent.child, child)
                 .fetchJoin()
                 .where(parent.parent.isNull())
@@ -35,16 +36,17 @@ public class CodeRepositoryImpl implements CodeRepositoryCustom {
     }
 
     @Override
-    public List<Code> findTreeCode(String code, String childCod) {
+    public Code findTreeCode(String code, String childCode) {
         QCode parent = new QCode("parent");
         QCode child = new QCode("child");
 
         return query.selectFrom(parent)
+                .distinct()
                 .leftJoin(parent.child, child)
                 .fetchJoin()
-                .where(parent.code.eq(code), childCodeCdEq(childCod))
+                .where(parent.code.eq(code), childCodeCdEq(childCode))
                 .orderBy(parent.ord.asc(), child.ord.asc())
-                .fetch();
+                .fetchOne();
     }
 
     @Override
@@ -68,11 +70,11 @@ public class CodeRepositoryImpl implements CodeRepositoryCustom {
 
     private BooleanExpression childCodeCdEq(String childCode) {
         QCode child = new QCode("child");
-        return childCode != null ? child.code.eq(childCode) : null;
+        return childCode != null && !childCode.isEmpty() ? child.code.eq(childCode) : null;
     }
 
     private BooleanExpression childCodeCdNe(String childCode) {
         QCode child = new QCode("child");
-        return childCode != null ? child.code.ne(childCode) : null;
+        return childCode != null && !childCode.isEmpty() ? child.code.ne(childCode) : null;
     }
 }

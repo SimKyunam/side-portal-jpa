@@ -29,13 +29,13 @@ class CodeRepositoryTest {
     @Test
     @DisplayName("2. 코드 상세 조회")
     void test2() {
-        System.out.println(codeRepository.findTreeCode("resourceCd", null));
+        System.out.println(codeRepository.findTreeCode("resourceCd", ""));
     }
 
     @Test
     @DisplayName("3. 부모 코드")
     void test3() {
-        CodeDto code = codeRepository.findParentCode("resourceCd", null);
+        CodeDto code = codeRepository.findParentCode("resourceCd", "");
         assertEquals(code.getChildCount(), 3);
         System.out.println(code);
     }
