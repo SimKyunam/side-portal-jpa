@@ -103,7 +103,23 @@ class BoardControllerTest {
 
     @Test
     @DisplayName("3. 공지사항 수정")
-    void test3() {
+    void test3() throws Exception {
+        ReqBoard.BoardNotice reqBoardNotice = ReqBoard.BoardNotice.builder()
+                .title("테스트 수정").content("내용 수정").ntcType("NTC")
+                .beginDate(LocalDateTime.now().plusDays(1))
+                .endDate(LocalDateTime.now().plusDays(12))
+                .hotYn("N").pubYn("Y")
+                .build();
+        String objStr = objectMapper.writeValueAsString(reqBoardNotice);
+
+        //when
+        mvc.perform(post("/api/v1/board/notice/update")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objStr))
+                .andExpect(status().isOk());
+
+        //then
+        then(boardService).should().updateBoardNotice(any());
     }
 
     @Test
