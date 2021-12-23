@@ -90,13 +90,10 @@ class AuthServiceTest {
         given(loginService.loginAuthenticate(any())).willReturn(new ReqToken());
 
         //when
-        when(authService.loginUser(userLogin)).thenThrow(BadCredentialsException.class);
-        assertThrows(BadCredentialsException.class, ()-> {
-            authService.loginUser(userLogin);
-        });
+        authService.loginUser(userLogin);
 
         //then
-        verify(loginService, times(3)).loginAuthenticate(any());
+        verify(loginService).loginAuthenticate(any());
     }
 
 

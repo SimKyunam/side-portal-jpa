@@ -6,8 +6,14 @@ import com.mile.portal.rest.common.model.domain.Code;
 import com.mile.portal.rest.common.model.dto.CodeDto;
 import com.mile.portal.rest.common.repository.CodeRepository;
 import com.mile.portal.rest.common.repository.UserRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Spy;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -23,14 +29,14 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 class CommonServiceTest {
-    @Autowired
+    @InjectMocks
     private CommonService commonService;
 
-    @MockBean
+    @Spy
     private CodeRepository codeRepository;
-    
+
     @Test
     @DisplayName("1. insert 부모가 없는 경우")
     void test1() {

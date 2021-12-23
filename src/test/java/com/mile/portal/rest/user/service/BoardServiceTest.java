@@ -40,7 +40,7 @@ class BoardServiceTest {
 
         //then
         assertEquals(boardNotice.getTitle(), reqNotice.getTitle());
-        verify(boardNoticeRepository.save(any()), times(1));
+        verify(boardNoticeRepository, times(1)).save(any());
     }
 
     private ReqBoard.BoardNotice createReqNotice() {
