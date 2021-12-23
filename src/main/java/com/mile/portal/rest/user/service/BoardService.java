@@ -1,27 +1,19 @@
 package com.mile.portal.rest.user.service;
 
 import com.mile.portal.config.exception.exceptions.ResultNotFoundException;
-import com.mile.portal.rest.mng.model.domain.QManager;
 import com.mile.portal.rest.user.model.domain.BoardNotice;
-import com.mile.portal.rest.user.model.domain.QBoardNotice;
-import com.mile.portal.rest.user.model.dto.BoardDto;
-import com.mile.portal.rest.user.model.dto.ReqBoard;
+import com.mile.portal.rest.user.model.dto.BoardNoticeDto;
+import com.mile.portal.rest.user.model.comm.ReqBoard;
 import com.mile.portal.rest.user.repository.BoardFaqRepository;
 import com.mile.portal.rest.user.repository.BoardNoticeRepository;
 import com.mile.portal.rest.user.repository.BoardQnaRepository;
-import com.querydsl.core.types.Projections;
-import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import static com.mile.portal.rest.user.model.domain.QBoardNotice.boardNotice;
-import static com.mile.portal.rest.mng.model.domain.QManager.manager;
 
 import java.util.Arrays;
 import java.util.List;
@@ -77,7 +69,7 @@ public class BoardService {
     }
 
     @Transactional(readOnly = true)
-    public BoardDto selectBoardNotice(Long id) {
+    public BoardNoticeDto selectBoardNotice(Long id) {
         BoardNotice boardNotice = boardNoticeRepository.findById(id).orElseThrow(ResultNotFoundException::new);
         return boardNoticeRepository.noticeSelect(boardNotice);
     }

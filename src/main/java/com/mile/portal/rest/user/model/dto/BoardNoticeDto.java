@@ -1,6 +1,7 @@
 package com.mile.portal.rest.user.model.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -9,9 +10,10 @@ import javax.persistence.Lob;
 import java.time.LocalDateTime;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class BoardDto {
+public class BoardNoticeDto {
     private Long id;
     private String ntcType;
     private String title;

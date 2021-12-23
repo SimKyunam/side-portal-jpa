@@ -1,8 +1,8 @@
 package com.mile.portal.rest.user.repository.custom;
 
 import com.mile.portal.rest.user.model.domain.BoardNotice;
-import com.mile.portal.rest.user.model.dto.BoardDto;
-import com.mile.portal.rest.user.model.dto.ReqBoard;
+import com.mile.portal.rest.user.model.dto.BoardNoticeDto;
+import com.mile.portal.rest.user.model.comm.ReqBoard;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -38,10 +38,10 @@ public class BoardNoticeRepositoryImpl implements BoardNoticeRepositoryCustom{
     }
 
     @Override
-    public BoardDto noticeSelect(BoardNotice reqBoardNotice) {
+    public BoardNoticeDto noticeSelect(BoardNotice reqBoardNotice) {
         Long id = reqBoardNotice.getId();
 
-        return query.select(Projections.fields(BoardDto.class,
+        return query.select(Projections.fields(BoardNoticeDto.class,
                 boardNotice.id, boardNotice.title, boardNotice.content, boardNotice.hotYn,
                 boardNotice.pubYn, boardNotice.beginDate, boardNotice.endDate, manager.name.as("managerName")
         ))

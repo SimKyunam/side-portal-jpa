@@ -3,8 +3,8 @@ package com.mile.portal.rest.user.controller;
 import com.mile.portal.rest.common.model.domain.Account;
 import com.mile.portal.rest.common.model.comm.ResBody;
 import com.mile.portal.rest.user.model.domain.BoardNotice;
-import com.mile.portal.rest.user.model.dto.BoardDto;
-import com.mile.portal.rest.user.model.dto.ReqBoard;
+import com.mile.portal.rest.user.model.dto.BoardNoticeDto;
+import com.mile.portal.rest.user.model.comm.ReqBoard;
 import com.mile.portal.rest.user.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,7 +50,7 @@ public class BoardController {
     @GetMapping("/notice/{id}")
     public ResBody selectBoardNotice(@AuthenticationPrincipal Account account,
                                      @PathVariable(name = "id") Long id) {
-        BoardDto boardNotice = boardService.selectBoardNotice(id);
+        BoardNoticeDto boardNotice = boardService.selectBoardNotice(id);
         return new ResBody(ResBody.CODE_SUCCESS, "", boardNotice);
     }
 

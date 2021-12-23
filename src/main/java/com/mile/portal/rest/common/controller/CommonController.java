@@ -1,16 +1,11 @@
 package com.mile.portal.rest.common.controller;
 
 import com.mile.portal.rest.common.model.comm.ReqCommon;
-import com.mile.portal.rest.common.model.domain.Account;
 import com.mile.portal.rest.common.model.domain.Code;
 import com.mile.portal.rest.common.model.comm.ResBody;
-import com.mile.portal.rest.common.model.dto.CodeDto;
 import com.mile.portal.rest.common.service.CommonService;
-import com.mile.portal.rest.user.model.dto.BoardDto;
-import com.mile.portal.rest.user.model.dto.ReqBoard;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;

@@ -1,9 +1,8 @@
 package com.mile.portal.rest.user.service;
 
 import com.mile.portal.rest.user.model.domain.BoardNotice;
-import com.mile.portal.rest.user.model.dto.ReqBoard;
+import com.mile.portal.rest.user.model.comm.ReqBoard;
 import com.mile.portal.rest.user.repository.BoardNoticeRepository;
-import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

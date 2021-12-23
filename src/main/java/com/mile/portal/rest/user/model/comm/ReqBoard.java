@@ -1,4 +1,4 @@
-package com.mile.portal.rest.user.model.dto;
+package com.mile.portal.rest.user.model.comm;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
