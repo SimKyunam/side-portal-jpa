@@ -35,9 +35,10 @@ logging:
     jdbc.sqlonly: debug
     org.springframework.web: DEBUG
 #    org.hibernate.SQL: DEBUG
-    org.hibernate.type: trace
+#    org.hibernate.type: trace
   file:
-    path: /logs
+    path: ./logs
+    level: INFO
 
 jwt:
   key: 12345678901234567890123456789012123456789012345678901234567890121234567890123456789012345678901212345678901234567890123456789012
@@ -69,6 +70,12 @@ spring:
 server:
   port: 9090
 
+decorator:
+  datasource:
+    p6spy:
+      enable-logging: true
+      multiline: true
+
 ---
 # 개발
 spring:
@@ -97,3 +104,9 @@ spring:
 
 server:
   port: 9090
+
+decorator:
+  datasource:
+    p6spy:
+      enable-logging: false
+      multiline: false
