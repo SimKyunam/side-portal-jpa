@@ -20,7 +20,7 @@ import javax.validation.Valid;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/board")
+@RequestMapping("/api/v1/user/board")
 public class BoardController {
 
     private final BoardService boardService;
@@ -29,22 +29,10 @@ public class BoardController {
     public ResBody listBoardNotice(@AuthenticationPrincipal Account account,
                                    @RequestParam(required = false) ReqBoard.BoardNotice reqBoardNotice,
                                    @PageableDefault(sort = "id", size = 100, direction = Sort.Direction.DESC) Pageable pageable) {
+        log.info(String.valueOf(account));
+
         Page<BoardNotice> boardNoticeList = boardService.listBoardNotice(reqBoardNotice, pageable);
         return new ResBody(ResBody.CODE_SUCCESS, "", boardNoticeList);
-    }
-
-    @PostMapping("/notice/create")
-    public ResBody createBoardNotice(@AuthenticationPrincipal Account account,
-                                     @Valid @RequestBody ReqBoard.BoardNotice reqBoardNotice) {
-        boardService.createBoardNotice(reqBoardNotice);
-        return new ResBody(ResBody.CODE_SUCCESS, "", null);
-    }
-
-    @PostMapping("/notice/update")
-    public ResBody updateBoardNotice(@AuthenticationPrincipal Account account,
-                                     @Valid @RequestBody ReqBoard.BoardNotice reqBoardNotice) {
-        boardService.updateBoardNotice(reqBoardNotice);
-        return new ResBody(ResBody.CODE_SUCCESS, "", null);
     }
 
     @GetMapping("/notice/{id}")
@@ -53,12 +41,4 @@ public class BoardController {
         BoardNoticeDto boardNotice = boardService.selectBoardNotice(id);
         return new ResBody(ResBody.CODE_SUCCESS, "", boardNotice);
     }
-
-    @DeleteMapping("/notice/{ids}")
-    public ResBody deleteBoardNotice(@AuthenticationPrincipal Account account,
-                                     @PathVariable(name = "ids") String ids) {
-        boardService.deleteBoardNotice(ids);
-        return new ResBody(ResBody.CODE_SUCCESS, "", null);
-    }
-
 }

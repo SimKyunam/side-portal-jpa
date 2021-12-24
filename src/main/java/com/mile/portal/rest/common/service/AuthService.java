@@ -3,6 +3,7 @@ package com.mile.portal.rest.common.service;
 import com.mile.portal.rest.common.model.comm.ReqCommon;
 import com.mile.portal.rest.common.model.comm.ReqLogin;
 import com.mile.portal.rest.common.model.comm.ReqToken;
+import com.mile.portal.rest.common.model.domain.Account;
 import com.mile.portal.rest.common.model.enums.Authority;
 import com.mile.portal.rest.common.repository.UserRepository;
 import com.mile.portal.rest.mng.model.domain.Manager;
@@ -23,15 +24,13 @@ public class AuthService {
     
     private final LoginService loginService;
     private final PasswordEncoder passwordEncoder;
-    
+
     private final UserRepository userRepository;
     private final ClientRepository clientRepository;
     private final ManagerRepository managerRepository;
 
     public Client createUser(ReqLogin userLogin) {
-        if(userRepository.existsByLoginId(userLogin.getLoginId())){
-            throw new RuntimeException("이미 가입되어 있는 유저입니다.");
-        }
+        this.existsUserCheck(userLogin);
 
         Client user = Client.builder()
                 .loginId(userLogin.getLoginId())
@@ -46,43 +45,41 @@ public class AuthService {
     }
 
     public ReqToken loginUser(ReqCommon.UserLogin userLogin) {
-        Client user = Client.builder()
-                .loginId(userLogin.getLoginId())
-                .loginPwd(userLogin.getLoginPwd())
-                .permission(Authority.ROLE_USER)
-                .build();
-
-        // 로그인 처리
-        return loginService.loginAuthenticate(user);
+        return loginProc(userLogin, Authority.ROLE_USER);
     }
 
     public Manager createMng(ReqLogin userLogin) {
-        if (userRepository.existsByLoginId(userLogin.getLoginId())) {
-            throw new RuntimeException("이미 가입되어 있는 유저입니다.");
-        }
+        this.existsUserCheck(userLogin);
 
-        Manager manager = (Manager) Manager.builder()
+        Manager manager = Manager.builder()
                 .loginId(userLogin.getLoginId())
                 .loginPwd(passwordEncoder.encode(userLogin.getLoginPwd()))
                 .name(userLogin.getUserName())
                 .permission(userLogin.getUserType())
                 .status(userLogin.getStatus())
+                .email(userLogin.getEmail())
+                .phone(userLogin.getPhone())
                 .build();
-
-        manager.setEmail(userLogin.getEmail());
-        manager.setPhone(userLogin.getPhone());
 
         return managerRepository.save(manager);
     }
 
     public ReqToken loginMng(ReqCommon.UserLogin userLogin) {
-        Manager manager = Manager.builder()
-                .loginId(userLogin.getLoginId())
-                .loginPwd(userLogin.getLoginPwd())
-                .permission(Authority.ROLE_ADMIN)
-                .build();
+        return loginProc(userLogin, Authority.ROLE_ADMIN);
+    }
 
-        // 로그인 처리
-        return loginService.loginAuthenticate(manager);
+    public void existsUserCheck(ReqLogin userLogin) {
+        if (userRepository.existsByLoginId(userLogin.getLoginId())) {
+            throw new RuntimeException("이미 가입되어 있는 유저입니다.");
+        }
+    }
+
+    public ReqToken loginProc(ReqCommon.UserLogin userLogin, Authority authority) {
+        Account account = new Account()
+                .setLoginId(userLogin.getLoginId())
+                .setLoginPwd(userLogin.getLoginPwd())
+                .setPermission(authority);
+
+        return loginService.loginAuthenticate(account);
     }
 }

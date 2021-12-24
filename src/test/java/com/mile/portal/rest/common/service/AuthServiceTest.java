@@ -14,7 +14,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,7 +29,7 @@ import static org.mockito.Mockito.*;
 @SpringBootTest
 class AuthServiceTest {
     @Autowired
-    private AuthService authService;
+    private AuthService AuthService;
 
     @MockBean
     private LoginService loginService;
@@ -55,7 +54,7 @@ class AuthServiceTest {
         given(clientRepository.save(any())).willReturn(client);
 
         //when
-        Client newUser = authService.createUser(reqLogin);
+        Client newUser = AuthService.createUser(reqLogin);
 
         //then
         verify(userRepository).existsByLoginId(eq(reqLogin.getLoginId()));
@@ -77,7 +76,7 @@ class AuthServiceTest {
 
         //then
         assertThrows(RuntimeException.class, () -> {
-            authService.createUser(reqLogin);
+            AuthService.createUser(reqLogin);
         });
     }
 
@@ -90,7 +89,7 @@ class AuthServiceTest {
         given(loginService.loginAuthenticate(any())).willReturn(new ReqToken());
 
         //when
-        authService.loginUser(userLogin);
+        AuthService.loginUser(userLogin);
 
         //then
         verify(loginService).loginAuthenticate(any());

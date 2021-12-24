@@ -43,15 +43,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .cors().and().csrf().disable()
                 .formLogin().disable()
-
                 .authorizeRequests()
-                .antMatchers("/api/v1/mng/**").hasRole("ADMIN")
                 .antMatchers(
                         "/exception/**", "/common/**", "/h2-console/**"
-                        , "/api/v1/common/**", "/api/v1/auth/**"
+                        , "/api/v1/auth/**"
                 ).permitAll()
-                .anyRequest().authenticated()
-
+                .antMatchers("/api/v1/mng/**").hasRole("ADMIN") // 관리자
+                .antMatchers("/api/v1/user/**").hasRole("USER") // 사용자
+                .anyRequest().authenticated() // 토큰있는 경우
                 .and().exceptionHandling()
                 .and().headers().frameOptions().disable() // 없으면 h2 console 안됌
                 .and().addFilterBefore(

@@ -1,4 +1,4 @@
-package com.mile.portal.rest.user.repository.custom;
+package com.mile.portal.rest.common.repository.custom;
 
 import com.mile.portal.rest.user.model.domain.BoardNotice;
 import com.mile.portal.rest.user.model.dto.BoardNoticeDto;

@@ -1,5 +1,6 @@
 package com.mile.portal.rest.user.repository;
 
+import com.mile.portal.rest.common.repository.BoardNoticeRepository;
 import com.mile.portal.rest.user.model.domain.BoardNotice;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -7,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Random;
-import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 

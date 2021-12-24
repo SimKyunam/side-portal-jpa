@@ -1,5 +1,6 @@
-package com.mile.portal.rest.user.repository.custom;
+package com.mile.portal.rest.common.repository.custom;
 
+import com.mile.portal.rest.common.repository.custom.BoardNoticeRepositoryCustom;
 import com.mile.portal.rest.user.model.domain.BoardNotice;
 import com.mile.portal.rest.user.model.dto.BoardNoticeDto;
 import com.mile.portal.rest.user.model.comm.ReqBoard;
@@ -16,7 +17,7 @@ import static com.mile.portal.rest.user.model.domain.QBoardNotice.boardNotice;
 
 @Repository
 @RequiredArgsConstructor
-public class BoardNoticeRepositoryImpl implements BoardNoticeRepositoryCustom{
+public class BoardNoticeRepositoryImpl implements BoardNoticeRepositoryCustom {
 
     private final JPAQueryFactory query;
 
