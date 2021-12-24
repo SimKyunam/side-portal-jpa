@@ -32,20 +32,26 @@ import java.util.stream.Stream;
 public class LoggerAspect {
 
     /** 포인트 컷 */
-    @Pointcut("execution(* com.mile.portal.rest.common.controller.*.*(..) ) && !@annotation(com.mile.portal.util.annotation.NoAspect)")
+    @Pointcut("execution(* com.mile.portal.rest.user.controller.*.*(..) ) && !@annotation(com.mile.portal.util.annotation.NoAspect)")
     public void userControllerAdvice() {}
 
-    @Pointcut("execution(* com.mile.portal.rest.common.service.*.*(..) ) && !@annotation(com.mile.portal.util.annotation.NoAspect)")
+    @Pointcut("execution(* com.mile.portal.rest.user.service.*.*(..) ) && !@annotation(com.mile.portal.util.annotation.NoAspect)")
     public void userServiceAdvice() {}
 
-    @Pointcut("execution(* com.mile.portal.rest.common.controller.*.*(..) ) && !@annotation(com.mile.portal.util.annotation.NoAspect)")
+    @Pointcut("execution(* com.mile.portal.rest.mng.controller.*.*(..) ) && !@annotation(com.mile.portal.util.annotation.NoAspect)")
     public void mngControllerAdvice() {}
 
-    @Pointcut("execution(* com.mile.portal.rest.common.service.*.*(..) ) && !@annotation(com.mile.portal.util.annotation.NoAspect)")
+    @Pointcut("execution(* com.mile.portal.rest.mng.service.*.*(..) ) && !@annotation(com.mile.portal.util.annotation.NoAspect)")
     public void mngServiceAdvice() {}
 
+    @Pointcut("execution(* com.mile.portal.rest.common.controller.*.*(..) ) && !@annotation(com.mile.portal.util.annotation.NoAspect)")
+    public void commControllerAdvice() {}
+
+    @Pointcut("execution(* com.mile.portal.rest.common.service.*.*(..) ) && !@annotation(com.mile.portal.util.annotation.NoAspect)")
+    public void commServiceAdvice() {}
+
     /** 컨트롤러 */
-    @Around("userControllerAdvice() || mngControllerAdvice()")
+    @Around("userControllerAdvice() || mngControllerAdvice() || commControllerAdvice()")
     public Object controllerLogger(ProceedingJoinPoint point) throws Throwable {
         Class clazz = point.getTarget().getClass();
         String[] classNameStr = point.getSignature().getDeclaringTypeName().split("\\.");
@@ -60,11 +66,11 @@ public class LoggerAspect {
         log.info(">>> HTTP method : " + requestUrlInfo[0]);
         log.info(">>> HTTP URL : " + requestUrlInfo[1]);
         log.info(">>> class : {} (method : {})", className, methodName);
-        log.info(">>> params : {}" + params(point));
+        log.info(">>> params : " + params(point));
 
         Object result = point.proceed(point.getArgs());
         stopWatch.stop();
-        log.info(">>> time : {}", stopWatch.prettyPrint());
+        log.info(">>> time : {}", stopWatch.getTotalTimeSeconds());
         log.info(">>> class : {}(method : {}) API success...", className, methodName);
         log.info("----------------------------------------------------------------");
 
@@ -72,7 +78,7 @@ public class LoggerAspect {
     }
 
     /** 서비스 */
-    @Around("userServiceAdvice() || mngServiceAdvice()")
+    @Around("userServiceAdvice() || mngServiceAdvice() || commServiceAdvice()")
     public Object userServiceLogger(ProceedingJoinPoint point) throws Throwable {
         String[] classNameStr = point.getSignature().getDeclaringTypeName().split("\\.");
         String className = classNameStr[classNameStr.length-1];
