@@ -6,7 +6,7 @@ spring:
   profiles:
     active: local
   jpa:
-    show-sql: true
+    show-sql: false
     hibernate:
       ddl-auto: create
       #ddl-auto: none / create-drop / create / update / validate
@@ -32,13 +32,13 @@ logging:
     root: info
     sql: error
     jdbc: off
-    jdbc.sqlonly: debug
-    org.springframework.web: DEBUG
-#    org.hibernate.SQL: DEBUG
-#    org.hibernate.type: trace
+    jdbc.sqlonly: info
+  #    org.springframework.web: DEBUG
+  #    org.hibernate.SQL: DEBUG
+  #    org.hibernate.type: trace
   file:
     path: ./logs
-    level: INFO
+    level: DEBUG
 
 jwt:
   key: 12345678901234567890123456789012123456789012345678901234567890121234567890123456789012345678901212345678901234567890123456789012
