@@ -1,5 +1,6 @@
 package com.mile.portal.config.p6spy;
 
+import com.mile.portal.util.DateTimeUtil;
 import com.p6spy.engine.common.P6Util;
 import com.p6spy.engine.logging.Category;
 import com.p6spy.engine.spy.appender.MessageFormattingStrategy;
@@ -11,7 +12,7 @@ public class P6spySqlFormat implements MessageFormattingStrategy {
     @Override
     public String formatMessage(int connectionId, String now, long elapsed, String category, String prepared, String sql, String url) {
         sql = formatSql(category, sql);
-        return now + "|" + elapsed + "ms|" + category + "|connection " + connectionId + "|" + P6Util.singleLine(prepared) + sql;
+        return "|time:" + now + "|" + elapsed + "ms|" + category + "|connection " + connectionId + "|" + P6Util.singleLine(prepared) + sql;
     }
 
     private String formatSql(String category, String sql) {

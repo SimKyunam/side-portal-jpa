@@ -279,7 +279,9 @@ public class DateTimeUtil {
 	}
 
 	public static String millisToDate(Long millis, String format) {
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-DD HH:mm:ss.SSS");
+		format = format == null ? "YYYY-MM-DD HH:mm:ss.SSS" : format;
+
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
 		return simpleDateFormat.format(millis);
 	}
 }
