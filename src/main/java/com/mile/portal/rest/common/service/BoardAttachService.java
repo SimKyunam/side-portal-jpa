@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -80,7 +81,7 @@ public class BoardAttachService extends AttachService {
         if(deleteNameUps.size() > 0) {
             attachPath = deleteNameUps.get(0).getPath();
         } else {
-            attachPath = boardAttachRepository.findById(board.getId()).orElse(null).getPath();
+            attachPath = boardAttachRepository.findById(board.getId()).orElse(BoardAttach.builder().build()).getPath();
         }
 
         if(attachPath != null && !attachPath.isEmpty()) {

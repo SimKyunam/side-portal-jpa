@@ -25,8 +25,8 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 import static com.mile.portal.rest.common.model.domain.QAccount.account;
+import static com.mile.portal.rest.common.model.domain.board.QBoardNotice.boardNotice;
 import static com.mile.portal.rest.mng.model.domain.QManager.manager;
-import static com.mile.portal.rest.user.model.domain.QBoardNotice.boardNotice;
 import static com.querydsl.core.types.ExpressionUtils.count;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
