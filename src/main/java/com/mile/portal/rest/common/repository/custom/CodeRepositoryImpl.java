@@ -68,6 +68,24 @@ public class CodeRepositoryImpl implements CodeRepositoryCustom {
                 .fetchOne();
     }
 
+    @Override
+    public List<CodeDto> findByCodeChildren(String[] codes) {
+        QCode parent = new QCode("parent");
+        QCode child = new QCode("child");
+
+        return query.select(
+                Projections.fields(CodeDto.class,
+                        parent.code, parent.codeName, parent.codeValue, parent.ord, parent.depth,
+                        ExpressionUtils.as(
+                                JPAExpressions.select(count(child.code))
+                                        .from(child)
+                                        .where(child.parent.eq(parent)),
+                                "childCount")
+                ))
+                .from(parent)
+                .where(parent.code.in(codes)).fetch();
+    }
+
     private BooleanExpression childCodeCdEq(String childCode) {
         QCode child = new QCode("child");
         return childCode != null && !childCode.isEmpty() ? child.code.eq(childCode) : null;

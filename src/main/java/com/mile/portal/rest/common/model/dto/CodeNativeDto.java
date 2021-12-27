@@ -13,13 +13,11 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CodeDto {
+public class CodeNativeDto {
     private String code;
     private String codeName;
     private String codeValue;
     private int ord;
     private int depth;
-
-    private List<Code> child = new ArrayList<>();
     private Long childCount;
 }

@@ -1,17 +1,14 @@
-package com.mile.portal.rest.user.controller;
+package com.mile.portal.rest.mng.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mile.portal.rest.mng.service.MngBoardService;
+import com.mile.portal.rest.user.model.comm.ReqBoard;
 import com.mile.portal.rest.user.model.domain.BoardNotice;
 import com.mile.portal.rest.user.model.dto.BoardNoticeDto;
-import com.mile.portal.rest.user.model.comm.ReqBoard;
 import com.mile.portal.rest.user.service.BoardService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.Spy;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -32,17 +29,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @WithMockUser
-class BoardControllerTest {
+class MngBoardControllerTest {
+
     private MockMvc mvc;
 
     @Autowired
@@ -52,7 +52,7 @@ class BoardControllerTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private BoardService boardService;
+    private MngBoardService mngBoardService;
 
     @BeforeEach
     public void setUp(){
@@ -71,30 +71,83 @@ class BoardControllerTest {
         Page<BoardNotice> noticePaging = createNoticePaging();
 
         //given
-        given(boardService.listBoardNotice(any(), any())).willReturn(noticePaging);
+        given(mngBoardService.listBoardNotice(any(), any())).willReturn(noticePaging);
 
         //when
-        mvc.perform(get("/api/v1/board/notice"))
+        mvc.perform(get("/api/v1/mng/board/notice"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.content[0].title").value("테스트 타이틀"));
 
         //then
-        then(boardService).should().listBoardNotice(any(), any());
+        then(mngBoardService).should().listBoardNotice(any(), any());
     }
 
     @Test
-    @DisplayName("2. 공지사항 상세")
+    @DisplayName("2. 공지사항 등록")
     void test2() throws Exception {
-        //given
-        given(boardService.selectBoardNotice(any())).willReturn(createNoticeDto());
+        ReqBoard.BoardNotice reqBoardNotice = ReqBoard.BoardNotice.builder()
+                .title("테스트").content("내용").ntcType("NTC")
+                .beginDate(LocalDateTime.now())
+                .endDate(LocalDateTime.now().plusDays(10))
+                .hotYn("N").pubYn("Y")
+                .build();
+        String objStr = objectMapper.writeValueAsString(reqBoardNotice);
 
         //when
-        mvc.perform(get("/api/v1/board/notice/1"))
+        mvc.perform(post("/api/v1/mng/board/notice/create")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objStr))
+                .andExpect(status().isOk());
+
+        //then
+        then(mngBoardService).should().createBoardNotice(any());
+    }
+
+    @Test
+    @DisplayName("3. 공지사항 수정")
+    void test3() throws Exception {
+        ReqBoard.BoardNotice reqBoardNotice = ReqBoard.BoardNotice.builder()
+                .title("테스트 수정").content("내용 수정").ntcType("NTC")
+                .beginDate(LocalDateTime.now().plusDays(1))
+                .endDate(LocalDateTime.now().plusDays(12))
+                .hotYn("N").pubYn("Y")
+                .build();
+        String objStr = objectMapper.writeValueAsString(reqBoardNotice);
+
+        //when
+        mvc.perform(post("/api/v1/mng/board/notice/update")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objStr))
+                .andExpect(status().isOk());
+
+        //then
+        then(mngBoardService).should().updateBoardNotice(any());
+    }
+
+    @Test
+    @DisplayName("4. 공지사항 상세")
+    void test4() throws Exception {
+        //given
+        given(mngBoardService.selectBoardNotice(any())).willReturn(createNoticeDto());
+
+        //when
+        mvc.perform(get("/api/v1/mng/board/notice/1"))
                 .andExpect(jsonPath("$.data.title").value("테스트 타이틀"))
                 .andExpect(status().isOk());
 
         //then
-        then(boardService).should().selectBoardNotice(any());
+        then(mngBoardService).should().selectBoardNotice(any());
+    }
+
+    @Test
+    @DisplayName("5. 공지사항 삭제")
+    void test5() throws Exception {
+        //when
+        mvc.perform(delete("/api/v1/mng/board/notice/1"))
+                .andExpect(status().isOk());
+
+        //then
+        then(mngBoardService).should().deleteBoardNotice(any());
     }
 
     BoardNotice createNotice() {
