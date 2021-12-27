@@ -1,4 +1,4 @@
-package com.mile.portal.rest.user.model.domain;
+package com.mile.portal.rest.common.model.domain.board;
 
 import com.mile.portal.rest.common.model.domain.BaseEntity;
 import com.mile.portal.rest.mng.model.domain.Manager;
@@ -8,24 +8,24 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
-@Builder
-@Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "board_type")
 @Where(clause = "deleted is null")
-public class BoardNotice extends BaseEntity {
+@Accessors(chain = true)
+public class Board extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "board_notice_id")
+    @Column(name = "board_id")
     private Long id;
-
-    @Column(length = 5)
-    private String ntcType;
 
     @Column(length = 50)
     private String title;
@@ -36,16 +36,9 @@ public class BoardNotice extends BaseEntity {
     @ColumnDefault(value = "0")
     private int readCnt;
 
-    private LocalDateTime beginDate;
-
-    private LocalDateTime endDate;
-
-    @Column(length = 1)
-    private String hotYn;
-
-    @Column(length = 1)
-    private String pubYn;
-
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private Manager manager;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "board")
+    private List<BoardAttach> boardAttachList = new ArrayList<>();
 }

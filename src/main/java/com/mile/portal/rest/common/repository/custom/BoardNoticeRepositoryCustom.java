@@ -1,6 +1,6 @@
 package com.mile.portal.rest.common.repository.custom;
 
-import com.mile.portal.rest.user.model.domain.BoardNotice;
+import com.mile.portal.rest.common.model.domain.board.BoardNotice;
 import com.mile.portal.rest.user.model.dto.BoardNoticeDto;
 import com.mile.portal.rest.user.model.comm.ReqBoard;
 import org.springframework.data.domain.Pageable;

@@ -1,7 +1,6 @@
 package com.mile.portal.rest.common.repository.custom;
 
-import com.mile.portal.rest.common.repository.custom.BoardNoticeRepositoryCustom;
-import com.mile.portal.rest.user.model.domain.BoardNotice;
+import com.mile.portal.rest.common.model.domain.board.BoardNotice;
 import com.mile.portal.rest.user.model.dto.BoardNoticeDto;
 import com.mile.portal.rest.user.model.comm.ReqBoard;
 import com.querydsl.core.types.Projections;
@@ -12,8 +11,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+import static com.mile.portal.rest.common.model.domain.board.QBoardNotice.boardNotice;
 import static com.mile.portal.rest.mng.model.domain.QManager.manager;
-import static com.mile.portal.rest.user.model.domain.QBoardNotice.boardNotice;
 
 @Repository
 @RequiredArgsConstructor

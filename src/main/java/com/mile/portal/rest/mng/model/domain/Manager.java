@@ -2,9 +2,9 @@ package com.mile.portal.rest.mng.model.domain;
 
 import com.mile.portal.rest.common.model.domain.Account;
 import com.mile.portal.rest.common.model.enums.Authority;
-import com.mile.portal.rest.user.model.domain.BoardFaq;
-import com.mile.portal.rest.user.model.domain.BoardNotice;
-import com.mile.portal.rest.user.model.domain.BoardQna;
+import com.mile.portal.rest.common.model.domain.board.BoardFaq;
+import com.mile.portal.rest.common.model.domain.board.BoardNotice;
+import com.mile.portal.rest.common.model.domain.board.BoardQna;
 import lombok.*;
 
 import javax.persistence.*;

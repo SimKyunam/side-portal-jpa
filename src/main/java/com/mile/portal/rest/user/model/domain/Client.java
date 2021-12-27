@@ -1,6 +1,7 @@
 package com.mile.portal.rest.user.model.domain;
 
 import com.mile.portal.rest.common.model.domain.Account;
+import com.mile.portal.rest.common.model.domain.board.BoardQna;
 import com.mile.portal.rest.common.model.enums.Authority;
 import lombok.*;
 

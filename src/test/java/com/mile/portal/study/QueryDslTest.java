@@ -4,7 +4,7 @@ import com.mile.portal.rest.common.model.domain.Account;
 import com.mile.portal.rest.common.model.domain.QAccount;
 import com.mile.portal.rest.common.model.domain.QCode;
 import com.mile.portal.rest.common.model.dto.CodeDto;
-import com.mile.portal.rest.user.model.domain.BoardNotice;
+import com.mile.portal.rest.common.model.domain.board.BoardNotice;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;

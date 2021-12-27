@@ -74,8 +74,10 @@ decorator:
   datasource:
     p6spy:
       enable-logging: true
-      multiline: true
+#      multiline: true
 
+file:
+  upload-dir: D:\attach\SIDE\HCMP\UPLOAD_FILES
 ---
 # 개발
 spring:

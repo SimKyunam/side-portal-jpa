@@ -1,7 +1,7 @@
 package com.mile.portal.rest.user.repository;
 
 import com.mile.portal.rest.common.repository.BoardNoticeRepository;
-import com.mile.portal.rest.user.model.domain.BoardNotice;
+import com.mile.portal.rest.common.model.domain.board.BoardNotice;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

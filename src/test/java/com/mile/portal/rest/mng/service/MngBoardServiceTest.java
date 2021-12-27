@@ -2,7 +2,7 @@ package com.mile.portal.rest.mng.service;
 
 import com.mile.portal.rest.common.repository.BoardNoticeRepository;
 import com.mile.portal.rest.user.model.comm.ReqBoard;
-import com.mile.portal.rest.user.model.domain.BoardNotice;
+import com.mile.portal.rest.common.model.domain.board.BoardNotice;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +34,7 @@ class MngBoardServiceTest {
         given(boardNoticeRepository.save(any())).willReturn(notice);
 
         //when
-        BoardNotice boardNotice = mngBoardService.createBoardNotice(reqNotice);
+        BoardNotice boardNotice = mngBoardService.createBoardNotice(reqNotice, null);
 
         //then
         assertEquals(boardNotice.getTitle(), reqNotice.getTitle());
@@ -44,7 +44,7 @@ class MngBoardServiceTest {
     @Test
     @DisplayName("2. 공지사항 삭제")
     void test2() {
-        IntStream.range(0, 5).forEach(i -> mngBoardService.createBoardNotice(createReqNotice()));
+        IntStream.range(0, 5).forEach(i -> mngBoardService.createBoardNotice(createReqNotice(), null));
 
         String ids = "1, 2, ,,";
         mngBoardService.deleteBoardNotice(ids);

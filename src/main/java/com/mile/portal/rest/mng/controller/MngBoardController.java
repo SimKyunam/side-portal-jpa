@@ -4,7 +4,7 @@ import com.mile.portal.rest.common.model.comm.ResBody;
 import com.mile.portal.rest.common.model.domain.Account;
 import com.mile.portal.rest.mng.service.MngBoardService;
 import com.mile.portal.rest.user.model.comm.ReqBoard;
-import com.mile.portal.rest.user.model.domain.BoardNotice;
+import com.mile.portal.rest.common.model.domain.board.BoardNotice;
 import com.mile.portal.rest.user.model.dto.BoardNoticeDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,8 +14,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -37,15 +39,17 @@ public class MngBoardController {
 
     @PostMapping("/notice/create")
     public ResBody createBoardNotice(@AuthenticationPrincipal Account account,
-                                     @Valid @RequestBody ReqBoard.BoardNotice reqBoardNotice) {
-        mngBoardService.createBoardNotice(reqBoardNotice);
+                                     @ModelAttribute @Valid ReqBoard.BoardNotice reqBoardNotice,
+                                     @RequestPart(required = false) List<MultipartFile> files) {
+        mngBoardService.createBoardNotice(reqBoardNotice, files);
         return new ResBody(ResBody.CODE_SUCCESS, "", null);
     }
 
     @PostMapping("/notice/update")
     public ResBody updateBoardNotice(@AuthenticationPrincipal Account account,
-                                     @Valid @RequestBody ReqBoard.BoardNotice reqBoardNotice) {
-        mngBoardService.updateBoardNotice(reqBoardNotice);
+                                     @Valid ReqBoard.BoardNotice reqBoardNotice,
+                                     @RequestPart(required = false) List<MultipartFile> files) {
+        mngBoardService.updateBoardNotice(reqBoardNotice, files);
         return new ResBody(ResBody.CODE_SUCCESS, "", null);
     }
 

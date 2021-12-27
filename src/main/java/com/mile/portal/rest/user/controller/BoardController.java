@@ -2,7 +2,7 @@ package com.mile.portal.rest.user.controller;
 
 import com.mile.portal.rest.common.model.domain.Account;
 import com.mile.portal.rest.common.model.comm.ResBody;
-import com.mile.portal.rest.user.model.domain.BoardNotice;
+import com.mile.portal.rest.common.model.domain.board.BoardNotice;
 import com.mile.portal.rest.user.model.dto.BoardNoticeDto;
 import com.mile.portal.rest.user.model.comm.ReqBoard;
 import com.mile.portal.rest.user.service.BoardService;
@@ -14,8 +14,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
 
 @Slf4j
 @RestController

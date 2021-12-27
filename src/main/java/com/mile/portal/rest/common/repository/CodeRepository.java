@@ -14,7 +14,5 @@ public interface CodeRepository extends JpaRepository<Code, String>, CodeReposit
     long countByParentIsNullAndCodeNot(String codeId);
 
     @Query(nativeQuery = true)
-
     List<CodeNativeDto> findByCodeChild(@Param("code") String code);
-
 }

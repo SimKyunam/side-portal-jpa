@@ -3,9 +3,8 @@ package com.mile.portal.rest.mng.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mile.portal.rest.mng.service.MngBoardService;
 import com.mile.portal.rest.user.model.comm.ReqBoard;
-import com.mile.portal.rest.user.model.domain.BoardNotice;
+import com.mile.portal.rest.common.model.domain.board.BoardNotice;
 import com.mile.portal.rest.user.model.dto.BoardNoticeDto;
-import com.mile.portal.rest.user.service.BoardService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,7 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -40,7 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-@WithMockUser
+@WithMockUser(roles = {"ADMIN"})
 class MngBoardControllerTest {
 
     private MockMvc mvc;
@@ -56,7 +54,6 @@ class MngBoardControllerTest {
 
     @BeforeEach
     public void setUp(){
-
         mvc = MockMvcBuilders
                 .webAppContextSetup(webApplicationContext)
                 .addFilters(new CharacterEncodingFilter("UTF-8", true))  // 필터 추가
@@ -100,7 +97,7 @@ class MngBoardControllerTest {
                 .andExpect(status().isOk());
 
         //then
-        then(mngBoardService).should().createBoardNotice(any());
+        then(mngBoardService).should().createBoardNotice(any(), any());
     }
 
     @Test
@@ -121,7 +118,7 @@ class MngBoardControllerTest {
                 .andExpect(status().isOk());
 
         //then
-        then(mngBoardService).should().updateBoardNotice(any());
+        then(mngBoardService).should().updateBoardNotice(any(), any());
     }
 
     @Test

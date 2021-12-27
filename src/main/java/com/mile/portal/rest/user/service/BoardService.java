@@ -5,7 +5,7 @@ import com.mile.portal.rest.common.repository.BoardFaqRepository;
 import com.mile.portal.rest.common.repository.BoardNoticeRepository;
 import com.mile.portal.rest.common.repository.BoardQnaRepository;
 import com.mile.portal.rest.user.model.comm.ReqBoard;
-import com.mile.portal.rest.user.model.domain.BoardNotice;
+import com.mile.portal.rest.common.model.domain.board.BoardNotice;
 import com.mile.portal.rest.user.model.dto.BoardNoticeDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
