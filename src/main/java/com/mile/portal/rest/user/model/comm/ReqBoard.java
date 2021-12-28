@@ -60,7 +60,7 @@ public class ReqBoard {
 
         //첨부 파일
         private String fileModifiedYn = "N";
-        private List<String> nameUps = new ArrayList<>();
+        private List<String> deleteUploadNames = new ArrayList<>();
     }
 
     @Data

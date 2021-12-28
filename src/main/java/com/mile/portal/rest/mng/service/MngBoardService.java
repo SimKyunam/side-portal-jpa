@@ -88,7 +88,7 @@ public class MngBoardService {
         BoardNotice notice = boardNoticeRepository.save(boardNotice);
 
         if(reqBoardNotice.getFileModifiedYn().equals("Y")) { //첨부파일을 수정한 경우
-            boardAttachService.deleteBoardAttachFile(notice, "NTC", reqBoardNotice.getNameUps());
+            boardAttachService.deleteBoardAttachFile(notice, "NTC", reqBoardNotice.getDeleteUploadNames());
 
             //첨부파일 체크
             if(files != null){
@@ -112,13 +112,16 @@ public class MngBoardService {
     }
 
     public void deleteBoardNotice(String ids) {
-        List<Long> idList = Arrays.stream(ids.split(","))
+        List<Long> boardIdList = Arrays.stream(ids.split(","))
                 .map(String::trim)
                 .filter(str -> !str.isEmpty())
                 .map(Long::parseLong)
                 .distinct()
                 .collect(Collectors.toList());
 
-        boardNoticeRepository.deleteAllById(idList);
+        List<BoardNotice> boardNotices = boardNoticeRepository.findAllById(boardIdList);
+        boardAttachService.deleteBoardAttachFiles(boardNotices, "NTC");
+
+        boardNoticeRepository.deleteAllById(boardIdList);
     }
 }

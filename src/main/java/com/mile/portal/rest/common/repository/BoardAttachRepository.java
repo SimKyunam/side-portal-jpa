@@ -11,4 +11,7 @@ import java.util.Optional;
 public interface BoardAttachRepository extends JpaRepository<BoardAttach, Long>, BoardAttachRepositoryCustom {
 
     Optional<List<BoardAttach>> findByAttachUploadIn(List<String> attachUpload);
+
+    Optional<BoardAttach> findFirstByBoardIdAndBoardType(Long boardId, String boardType);
+    Optional<BoardAttach> findByBoardIdInAndBoardType(List<Long> boardId, String boardType);
 }

@@ -60,9 +60,9 @@ public class MngBoardController {
         return new ResBody(ResBody.CODE_SUCCESS, "", boardNotice);
     }
 
-    @DeleteMapping("/notice/{ids}")
+    @DeleteMapping("/notice/delete")
     public ResBody deleteBoardNotice(@AuthenticationPrincipal Account account,
-                                     @PathVariable(name = "ids") String ids) {
+                                     @RequestParam String ids) {
         mngBoardService.deleteBoardNotice(ids);
         return new ResBody(ResBody.CODE_SUCCESS, "", null);
     }
