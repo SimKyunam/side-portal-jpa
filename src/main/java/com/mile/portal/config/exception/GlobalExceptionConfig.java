@@ -6,6 +6,7 @@ import com.mile.portal.config.exception.exceptions.TokenExpireException;
 import com.mile.portal.config.exception.exceptions.message.ExceptionMessage;
 import com.mile.portal.rest.common.model.comm.ResBody;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -99,11 +101,11 @@ public class GlobalExceptionConfig {
                 HttpStatus.BAD_REQUEST.toString()
         );
 
-        ResBody resbody = new ResBody(ResBody.CODE_ERROR, exception.getMessage(),errorResponse);
+        ResBody resbody = new ResBody(ResBody.CODE_ERROR, exception.getMessage(), errorResponse);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(resbody);
     }
 
-    @ExceptionHandler({ResultNotFoundException.class})
+    @ExceptionHandler(value = {ResultNotFoundException.class})
     public ResponseEntity<ResBody> resultNotFoundException(ResultNotFoundException exception, HttpServletRequest httpServletRequest) {
         ErrorResponse errorResponse = createErrorResponse(null,
                 ExceptionMessage.RESULT_NOT_FOUND_MESSAGE,
@@ -111,19 +113,28 @@ public class GlobalExceptionConfig {
                 HttpStatus.BAD_REQUEST.toString()
         );
 
-        ResBody resbody = new ResBody(ResBody.CODE_ERROR, exception.getMessage(),errorResponse);
+        ResBody resbody = new ResBody(ResBody.CODE_ERROR, exception.getMessage(), errorResponse);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(resbody);
     }
 
-    public ErrorResponse createErrorResponse(List errorList, String message, String url, String statusCode){
-        String requestUri = url;
-//        String[] deps = requestUri.split("/");
-//        String lastURL = deps[deps.length-1];
+    @ExceptionHandler(value = DataIntegrityViolationException.class)
+    public ResponseEntity<ResBody> constraintViolationException(DataIntegrityViolationException exception, HttpServletRequest httpServletRequest) {
+        ErrorResponse errorResponse = createErrorResponse(null,
+                ExceptionMessage.CONSTRAINT_VIOLATION_MESSAGE,
+                httpServletRequest.getRequestURI(),
+                HttpStatus.INTERNAL_SERVER_ERROR.toString()
+        );
 
+        ResBody resbody = new ResBody(ResBody.CODE_ERROR, exception.getMessage(), errorResponse);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(resbody);
+    }
+
+
+    public ErrorResponse createErrorResponse(List<? extends Error> errorList, String message, String url, String statusCode){
         return ErrorResponse.builder()
                 .errorList(errorList)
                 .message(message)
-                .requestUrl(requestUri)
+                .requestUrl(url)
                 .statusCode(statusCode)
                 .build();
     }

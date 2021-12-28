@@ -15,9 +15,6 @@ spring:
         format_sql: true
         default_batch_fetch_size: 20
     database-platform: org.hibernate.dialect.H2Dialect
-  cache:
-    jcache:
-      config: classpath:ehcache.xml
 #  jackson:
 #    property-naming-strategy: SNAKE_CASE
 
@@ -54,18 +51,19 @@ spring:
   sql:
     init:
       mode: always
-
   h2:
     console:
       enabled: true
       path: /h2-console
-
   datasource:
     #    url: jdbc:h2:~/test; #메모리
     url: jdbc:h2:file:./memoryDb;AUTO_SERVER=true #상대경로 파일저장(memoryDb.mv.db)
     driver-class-name: org.h2.Driver
     username: sa
     password:
+  cache:
+    jcache:
+      config: classpath:ehcache.xml
 
 server:
   port: 9090
@@ -74,10 +72,10 @@ decorator:
   datasource:
     p6spy:
       enable-logging: true
-#      multiline: true
 
 file:
   upload-dir: D:\attach\SIDE\HCMP\UPLOAD_FILES
+
 ---
 # 개발
 spring:
@@ -85,17 +83,44 @@ spring:
     activate:
       on-profile: dev
 
+#  datasource:
+#    url: jdbc:log4jdbc:mariadb://211.43.12.150:13306/hcmp21?verifyServerCertificate=false&useSSL=false
+#    dirverClassName: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+#    hikari:
+#      username: hcmp
+#      password: hcmp54#@
+#      maximum-pool-size: 10
+#      connection-test-query: SELECT 1
+
+  jpa:
+    defer-datasource-initialization: true
+  sql:
+    init:
+      mode: always
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
   datasource:
-    url: jdbc:log4jdbc:mariadb://211.43.12.150:13306/hcmp21?verifyServerCertificate=false&useSSL=false
-    dirverClassName: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
-    hikari:
-      username: hcmp
-      password: hcmp54#@
-      maximum-pool-size: 10
-      connection-test-query: SELECT 1
+    #    url: jdbc:h2:~/test; #메모리
+    url: jdbc:h2:file:./memoryDb;AUTO_SERVER=true #상대경로 파일저장(memoryDb.mv.db)
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  redis:
+    host: localhost
+    port: 6379
 
 server:
   port: 9090
+
+decorator:
+  datasource:
+    p6spy:
+      enable-logging: true
+
+file:
+  upload-dir: D:\attach\SIDE\HCMP\UPLOAD_FILES
 
 ---
 # 배포

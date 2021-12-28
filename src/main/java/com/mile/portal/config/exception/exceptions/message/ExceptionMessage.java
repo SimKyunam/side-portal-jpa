@@ -7,4 +7,5 @@ public class ExceptionMessage {
     public static String ARGUMENT_NOT_VALID_MESSAGE = "유효하지 않은 값이 들어있습니다.";
     public static String TOKEN_EXPIRE_MESSAGE = "토큰이 만료 되었습니다.";
     public static String RESULT_NOT_FOUND_MESSAGE = "결과가 존재하지 않습니다.";
+    public static String CONSTRAINT_VIOLATION_MESSAGE = "데이터베이스에 동일한 키 값이 존재합니다.";
 }

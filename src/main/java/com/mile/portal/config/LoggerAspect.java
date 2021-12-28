@@ -70,7 +70,7 @@ public class LoggerAspect {
 
         Object result = point.proceed(point.getArgs());
         stopWatch.stop();
-        log.info(">>> time : {}", stopWatch.getTotalTimeSeconds());
+        log.info(">>> time : {} ms", Math.round(stopWatch.getTotalTimeSeconds() * 100) / 100.0);
         log.info(">>> class : {}(method : {}) API success...", className, methodName);
         log.info("----------------------------------------------------------------");
 

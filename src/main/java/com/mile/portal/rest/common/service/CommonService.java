@@ -12,6 +12,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,7 +21,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Transactional
 public class CommonService {
-    
+
+    private final EntityManager entityManager;
     private final CodeRepository codeRepository;
 
     @Transactional(readOnly = true)
@@ -69,7 +71,8 @@ public class CommonService {
                 .parent(parentCode)
                 .build();
 
-        return codeRepository.save(code);
+        entityManager.persist(code);
+        return code;
     }
 
     @CacheEvict(value = "codeCache", allEntries = true)

@@ -18,5 +18,5 @@ public class ErrorResponse {
     String message;
     String resultCode;
 
-    List<Error> errorList;
+    List<?> errorList;
 }
