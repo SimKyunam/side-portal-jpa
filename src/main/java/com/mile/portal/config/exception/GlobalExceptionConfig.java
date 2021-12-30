@@ -27,7 +27,7 @@ public class GlobalExceptionConfig {
 
     @ExceptionHandler(value = Exception.class)
     public ResponseEntity exception(Exception exception, HttpServletRequest httpServletRequest) {
-        log.error("Exception", exception.getMessage());
+        log.error(exception.getMessage(), exception.getStackTrace());
 
         ErrorResponse errorResponse = createErrorResponse(null,
                 ExceptionMessage.EXCEPTION_MESSAGE,
@@ -41,7 +41,7 @@ public class GlobalExceptionConfig {
 
     @ExceptionHandler(value = {BindException.class, MethodArgumentNotValidException.class})
     public ResponseEntity bindException(BindException exception, HttpServletRequest httpServletRequest) {
-        log.error("BindException", exception.getMessage());
+        log.error(exception.getMessage(), exception.getStackTrace());
 
         List<Error> errorList = new ArrayList<>();
 
@@ -74,7 +74,7 @@ public class GlobalExceptionConfig {
 
     @ExceptionHandler(value = BadRequestException.class)
     public ResponseEntity<ResBody> badRequestException(BadRequestException exception, HttpServletRequest httpServletRequest) {
-        log.error("BadRequestException", exception.getMessage());
+        log.error(exception.getMessage(), exception.getStackTrace());
 
         ErrorResponse errorResponse = createErrorResponse(null,
                 ExceptionMessage.BAD_REQUEST_MESSAGE,
@@ -88,7 +88,7 @@ public class GlobalExceptionConfig {
 
     @ExceptionHandler(value = {TokenExpireException.class})
     public ResponseEntity<ResBody> tokenExpireException(TokenExpireException exception, HttpServletRequest httpServletRequest) {
-        log.error("TokenExpireException", exception.getMessage());
+        log.error(exception.getMessage(), exception.getStackTrace());
 
         ErrorResponse errorResponse = createErrorResponse(null,
                 ExceptionMessage.TOKEN_EXPIRE_MESSAGE,
@@ -102,7 +102,7 @@ public class GlobalExceptionConfig {
 
     @ExceptionHandler(value = {EmptyResultDataAccessException.class})
     public ResponseEntity<ResBody> EmptyResultDataAccessException(EmptyResultDataAccessException exception, HttpServletRequest httpServletRequest) {
-        log.error("EmptyResultDataAccessException", exception.getMessage());
+        log.error(exception.getMessage(), exception.getStackTrace());
 
         ErrorResponse errorResponse = createErrorResponse(null,
                 ExceptionMessage.RESULT_NOT_FOUND_MESSAGE,
@@ -116,7 +116,7 @@ public class GlobalExceptionConfig {
 
     @ExceptionHandler(value = {ResultNotFoundException.class})
     public ResponseEntity<ResBody> resultNotFoundException(ResultNotFoundException exception, HttpServletRequest httpServletRequest) {
-        log.error("ResultNotFoundException", exception.getMessage());
+        log.error(exception.getMessage());
 
         ErrorResponse errorResponse = createErrorResponse(null,
                 ExceptionMessage.RESULT_NOT_FOUND_MESSAGE,
@@ -130,7 +130,7 @@ public class GlobalExceptionConfig {
 
     @ExceptionHandler(value = DataIntegrityViolationException.class)
     public ResponseEntity<ResBody> constraintViolationException(DataIntegrityViolationException exception, HttpServletRequest httpServletRequest) {
-        log.error("DataIntegrityViolationException", exception.getMessage());
+        log.error(exception.getMessage(), exception.getStackTrace());
 
         ErrorResponse errorResponse = createErrorResponse(null,
                 ExceptionMessage.CONSTRAINT_VIOLATION_MESSAGE,
