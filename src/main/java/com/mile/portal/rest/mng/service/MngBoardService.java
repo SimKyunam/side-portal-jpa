@@ -129,8 +129,8 @@ public class MngBoardService {
                 .collect(Collectors.toList());
 
         List<BoardNotice> boardNotices = boardNoticeRepository.findAllById(boardIdList);
-        boardAttachService.deleteBoardAttachFiles(boardNotices, "NTC"); //첨부파일 삭제
+        boardAttachService.deleteBoardAttachFiles(boardNotices, "NTC"); // 첨부파일 삭제
 
-        boardNotices.forEach(notice -> notice.setDeleted(LocalDateTime.now()));
+        boardNotices.forEach(notice -> notice.setDeleted(LocalDateTime.now())); // 소프트 삭제
     }
 }

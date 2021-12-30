@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.ConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +26,9 @@ import java.util.List;
 public class GlobalExceptionConfig {
 
     @ExceptionHandler(value = Exception.class)
-    public ResponseEntity exception(Exception exception, HttpServletRequest httpServletRequest){
+    public ResponseEntity exception(Exception exception, HttpServletRequest httpServletRequest) {
+        log.error("Exception", exception.getMessage());
+
         ErrorResponse errorResponse = createErrorResponse(null,
                 ExceptionMessage.EXCEPTION_MESSAGE,
                 httpServletRequest.getRequestURI(),
@@ -39,7 +40,9 @@ public class GlobalExceptionConfig {
     }
 
     @ExceptionHandler(value = {BindException.class, MethodArgumentNotValidException.class})
-    public ResponseEntity bindException(BindException exception, HttpServletRequest httpServletRequest){
+    public ResponseEntity bindException(BindException exception, HttpServletRequest httpServletRequest) {
+        log.error("BindException", exception.getMessage());
+
         List<Error> errorList = new ArrayList<>();
 
         BindingResult bindingResult = exception.getBindingResult();
@@ -71,6 +74,8 @@ public class GlobalExceptionConfig {
 
     @ExceptionHandler(value = BadRequestException.class)
     public ResponseEntity<ResBody> badRequestException(BadRequestException exception, HttpServletRequest httpServletRequest) {
+        log.error("BadRequestException", exception.getMessage());
+
         ErrorResponse errorResponse = createErrorResponse(null,
                 ExceptionMessage.BAD_REQUEST_MESSAGE,
                 httpServletRequest.getRequestURI(),
@@ -83,6 +88,8 @@ public class GlobalExceptionConfig {
 
     @ExceptionHandler(value = {TokenExpireException.class})
     public ResponseEntity<ResBody> tokenExpireException(TokenExpireException exception, HttpServletRequest httpServletRequest) {
+        log.error("TokenExpireException", exception.getMessage());
+
         ErrorResponse errorResponse = createErrorResponse(null,
                 ExceptionMessage.TOKEN_EXPIRE_MESSAGE,
                 httpServletRequest.getRequestURI(),
@@ -95,6 +102,8 @@ public class GlobalExceptionConfig {
 
     @ExceptionHandler(value = {EmptyResultDataAccessException.class})
     public ResponseEntity<ResBody> EmptyResultDataAccessException(EmptyResultDataAccessException exception, HttpServletRequest httpServletRequest) {
+        log.error("EmptyResultDataAccessException", exception.getMessage());
+
         ErrorResponse errorResponse = createErrorResponse(null,
                 ExceptionMessage.RESULT_NOT_FOUND_MESSAGE,
                 httpServletRequest.getRequestURI(),
@@ -107,6 +116,8 @@ public class GlobalExceptionConfig {
 
     @ExceptionHandler(value = {ResultNotFoundException.class})
     public ResponseEntity<ResBody> resultNotFoundException(ResultNotFoundException exception, HttpServletRequest httpServletRequest) {
+        log.error("ResultNotFoundException", exception.getMessage());
+
         ErrorResponse errorResponse = createErrorResponse(null,
                 ExceptionMessage.RESULT_NOT_FOUND_MESSAGE,
                 httpServletRequest.getRequestURI(),
@@ -119,6 +130,8 @@ public class GlobalExceptionConfig {
 
     @ExceptionHandler(value = DataIntegrityViolationException.class)
     public ResponseEntity<ResBody> constraintViolationException(DataIntegrityViolationException exception, HttpServletRequest httpServletRequest) {
+        log.error("DataIntegrityViolationException", exception.getMessage());
+
         ErrorResponse errorResponse = createErrorResponse(null,
                 ExceptionMessage.CONSTRAINT_VIOLATION_MESSAGE,
                 httpServletRequest.getRequestURI(),
@@ -130,7 +143,7 @@ public class GlobalExceptionConfig {
     }
 
 
-    public ErrorResponse createErrorResponse(List<? extends Error> errorList, String message, String url, String statusCode){
+    public ErrorResponse createErrorResponse(List<? extends Error> errorList, String message, String url, String statusCode) {
         return ErrorResponse.builder()
                 .errorList(errorList)
                 .message(message)

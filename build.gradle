@@ -71,6 +71,9 @@ dependencies {
 
     // hibernate5 데이터타입 (redis에서 캐싱 안되서 추가)
     implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-joda', version: '2.13.0'
+
+    //logstash
+    implementation group: 'net.logstash.logback', name: 'logstash-logback-encoder', version: '6.3'
 }
 
 test {
