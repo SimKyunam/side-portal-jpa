@@ -2,10 +2,9 @@ package com.mile.portal.rest.mng.controller;
 
 import com.mile.portal.rest.common.model.comm.ResBody;
 import com.mile.portal.rest.common.model.domain.Account;
+import com.mile.portal.rest.common.model.dto.board.BoardNoticeDto;
 import com.mile.portal.rest.mng.service.MngBoardService;
 import com.mile.portal.rest.user.model.comm.ReqBoard;
-import com.mile.portal.rest.common.model.domain.board.BoardNotice;
-import com.mile.portal.rest.user.model.dto.BoardNoticeDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -31,9 +30,7 @@ public class MngBoardController {
     public ResBody listBoardNotice(@AuthenticationPrincipal Account account,
                                    @RequestParam(required = false) ReqBoard.BoardNotice reqBoardNotice,
                                    @PageableDefault(sort = "id", size = 100, direction = Sort.Direction.DESC) Pageable pageable) {
-        log.info(String.valueOf(account));
-
-        Page<BoardNotice> boardNoticeList = mngBoardService.listBoardNotice(reqBoardNotice, pageable);
+        Page<BoardNoticeDto> boardNoticeList = mngBoardService.listBoardNotice(reqBoardNotice, pageable);
         return new ResBody(ResBody.CODE_SUCCESS, "", boardNoticeList);
     }
 
@@ -41,7 +38,9 @@ public class MngBoardController {
     public ResBody createBoardNotice(@AuthenticationPrincipal Account account,
                                      @ModelAttribute @Valid ReqBoard.BoardNotice reqBoardNotice,
                                      @RequestPart(required = false) List<MultipartFile> files) {
-        mngBoardService.createBoardNotice(reqBoardNotice, files);
+        Long managerId = account.getId();
+
+        mngBoardService.createBoardNotice(reqBoardNotice, files, managerId);
         return new ResBody(ResBody.CODE_SUCCESS, "", null);
     }
 
@@ -49,7 +48,9 @@ public class MngBoardController {
     public ResBody updateBoardNotice(@AuthenticationPrincipal Account account,
                                      @Valid ReqBoard.BoardNotice reqBoardNotice,
                                      @RequestPart(required = false) List<MultipartFile> files) {
-        mngBoardService.updateBoardNotice(reqBoardNotice, files);
+        Long managerId = account.getId();
+
+        mngBoardService.updateBoardNotice(reqBoardNotice, files, managerId);
         return new ResBody(ResBody.CODE_SUCCESS, "", null);
     }
 

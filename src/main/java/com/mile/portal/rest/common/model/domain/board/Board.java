@@ -1,5 +1,6 @@
 package com.mile.portal.rest.common.model.domain.board;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mile.portal.rest.common.model.domain.BaseEntity;
 import com.mile.portal.rest.mng.model.domain.Manager;
 import lombok.*;
@@ -13,7 +14,8 @@ import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -36,7 +38,9 @@ public class Board extends BaseEntity {
     @ColumnDefault(value = "0")
     private int readCnt;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "account_id")
+    @JsonIgnore
     private Manager manager;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "board")

@@ -1,15 +1,17 @@
 package com.mile.portal.rest.common.repository.custom;
 
-import com.mile.portal.rest.common.model.domain.board.BoardNotice;
-import com.mile.portal.rest.user.model.dto.BoardNoticeDto;
+import com.mile.portal.rest.common.model.dto.board.BoardNoticeDto;
 import com.mile.portal.rest.user.model.comm.ReqBoard;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface BoardNoticeRepositoryCustom {
 
-    List<BoardNotice> noticeSearchList(ReqBoard.BoardNotice reqBoardNotice, Pageable pageable);
+    List<BoardNoticeDto> noticeSearchList(ReqBoard.BoardNotice reqBoardNotice, Pageable pageable);
+
     Long noticeSearchListCnt(ReqBoard.BoardNotice reqBoardNotice);
-    BoardNoticeDto noticeSelect(BoardNotice reqBoardNotice);
+
+    Optional<BoardNoticeDto> noticeSelect(Long id);
 }

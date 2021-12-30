@@ -1,12 +1,11 @@
 package com.mile.portal.rest.user.service;
 
 import com.mile.portal.config.exception.exceptions.ResultNotFoundException;
+import com.mile.portal.rest.common.model.dto.board.BoardNoticeDto;
 import com.mile.portal.rest.common.repository.BoardFaqRepository;
 import com.mile.portal.rest.common.repository.BoardNoticeRepository;
 import com.mile.portal.rest.common.repository.BoardQnaRepository;
 import com.mile.portal.rest.user.model.comm.ReqBoard;
-import com.mile.portal.rest.common.model.domain.board.BoardNotice;
-import com.mile.portal.rest.user.model.dto.BoardNoticeDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -28,9 +27,9 @@ public class BoardService {
     private final BoardFaqRepository boardFaqRepository;
 
     @Transactional(readOnly = true)
-    public Page<BoardNotice> listBoardNotice(ReqBoard.BoardNotice reqBoardNotice, Pageable pageable) {
+    public Page<BoardNoticeDto> listBoardNotice(ReqBoard.BoardNotice reqBoardNotice, Pageable pageable) {
         // 컨텐츠 쿼리
-        List<BoardNotice> boardNoticeList = boardNoticeRepository.noticeSearchList(reqBoardNotice, pageable);
+        List<BoardNoticeDto> boardNoticeList = boardNoticeRepository.noticeSearchList(reqBoardNotice, pageable);
 
         // count 하는 쿼리
         long total = boardNoticeRepository.noticeSearchListCnt(reqBoardNotice);
@@ -40,7 +39,6 @@ public class BoardService {
 
     @Transactional(readOnly = true)
     public BoardNoticeDto selectBoardNotice(Long id) {
-        BoardNotice boardNotice = boardNoticeRepository.findById(id).orElseThrow(ResultNotFoundException::new);
-        return boardNoticeRepository.noticeSelect(boardNotice);
+        return boardNoticeRepository.noticeSelect(id).orElseThrow(ResultNotFoundException::new);
     }
 }

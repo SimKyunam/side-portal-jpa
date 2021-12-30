@@ -1,10 +1,10 @@
 package com.mile.portal.rest.mng.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mile.portal.rest.common.model.domain.board.BoardNotice;
+import com.mile.portal.rest.common.model.dto.board.BoardNoticeDto;
 import com.mile.portal.rest.mng.service.MngBoardService;
 import com.mile.portal.rest.user.model.comm.ReqBoard;
-import com.mile.portal.rest.common.model.domain.board.BoardNotice;
-import com.mile.portal.rest.user.model.dto.BoardNoticeDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -53,7 +53,7 @@ class MngBoardControllerTest {
     private MngBoardService mngBoardService;
 
     @BeforeEach
-    public void setUp(){
+    public void setUp() {
         mvc = MockMvcBuilders
                 .webAppContextSetup(webApplicationContext)
                 .addFilters(new CharacterEncodingFilter("UTF-8", true))  // 필터 추가
@@ -65,7 +65,7 @@ class MngBoardControllerTest {
     @Test
     @DisplayName("1. 공지사항 목록 조회")
     void test1() throws Exception {
-        Page<BoardNotice> noticePaging = createNoticePaging();
+        Page<BoardNoticeDto> noticePaging = createNoticePaging();
 
         //given
         given(mngBoardService.listBoardNotice(any(), any())).willReturn(noticePaging);
@@ -97,7 +97,7 @@ class MngBoardControllerTest {
                 .andExpect(status().isOk());
 
         //then
-        then(mngBoardService).should().createBoardNotice(any(), any());
+        then(mngBoardService).should().createBoardNotice(any(), any(), any());
     }
 
     @Test
@@ -118,7 +118,7 @@ class MngBoardControllerTest {
                 .andExpect(status().isOk());
 
         //then
-        then(mngBoardService).should().updateBoardNotice(any(), any());
+        then(mngBoardService).should().updateBoardNotice(any(), any(), any());
     }
 
     @Test
@@ -165,11 +165,11 @@ class MngBoardControllerTest {
                 .build();
     }
 
-    Page<BoardNotice> createNoticePaging() {
-        List<BoardNotice> boardNoticeList = new ArrayList<>();
+    Page<BoardNoticeDto> createNoticePaging() {
+        List<BoardNoticeDto> boardNoticeList = new ArrayList<>();
         Pageable pageable = PageRequest.of(0, 5, Sort.Direction.DESC, "id");
         IntStream.range(0, 5)
-                .forEach(i -> boardNoticeList.add(createNotice()));
+                .forEach(i -> boardNoticeList.add(createNoticeDto()));
 
         return PageableExecutionUtils.getPage(boardNoticeList, pageable, boardNoticeList::size);
     }

@@ -1,13 +1,12 @@
 package com.mile.portal.rest.mng.model.domain;
 
 import com.mile.portal.rest.common.model.domain.Account;
+import com.mile.portal.rest.common.model.domain.board.Board;
 import com.mile.portal.rest.common.model.enums.Authority;
-import com.mile.portal.rest.common.model.domain.board.BoardFaq;
-import com.mile.portal.rest.common.model.domain.board.BoardNotice;
-import com.mile.portal.rest.common.model.domain.board.BoardQna;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -25,13 +24,7 @@ public class Manager extends Account {
     private String email;
 
     @OneToMany(mappedBy = "manager", fetch = FetchType.LAZY)
-    private List<BoardFaq> boardFaqs;
-
-    @OneToMany(mappedBy = "manager", fetch = FetchType.LAZY)
-    private List<BoardNotice> boardNotices;
-
-    @OneToMany(mappedBy = "manager", fetch = FetchType.LAZY)
-    private List<BoardQna> boardQnas;
+    private List<Board> boards = new ArrayList<>();
 
     @Builder
     public Manager(Long id, String name, String loginPwd,

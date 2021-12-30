@@ -1,9 +1,8 @@
 package com.mile.portal.rest.user.controller;
 
-import com.mile.portal.rest.common.model.domain.Account;
 import com.mile.portal.rest.common.model.comm.ResBody;
-import com.mile.portal.rest.common.model.domain.board.BoardNotice;
-import com.mile.portal.rest.user.model.dto.BoardNoticeDto;
+import com.mile.portal.rest.common.model.domain.Account;
+import com.mile.portal.rest.common.model.dto.board.BoardNoticeDto;
 import com.mile.portal.rest.user.model.comm.ReqBoard;
 import com.mile.portal.rest.user.service.BoardService;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +28,7 @@ public class BoardController {
                                    @PageableDefault(sort = "id", size = 100, direction = Sort.Direction.DESC) Pageable pageable) {
         log.info(String.valueOf(account));
 
-        Page<BoardNotice> boardNoticeList = boardService.listBoardNotice(reqBoardNotice, pageable);
+        Page<BoardNoticeDto> boardNoticeList = boardService.listBoardNotice(reqBoardNotice, pageable);
         return new ResBody(ResBody.CODE_SUCCESS, "", boardNoticeList);
     }
 

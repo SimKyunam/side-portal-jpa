@@ -1,15 +1,15 @@
 package com.mile.portal.rest.common.model.domain.board;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mile.portal.rest.common.model.domain.Attach;
-import com.mile.portal.rest.common.model.enums.Authority;
 import lombok.*;
-import lombok.experimental.Accessors;
 
 import javax.persistence.*;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @DiscriminatorValue("B")
@@ -17,7 +17,9 @@ public class BoardAttach extends Attach {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id")
+    @JsonIgnore
     private Board board;
+
     private String boardType;
 
     @Builder

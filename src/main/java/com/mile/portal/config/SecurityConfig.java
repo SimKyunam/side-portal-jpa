@@ -46,7 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(
                         "/exception/**", "/common/**", "/h2-console/**"
-                        , "/api/v1/auth/**"
+                        , "/api/v1/auth/**", "/api/v1/attach/**"
                 ).permitAll()
                 .antMatchers("/api/v1/mng/**").hasRole("ADMIN") // 관리자
                 .antMatchers("/api/v1/user/**").hasRole("USER") // 사용자
@@ -54,9 +54,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().exceptionHandling()
                 .and().headers().frameOptions().disable() // 없으면 h2 console 안됌
                 .and().addFilterBefore(
-                        jwtAuthenticationFilter,
-                        UsernamePasswordAuthenticationFilter.class
-                ).sessionManagement()
+                jwtAuthenticationFilter,
+                UsernamePasswordAuthenticationFilter.class
+        ).sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 
@@ -66,9 +66,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .requestMatchers(
                         PathRequest.toStaticResources().atCommonLocations()
                 ).antMatchers(
-            "/v1/api-docs", "/swagger-resources/**", "/swagger-ui.html",
-                        "/webjars/**", "/swagger/**", "/h2-console"
-                );
+                "/v1/api-docs", "/swagger-resources/**", "/swagger-ui.html",
+                "/webjars/**", "/swagger/**", "/h2-console"
+        );
     }
 
     @Bean

@@ -10,19 +10,22 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class BoardAttachService extends AttachService {
+public class BoardAttachService extends FileService {
 
     private final BoardAttachRepository boardAttachRepository;
 
     /** 첨부파일 */
     /**
      * 첨부파일 공통 처리 uuid 기본 사용 메소드
+     *
      * @param board
      * @param boardType
      * @param fileList
@@ -34,6 +37,7 @@ public class BoardAttachService extends AttachService {
 
     /**
      * 첨부파일 공통 처리 uuid 설정 메소드
+     *
      * @param board
      * @param boardType
      * @param fileList
@@ -72,22 +76,25 @@ public class BoardAttachService extends AttachService {
         Long result = 0L;
         String attachPath = "";
 
-        List<BoardAttach> deleteNameUps = boardAttachRepository.findByAttachUploadIn(deleteUploadNames).orElseGet(Collections::emptyList);
+        List<BoardAttach> deleteNameUps = boardAttachRepository.findByAttachUploadIn(deleteUploadNames)
+                .orElseGet(Collections::emptyList);
 
-        if(deleteNameUps.size() > 0) {
+        if (deleteNameUps.size() > 0) {
             attachPath = deleteNameUps.get(0).getPath();
         } else {
-            attachPath = boardAttachRepository.findFirstByBoardIdAndBoardType(board.getId(), boardType).orElseGet(BoardAttach::new).getPath();
+            attachPath = boardAttachRepository.findFirstByBoardIdAndBoardType(board.getId(), boardType)
+                    .orElseGet(BoardAttach::new)
+                    .getPath();
         }
 
-        if(attachPath != null && !attachPath.isEmpty()) {
+        if (attachPath != null && !attachPath.isEmpty()) {
             result = boardAttachRepository.deleteBoardAttachFile(board, deleteNameUps); //데이터베이스 삭제
-            if(result > 0){
-                if(deleteNameUps.size() > 0){
-                    for(BoardAttach boardAttach : deleteNameUps){
+            if (result > 0) {
+                if (deleteNameUps.size() > 0) {
+                    for (BoardAttach boardAttach : deleteNameUps) {
                         super.delete(attachPath, boardAttach.getAttachUpload()); //실제 파일 단일 삭제
                     }
-                }else{
+                } else {
                     super.deleteAll(attachPath); //실제 파일 삭제
                 }
             }
@@ -100,10 +107,14 @@ public class BoardAttachService extends AttachService {
     @Transactional
     public int deleteBoardAttachFiles(List<? extends Board> boardList, String bbsType) {
         int deleteCnt = 0;
-        for(Board board : boardList) {
+        for (Board board : boardList) {
             deleteCnt += this.deleteBoardAttachFile(board, bbsType);
         }
 
         return deleteCnt;
+    }
+
+    public List<BoardAttach> listBoardAttach(Long id) {
+        return boardAttachRepository.findByBoardId(id).orElseThrow(ResultNotFoundException::new);
     }
 }

@@ -2,7 +2,7 @@ package com.mile.portal.rest.user.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mile.portal.rest.common.model.domain.board.BoardNotice;
-import com.mile.portal.rest.user.model.dto.BoardNoticeDto;
+import com.mile.portal.rest.common.model.dto.board.BoardNoticeDto;
 import com.mile.portal.rest.user.service.BoardService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -30,9 +30,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @WithMockUser
@@ -49,7 +50,7 @@ class BoardControllerTest {
     private BoardService boardService;
 
     @BeforeEach
-    public void setUp(){
+    public void setUp() {
 
         mvc = MockMvcBuilders
                 .webAppContextSetup(webApplicationContext)
@@ -62,7 +63,7 @@ class BoardControllerTest {
     @Test
     @DisplayName("1. 공지사항 목록 조회")
     void test1() throws Exception {
-        Page<BoardNotice> noticePaging = createNoticePaging();
+        Page<BoardNoticeDto> noticePaging = createNoticePaging();
 
         //given
         given(boardService.listBoardNotice(any(), any())).willReturn(noticePaging);
@@ -109,11 +110,11 @@ class BoardControllerTest {
                 .build();
     }
 
-    Page<BoardNotice> createNoticePaging() {
-        List<BoardNotice> boardNoticeList = new ArrayList<>();
+    Page<BoardNoticeDto> createNoticePaging() {
+        List<BoardNoticeDto> boardNoticeList = new ArrayList<>();
         Pageable pageable = PageRequest.of(0, 5, Sort.Direction.DESC, "id");
         IntStream.range(0, 5)
-                .forEach(i -> boardNoticeList.add(createNotice()));
+                .forEach(i -> boardNoticeList.add(createNoticeDto()));
 
         return PageableExecutionUtils.getPage(boardNoticeList, pageable, boardNoticeList::size);
     }

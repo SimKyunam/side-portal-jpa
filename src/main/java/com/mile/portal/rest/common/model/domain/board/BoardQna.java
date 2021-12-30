@@ -1,10 +1,9 @@
 package com.mile.portal.rest.common.model.domain.board;
 
-import com.mile.portal.rest.common.model.domain.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mile.portal.rest.mng.model.domain.Manager;
 import com.mile.portal.rest.user.model.domain.Client;
 import lombok.*;
-import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.util.List;
@@ -24,6 +23,7 @@ public class BoardQna extends Board {
     private String answerContent;
 
     @ManyToOne
+    @JsonIgnore
     private Client client;
 
     @Builder
