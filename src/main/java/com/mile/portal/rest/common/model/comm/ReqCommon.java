@@ -81,10 +81,10 @@ public class ReqCommon {
     @AllArgsConstructor
     public static class Menu {
         @NotBlank
-        private String menuId;
+        private Long menuId;
         @NotBlank
         private String menuName;
         private String menuValue;
-        private String parentId;
+        private Long parentId;
     }
 }

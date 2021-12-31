@@ -26,10 +26,10 @@ public class MenuController {
     }
 
     @GetMapping("/menu/{menuId}")
-    public ResBody selectMenu(@PathVariable String menuId,
-                              @RequestParam(required = false, defaultValue = "") String childMenu) {
+    public ResBody selectMenu(@PathVariable Long menuId,
+                              @RequestParam(required = false, defaultValue = "") Long childMenuId) {
 
-        Menu menuList = menuService.selectMenu(menuId, childMenu);
+        Menu menuList = menuService.selectMenu(menuId, childMenuId);
         return new ResBody(ResBody.CODE_SUCCESS, "", menuList);
     }
 
@@ -46,7 +46,7 @@ public class MenuController {
     }
 
     @DeleteMapping("/menu/{menuId}")
-    public ResBody deleteMenu(@PathVariable String menuId) {
+    public ResBody deleteMenu(@PathVariable Long menuId) {
         menuService.deleteMenu(menuId);
         return new ResBody(ResBody.CODE_SUCCESS, "", null);
     }

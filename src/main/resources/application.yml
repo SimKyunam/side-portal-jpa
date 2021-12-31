@@ -13,7 +13,6 @@ spring:
       hibernate:
         format_sql: true
         default_batch_fetch_size: 20
-    database-platform: org.hibernate.dialect.H2Dialect
   redis: #redis cache 사용
     host: localhost
     port: 6379
@@ -51,6 +50,7 @@ spring:
       on-profile: local
   jpa:
     defer-datasource-initialization: true
+    database-platform: org.hibernate.dialect.H2Dialect
   sql:
     init:
       mode: always
@@ -74,7 +74,7 @@ decorator:
     p6spy:
       enable-logging: true
 file:
-  upload-dir: D:\attach\SIDE\HCMP\UPLOAD_FILES
+  upload-dir: C:\Users\Sim\Desktop\folder\attach\SIDE\HCMP\UPLOAD_FILES
 
 ---
 # 개발

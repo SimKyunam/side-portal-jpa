@@ -3,9 +3,8 @@ package com.mile.portal.rest.common.service;
 import com.mile.portal.config.cache.CacheProperties;
 import com.mile.portal.config.exception.exceptions.ResultNotFoundException;
 import com.mile.portal.rest.common.model.comm.ReqCommon;
-import com.mile.portal.rest.common.model.domain.Code;
 import com.mile.portal.rest.common.model.domain.Menu;
-import com.mile.portal.rest.common.model.dto.CodeDto;
+import com.mile.portal.rest.common.model.dto.MenuDto;
 import com.mile.portal.rest.common.repository.MenuRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,47 +32,47 @@ public class MenuService {
     @Transactional(readOnly = true)
     @Cacheable(value = CacheProperties.MENU)
     public List<Menu> listMenu() {
-        return menuRepository.findTreeAll();
+        return menuRepository.findMenuAll();
     }
 
     @Transactional(readOnly = true)
-    @Cacheable(value = CacheProperties.MENU, key = "#codeId.concat(':').concat(#childCode)", unless = "#result == null")
-    public Code selectMenu(String codeId, String childCode) {
-        return menuRepository.findTreeCode(codeId, childCode);
+    @Cacheable(value = CacheProperties.MENU, key = "#menuId.concat(':').concat(#childMenuId)", unless = "#result == null")
+    public Menu selectMenu(Long menuId, Long childMenuId) {
+        return menuRepository.findMenuDetail(menuId, childMenuId);
     }
 
     @CacheEvict(value = CacheProperties.MENU, allEntries = true)
-    public Code createMenu(ReqCommon.Code reqCode) {
+    public Menu createMenu(ReqCommon.Menu reqMenu) {
         int depth = 1, ord = 1;
-        String parentId = reqCode.getParentId();
-        String codeId = reqCode.getCodeId();
-        Code parentCode = null;
+        Long parentId = reqMenu.getParentId();
+        Long menuId = reqMenu.getMenuId();
+        Menu parentMenu = null;
 
         if (parentId != null) {
-            CodeDto parent = Optional.ofNullable(menuRepository.findParentCode(parentId, codeId)).orElseThrow(ResultNotFoundException::new);
+            MenuDto parent = Optional.ofNullable(menuRepository.findParentMenu(parentId, menuId)).orElseThrow(ResultNotFoundException::new);
 
             depth = parent.getDepth() + 1;
             ord = parent.getChildCount().intValue() + 1;
 
-            parentCode = Code.builder()
-                    .code(parent.getCode())
-                    .codeValue(parent.getCodeValue())
-                    .codeName(parent.getCodeName())
+            parentMenu = Menu.builder()
+                    .id(parent.getId())
+                    .menuName(parent.getMenuName())
+                    .menuValue(parent.getMenuValue())
                     .depth(parent.getDepth())
                     .ord(parent.getOrd())
                     .build();
         } else {
-            long parentCnt = menuRepository.countByParentIsNullAndCodeNot(codeId);
+            long parentCnt = menuRepository.countByParentIsNullAndIdNot(menuId);
             ord = (int) parentCnt + 1;
         }
 
-        Code code = Code.builder()
-                .code(reqCode.getCodeId())
-                .codeName(reqCode.getCodeName())
-                .codeValue(reqCode.getCodeValue())
+        Menu code = Menu.builder()
+                .id(reqMenu.getMenuId())
+                .menuName(reqMenu.getMenuName())
+                .menuValue(reqMenu.getMenuValue())
                 .depth(depth)
                 .ord(ord)
-                .parent(parentCode)
+                .parent(parentMenu)
                 .build();
 
         entityManager.persist(code);
@@ -81,20 +80,20 @@ public class MenuService {
     }
 
     @CacheEvict(value = CacheProperties.MENU, allEntries = true)
-    public Code updateMenu(ReqCommon.Code reqCode) {
-        String codeName = reqCode.getCodeName();
-        String codeValue = reqCode.getCodeValue();
-        String codeId = reqCode.getCodeId();
+    public Menu updateMenu(ReqCommon.Menu reqMenu) {
+        Long menuId = reqMenu.getMenuId();
+        String menuName = reqMenu.getMenuName();
+        String menuValue = reqMenu.getMenuValue();
 
-        Code code = menuRepository.findById(codeId).orElseThrow(ResultNotFoundException::new);
-        code.setCodeName(codeName);
-        code.setCodeValue(codeValue);
+        Menu menu = menuRepository.findById(menuId).orElseThrow(ResultNotFoundException::new);
+        menu.setMenuName(menuName);
+        menu.setMenuValue(menuValue);
 
-        return menuRepository.save(code);
+        return menuRepository.save(menu);
     }
 
     @CacheEvict(value = CacheProperties.MENU, allEntries = true)
-    public void deleteMenu(String codeId) {
-        menuRepository.deleteById(codeId);
+    public void deleteMenu(Long menuId) {
+        menuRepository.deleteById(menuId);
     }
 }

@@ -1,8 +1,8 @@
 package com.mile.portal.rest.common.repository.custom;
 
-import com.mile.portal.rest.common.model.domain.Code;
-import com.mile.portal.rest.common.model.domain.QCode;
-import com.mile.portal.rest.common.model.dto.CodeDto;
+import com.mile.portal.rest.common.model.domain.Menu;
+import com.mile.portal.rest.common.model.domain.QMenu;
+import com.mile.portal.rest.common.model.dto.MenuDto;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -22,9 +22,9 @@ public class MenuRepositoryImpl implements MenuRepositoryCustom {
     private final JPAQueryFactory query;
 
     @Override
-    public List<Code> findTreeAll() {
-        QCode parent = new QCode("parent");
-        QCode child = new QCode("child");
+    public List<Menu> findMenuAll() {
+        QMenu parent = new QMenu("parent");
+        QMenu child = new QMenu("child");
 
         return query.selectFrom(parent)
                 .distinct()
@@ -36,63 +36,45 @@ public class MenuRepositoryImpl implements MenuRepositoryCustom {
     }
 
     @Override
-    public Code findTreeCode(String code, String childCode) {
-        QCode parent = new QCode("parent");
-        QCode child = new QCode("child");
+    public Menu findMenuDetail(Long menuId, Long childMenuId) {
+        QMenu parent = new QMenu("parent");
+        QMenu child = new QMenu("child");
 
         return query.selectFrom(parent)
                 .distinct()
                 .leftJoin(parent.child, child)
                 .fetchJoin()
-                .where(parent.code.eq(code), childCodeCdEq(childCode))
+                .where(parent.id.eq(menuId), childMenuIdEq(childMenuId))
                 .orderBy(parent.ord.asc(), child.ord.asc())
                 .fetchOne();
     }
 
     @Override
-    public CodeDto findParentCode(String parentId, String codeId) {
-        QCode parent = new QCode("parent");
-        QCode child = new QCode("child");
+    public MenuDto findParentMenu(Long parentId, Long childMenuId) {
+        QMenu parent = new QMenu("parent");
+        QMenu child = new QMenu("child");
 
         return query.select(
-                Projections.fields(CodeDto.class,
-                        parent.code, parent.codeName, parent.codeValue, parent.ord, parent.depth,
+                Projections.fields(MenuDto.class,
+                        parent.id, parent.menuName, parent.menuValue, parent.ord, parent.depth,
                         ExpressionUtils.as(
-                                JPAExpressions.select(count(child.code))
+                                JPAExpressions.select(count(child.id))
                                         .from(child)
-                                        .where(child.parent.eq(parent), childCodeCdNe(codeId)),
+                                        .where(child.parent.eq(parent), childMenuIdNe(childMenuId)),
                                 "childCount")
                 ))
                 .from(parent)
-                .where(parent.code.eq(parentId))
+                .where(parent.id.eq(parentId))
                 .fetchOne();
     }
 
-    @Override
-    public List<CodeDto> findByCodeChildren(String[] codes) {
-        QCode parent = new QCode("parent");
-        QCode child = new QCode("child");
-
-        return query.select(
-                Projections.fields(CodeDto.class,
-                        parent.code, parent.codeName, parent.codeValue, parent.ord, parent.depth,
-                        ExpressionUtils.as(
-                                JPAExpressions.select(count(child.code))
-                                        .from(child)
-                                        .where(child.parent.eq(parent)),
-                                "childCount")
-                ))
-                .from(parent)
-                .where(parent.code.in(codes)).fetch();
+    private BooleanExpression childMenuIdEq(Long childMenuId) {
+        QMenu child = new QMenu("child");
+        return childMenuId != null && childMenuId > 0 ? child.id.eq(childMenuId) : null;
     }
 
-    private BooleanExpression childCodeCdEq(String childCode) {
-        QCode child = new QCode("child");
-        return childCode != null && !childCode.isEmpty() ? child.code.eq(childCode) : null;
-    }
-
-    private BooleanExpression childCodeCdNe(String childCode) {
-        QCode child = new QCode("child");
-        return childCode != null && !childCode.isEmpty() ? child.code.ne(childCode) : null;
+    private BooleanExpression childMenuIdNe(Long childMenuId) {
+        QMenu child = new QMenu("child");
+        return childMenuId != null && childMenuId > 0 ? child.id.ne(childMenuId) : null;
     }
 }

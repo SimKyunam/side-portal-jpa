@@ -1,16 +1,14 @@
 package com.mile.portal.rest.common.repository.custom;
 
-import com.mile.portal.rest.common.model.domain.Code;
-import com.mile.portal.rest.common.model.dto.CodeDto;
+import com.mile.portal.rest.common.model.domain.Menu;
+import com.mile.portal.rest.common.model.dto.MenuDto;
 
 import java.util.List;
 
 public interface MenuRepositoryCustom {
-    List<Code> findTreeAll();
+    List<Menu> findMenuAll();
 
-    Code findTreeCode(String code, String childCode);
+    Menu findMenuDetail(Long menuId, Long childMenuId);
 
-    CodeDto findParentCode(String parentId, String codeId);
-
-    List<CodeDto> findByCodeChildren(String... codes);
+    MenuDto findParentMenu(Long parentId, Long childMenuId);
 }
