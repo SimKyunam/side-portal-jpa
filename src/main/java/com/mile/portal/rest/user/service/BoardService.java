@@ -1,5 +1,6 @@
 package com.mile.portal.rest.user.service;
 
+import com.mile.portal.config.cache.CacheProperties;
 import com.mile.portal.config.exception.exceptions.ResultNotFoundException;
 import com.mile.portal.rest.common.model.dto.board.BoardNoticeDto;
 import com.mile.portal.rest.common.repository.BoardFaqRepository;
@@ -8,6 +9,7 @@ import com.mile.portal.rest.common.repository.BoardQnaRepository;
 import com.mile.portal.rest.user.model.comm.ReqBoard;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
@@ -27,6 +29,7 @@ public class BoardService {
     private final BoardFaqRepository boardFaqRepository;
 
     @Transactional(readOnly = true)
+    @Cacheable(value = CacheProperties.BOARD_NOTICE, unless = "#result == null")
     public Page<BoardNoticeDto> listBoardNotice(ReqBoard.BoardNotice reqBoardNotice, Pageable pageable) {
         // 컨텐츠 쿼리
         List<BoardNoticeDto> boardNoticeList = boardNoticeRepository.noticeSearchList(reqBoardNotice, pageable);
@@ -38,6 +41,7 @@ public class BoardService {
     }
 
     @Transactional(readOnly = true)
+    @Cacheable(value = CacheProperties.BOARD_NOTICE, key = "#id", unless = "#result == null")
     public BoardNoticeDto selectBoardNotice(Long id) {
         return boardNoticeRepository.noticeSelect(id).orElseThrow(ResultNotFoundException::new);
     }

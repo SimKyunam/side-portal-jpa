@@ -17,6 +17,7 @@ spring:
   redis: #redis cache 사용
     host: localhost
     port: 6379
+
 #  cache: #ehcache 사용
 #    jcache:
 #      config: classpath:ehcache.xml

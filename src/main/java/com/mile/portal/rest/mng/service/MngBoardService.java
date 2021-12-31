@@ -1,5 +1,6 @@
 package com.mile.portal.rest.mng.service;
 
+import com.mile.portal.config.cache.CacheProperties;
 import com.mile.portal.config.exception.exceptions.ResultNotFoundException;
 import com.mile.portal.rest.common.model.domain.board.BoardNotice;
 import com.mile.portal.rest.common.model.dto.board.BoardNoticeDto;
@@ -11,6 +12,8 @@ import com.mile.portal.rest.mng.repository.ManagerRepository;
 import com.mile.portal.rest.user.model.comm.ReqBoard;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
@@ -30,14 +33,14 @@ import java.util.stream.Collectors;
 @Transactional
 public class MngBoardService {
     private final BoardAttachService boardAttachService; // 게시판 첨부 파일
-
     private final ManagerRepository managerRepository;
-    private final BoardNoticeRepository boardNoticeRepository;
 
+    private final BoardNoticeRepository boardNoticeRepository;
     private final BoardQnaRepository boardQnaRepository;
     private final BoardFaqRepository boardFaqRepository;
 
     @Transactional(readOnly = true)
+    @Cacheable(value = CacheProperties.BOARD_NOTICE, unless = "#result == null")
     public Page<BoardNoticeDto> listBoardNotice(ReqBoard.BoardNotice reqBoardNotice, Pageable pageable) {
 
         // 컨텐츠 쿼리
@@ -49,6 +52,7 @@ public class MngBoardService {
         return PageableExecutionUtils.getPage(boardNoticeList, pageable, () -> total);
     }
 
+    @CacheEvict(value = CacheProperties.BOARD_NOTICE, allEntries = true)
     public BoardNotice createBoardNotice(ReqBoard.BoardNotice reqBoardNotice, List<MultipartFile> files, Long managerId) {
         BoardNotice boardNotice = BoardNotice.builder()
                 .title(reqBoardNotice.getTitle())
@@ -77,6 +81,7 @@ public class MngBoardService {
         return notice;
     }
 
+    @CacheEvict(value = CacheProperties.BOARD_NOTICE, allEntries = true)
     public BoardNotice updateBoardNotice(ReqBoard.BoardNotice reqBoardNotice, List<MultipartFile> files, Long managerId) {
         BoardNotice boardNotice = boardNoticeRepository.findById(reqBoardNotice.getId()).orElseThrow(ResultNotFoundException::new);
 
@@ -110,6 +115,7 @@ public class MngBoardService {
     }
 
     @Transactional(readOnly = true)
+    @Cacheable(value = CacheProperties.BOARD_NOTICE, key = "#id", unless = "#result == null")
     public BoardNoticeDto selectBoardNotice(Long id) {
         BoardNoticeDto boardNoticeDto = boardNoticeRepository.noticeSelect(id).orElseThrow(ResultNotFoundException::new);
 
@@ -120,6 +126,7 @@ public class MngBoardService {
         return boardNoticeDto;
     }
 
+    @CacheEvict(value = CacheProperties.BOARD_NOTICE, allEntries = true)
     public void deleteBoardNotice(String ids) {
         List<Long> boardIdList = Arrays.stream(ids.split(","))
                 .map(String::trim)

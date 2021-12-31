@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.cache.CacheKeyPrefix;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -21,9 +22,11 @@ import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
+import java.time.Duration;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
-//@Profile({"dev", "release"})
 @Configuration
 @RequiredArgsConstructor
 public class RedisCacheConfig {
@@ -35,13 +38,14 @@ public class RedisCacheConfig {
 
     public Jackson2JsonRedisSerializer redisJsonRedisSerializer() {
         Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<>(Object.class);
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY);
-        mapper.registerModule(new Jdk8Module());
-        mapper.registerModule(new JavaTimeModule());
-        mapper.registerModule(new JodaModule());
-        mapper.addMixIn(Collection.class, HibernateCollectionMixIn.class);
-        jackson2JsonRedisSerializer.setObjectMapper(mapper);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.activateDefaultTyping(objectMapper.getPolymorphicTypeValidator(), ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY);
+        objectMapper.registerModule(new Jdk8Module());
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.registerModule(new JodaModule());
+        objectMapper.addMixIn(Collection.class, HibernateCollectionMixIn.class);
+        jackson2JsonRedisSerializer.setObjectMapper(objectMapper);
 
         return jackson2JsonRedisSerializer;
     }
@@ -65,17 +69,43 @@ public class RedisCacheConfig {
 
     @Bean
     public CacheManager redisCacheManager() {
-        RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
+        return RedisCacheManager
+                .RedisCacheManagerBuilder
+                .fromConnectionFactory(redisConnectionFactory())
+                .cacheDefaults(redisCacheConfiguration(CacheProperties.DEFAULT_EXPIRE_SEC))
+                .withInitialCacheConfigurations(customCacheConfig())
+                .build();
+    }
+
+    // 커스텀 캐시들 추가
+    public Map<String, RedisCacheConfiguration> customCacheConfig() {
+        Map<String, Integer> cacheMap = new HashMap<>();
+        cacheMap.put(CacheProperties.USER, CacheProperties.USER_EXPIRE_SEC);
+        cacheMap.put(CacheProperties.BOARD_NOTICE, CacheProperties.BOARD_NOTICE_EXPIRE_SEC);
+        cacheMap.put(CacheProperties.BOARD_FAQ, CacheProperties.BOARD_FAQ_EXPIRE_SEC);
+        cacheMap.put(CacheProperties.BOARD_QNA, CacheProperties.BOARD_QNA_EXPIRE_SEC);
+        cacheMap.put(CacheProperties.CODE, CacheProperties.CODE_EXPIRE_SEC);
+
+        Map<String, RedisCacheConfiguration> cacheConfigurations = new HashMap<>();
+
+        cacheMap.forEach((key, value) -> {
+            cacheConfigurations.put(key, redisCacheConfiguration(value));
+        });
+
+        return cacheConfigurations;
+    }
+
+    // RedisCacheConfiguration 공통처리
+    public RedisCacheConfiguration redisCacheConfiguration(int expireSec) {
+        return RedisCacheConfiguration.defaultCacheConfig()
+                .disableCachingNullValues() // null 캐시 제외
+                .entryTtl(Duration.ofSeconds(expireSec)) // 유지 시간 설정
+                .computePrefixWith(CacheKeyPrefix.simple())
                 .serializeKeysWith(RedisSerializationContext
                         .SerializationPair
                         .fromSerializer(new StringRedisSerializer()))
                 .serializeValuesWith(RedisSerializationContext
                         .SerializationPair
                         .fromSerializer(redisJsonRedisSerializer()));
-
-        return RedisCacheManager
-                .RedisCacheManagerBuilder
-                .fromConnectionFactory(redisConnectionFactory())
-                .cacheDefaults(redisCacheConfiguration).build();
     }
 }

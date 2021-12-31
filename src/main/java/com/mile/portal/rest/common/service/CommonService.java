@@ -1,5 +1,6 @@
 package com.mile.portal.rest.common.service;
 
+import com.mile.portal.config.cache.CacheProperties;
 import com.mile.portal.config.exception.exceptions.ResultNotFoundException;
 import com.mile.portal.rest.common.model.comm.ReqCommon;
 import com.mile.portal.rest.common.model.domain.Code;
@@ -23,31 +24,30 @@ import java.util.Optional;
 @Transactional
 public class CommonService {
 
+    private final CodeRepository codeRepository;
     @PersistenceContext
     private EntityManager entityManager;
 
-    private final CodeRepository codeRepository;
-
     @Transactional(readOnly = true)
-    @Cacheable(value = "codeCache")
+    @Cacheable(value = CacheProperties.CODE)
     public List<Code> listCode() {
         return codeRepository.findTreeAll();
     }
 
     @Transactional(readOnly = true)
-    @Cacheable(value = "codeCache", key = "#codeId.concat(':').concat(#childCode)", unless = "#result == null")
+    @Cacheable(value = CacheProperties.CODE, key = "#codeId.concat(':').concat(#childCode)", unless = "#result == null")
     public Code selectCode(String codeId, String childCode) {
         return codeRepository.findTreeCode(codeId, childCode);
     }
 
-    @CacheEvict(value = "codeCache", allEntries = true)
+    @CacheEvict(value = CacheProperties.CODE, allEntries = true)
     public Code createCode(ReqCommon.Code reqCode) {
         int depth = 1, ord = 1;
         String parentId = reqCode.getParentId();
         String codeId = reqCode.getCodeId();
         Code parentCode = null;
 
-        if(parentId != null) {
+        if (parentId != null) {
             CodeDto parent = Optional.ofNullable(codeRepository.findParentCode(parentId, codeId)).orElseThrow(ResultNotFoundException::new);
 
             depth = parent.getDepth() + 1;
@@ -78,7 +78,7 @@ public class CommonService {
         return code;
     }
 
-    @CacheEvict(value = "codeCache", allEntries = true)
+    @CacheEvict(value = CacheProperties.CODE, allEntries = true)
     public Code updateCode(ReqCommon.Code reqCode) {
         String codeName = reqCode.getCodeName();
         String codeValue = reqCode.getCodeValue();
@@ -91,7 +91,7 @@ public class CommonService {
         return codeRepository.save(code);
     }
 
-    @CacheEvict(value = "codeCache", allEntries = true)
+    @CacheEvict(value = CacheProperties.CODE, allEntries = true)
     public void deleteCode(String codeId) {
         codeRepository.deleteById(codeId);
     }
