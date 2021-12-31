@@ -4,8 +4,9 @@ import com.mile.portal.config.cache.CacheProperties;
 import com.mile.portal.config.exception.exceptions.ResultNotFoundException;
 import com.mile.portal.rest.common.model.comm.ReqCommon;
 import com.mile.portal.rest.common.model.domain.Code;
+import com.mile.portal.rest.common.model.domain.Menu;
 import com.mile.portal.rest.common.model.dto.CodeDto;
-import com.mile.portal.rest.common.repository.CodeRepository;
+import com.mile.portal.rest.common.repository.MenuRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
@@ -22,33 +23,34 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class CommonService {
+public class MenuService {
 
-    private final CodeRepository codeRepository;
+    private final MenuRepository menuRepository;
+
     @PersistenceContext
     private EntityManager entityManager;
 
     @Transactional(readOnly = true)
-    @Cacheable(value = CacheProperties.CODE)
-    public List<Code> listCode() {
-        return codeRepository.findTreeAll();
+    @Cacheable(value = CacheProperties.MENU)
+    public List<Menu> listMenu() {
+        return menuRepository.findTreeAll();
     }
 
     @Transactional(readOnly = true)
-    @Cacheable(value = CacheProperties.CODE, key = "#codeId.concat(':').concat(#childCode)", unless = "#result == null")
-    public Code selectCode(String codeId, String childCode) {
-        return codeRepository.findTreeCode(codeId, childCode);
+    @Cacheable(value = CacheProperties.MENU, key = "#codeId.concat(':').concat(#childCode)", unless = "#result == null")
+    public Code selectMenu(String codeId, String childCode) {
+        return menuRepository.findTreeCode(codeId, childCode);
     }
 
-    @CacheEvict(value = CacheProperties.CODE, allEntries = true)
-    public Code createCode(ReqCommon.Code reqCode) {
+    @CacheEvict(value = CacheProperties.MENU, allEntries = true)
+    public Code createMenu(ReqCommon.Code reqCode) {
         int depth = 1, ord = 1;
         String parentId = reqCode.getParentId();
         String codeId = reqCode.getCodeId();
         Code parentCode = null;
 
         if (parentId != null) {
-            CodeDto parent = Optional.ofNullable(codeRepository.findParentCode(parentId, codeId)).orElseThrow(ResultNotFoundException::new);
+            CodeDto parent = Optional.ofNullable(menuRepository.findParentCode(parentId, codeId)).orElseThrow(ResultNotFoundException::new);
 
             depth = parent.getDepth() + 1;
             ord = parent.getChildCount().intValue() + 1;
@@ -61,7 +63,7 @@ public class CommonService {
                     .ord(parent.getOrd())
                     .build();
         } else {
-            long parentCnt = codeRepository.countByParentIsNullAndCodeNot(codeId);
+            long parentCnt = menuRepository.countByParentIsNullAndCodeNot(codeId);
             ord = (int) parentCnt + 1;
         }
 
@@ -78,21 +80,21 @@ public class CommonService {
         return code;
     }
 
-    @CacheEvict(value = CacheProperties.CODE, allEntries = true)
-    public Code updateCode(ReqCommon.Code reqCode) {
+    @CacheEvict(value = CacheProperties.MENU, allEntries = true)
+    public Code updateMenu(ReqCommon.Code reqCode) {
         String codeName = reqCode.getCodeName();
         String codeValue = reqCode.getCodeValue();
         String codeId = reqCode.getCodeId();
 
-        Code code = codeRepository.findById(codeId).orElseThrow(ResultNotFoundException::new);
+        Code code = menuRepository.findById(codeId).orElseThrow(ResultNotFoundException::new);
         code.setCodeName(codeName);
         code.setCodeValue(codeValue);
 
-        return codeRepository.save(code);
+        return menuRepository.save(code);
     }
 
-    @CacheEvict(value = CacheProperties.CODE, allEntries = true)
-    public void deleteCode(String codeId) {
-        codeRepository.deleteById(codeId);
+    @CacheEvict(value = CacheProperties.MENU, allEntries = true)
+    public void deleteMenu(String codeId) {
+        menuRepository.deleteById(codeId);
     }
 }

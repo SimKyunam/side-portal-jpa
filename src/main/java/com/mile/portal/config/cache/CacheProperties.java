@@ -17,4 +17,7 @@ public class CacheProperties {
 
     public static final String CODE = "code";
     public static final int CODE_EXPIRE_SEC = 60 * 10; // 10 minutes
+
+    public static final String MENU = "menu";
+    public static final int MENU_EXPIRE_SEC = 60 * 10; // 10 minutes
 }

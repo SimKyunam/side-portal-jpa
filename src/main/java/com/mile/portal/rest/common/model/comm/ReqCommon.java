@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
 public class ReqCommon {
@@ -73,6 +72,19 @@ public class ReqCommon {
         @NotBlank
         private String codeName;
         private String codeValue;
+        private String parentId;
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Menu {
+        @NotBlank
+        private String menuId;
+        @NotBlank
+        private String menuName;
+        private String menuValue;
         private String parentId;
     }
 }

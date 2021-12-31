@@ -5,34 +5,28 @@ import com.mile.portal.rest.common.model.comm.ReqCommon;
 import com.mile.portal.rest.common.model.domain.Code;
 import com.mile.portal.rest.common.model.dto.CodeDto;
 import com.mile.portal.rest.common.repository.CodeRepository;
-import com.mile.portal.rest.common.repository.UserRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.Locale;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-class CommonServiceTest {
+class CodeServiceTest {
     @InjectMocks
-    private CommonService commonService;
+    private CodeService codeService;
 
     @Spy
     private CodeRepository codeRepository;
@@ -48,7 +42,7 @@ class CommonServiceTest {
         given(codeRepository.save(any())).willReturn(createCode(reqCode));
 
         //when
-        Code code = commonService.createCode(reqCode);
+        Code code = codeService.createCode(reqCode);
 
         //then
         then(codeRepository).should(times(1)).countByParentIsNullAndCodeNot(eq(codeId));
@@ -69,13 +63,13 @@ class CommonServiceTest {
         given(codeRepository.save(any())).willReturn(createCode(reqCode));
 
         //when
-        Code code = commonService.createCode(reqCode);
+        Code code = codeService.createCode(reqCode);
 
         //then
         then(codeRepository).should(times(1)).findParentCode(eq(parentId), eq(codeId));
         assertEquals(code.getCode(), codeId);
     }
-    
+
     @Test
     @DisplayName("3. update-code가 존재하는 경우")
     void test3() {
@@ -87,7 +81,7 @@ class CommonServiceTest {
         given(codeRepository.save(any())).willReturn(createCode(reqCode));
 
         //when
-        Code updatedCode = commonService.updateCode(reqCode);
+        Code updatedCode = codeService.updateCode(reqCode);
 
         //then
         then(codeRepository).should().save(any());
@@ -105,13 +99,13 @@ class CommonServiceTest {
 
         //when
         assertThrows(ResultNotFoundException.class, () -> {
-            commonService.updateCode(reqCode);
+            codeService.updateCode(reqCode);
         });
 
         //then
         then(codeRepository).should().findById(any());
     }
-    
+
     CodeDto createCodeDto() {
         return CodeDto.builder()
                 .code("actionCode")
@@ -141,7 +135,7 @@ class CommonServiceTest {
                 .ord(4)
                 .build();
 
-        if(reqCode.getParentId() != null && reqCode.getParentId().isEmpty()) {
+        if (reqCode.getParentId() != null && reqCode.getParentId().isEmpty()) {
             code.setParent(Code.builder().code(reqCode.getParentId()).build());
         }
 

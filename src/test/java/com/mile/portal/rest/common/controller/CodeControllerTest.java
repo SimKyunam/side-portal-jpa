@@ -3,7 +3,7 @@ package com.mile.portal.rest.common.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mile.portal.rest.common.model.comm.ReqCommon;
 import com.mile.portal.rest.common.model.domain.Code;
-import com.mile.portal.rest.common.service.CommonService;
+import com.mile.portal.rest.common.service.CodeService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,10 +27,11 @@ import static org.mockito.Mockito.never;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-class CommonControllerTest {
+class CodeControllerTest {
     private MockMvc mvc;
 
     @Autowired
@@ -40,10 +41,10 @@ class CommonControllerTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private CommonService commonService;
+    private CodeService codeService;
 
     @BeforeEach
-    public void setUp(){
+    public void setUp() {
         mvc = MockMvcBuilders
                 .webAppContextSetup(webApplicationContext)
                 .addFilters(new CharacterEncodingFilter("UTF-8", true))  // 필터 추가
@@ -56,7 +57,7 @@ class CommonControllerTest {
     @DisplayName("1. 코드 목록")
     void test1() throws Exception {
         //given
-        given(commonService.listCode()).willReturn(createMenuList());
+        given(codeService.listCode()).willReturn(createMenuList());
 
         //when
         mvc.perform(get("/api/v1/common/code"))
@@ -64,14 +65,14 @@ class CommonControllerTest {
                 .andExpect(jsonPath("$.data[0].code").value("resourceCd"));
 
         //then
-        then(commonService).should().listCode();
+        then(codeService).should().listCode();
     }
 
     @Test
     @DisplayName("2. 코드 상세 조회")
     void test2() throws Exception {
         //given
-        given(commonService.selectCode(any(), any())).willReturn(createResourceCd());
+        given(codeService.selectCode(any(), any())).willReturn(createResourceCd());
 
         //when
         mvc.perform(get("/api/v1/common/code/resourceCd"))
@@ -79,7 +80,7 @@ class CommonControllerTest {
                 .andExpect(jsonPath("$.data.code").value("resourceCd"));
 
         //then
-        then(commonService).should().selectCode(any(), any());
+        then(codeService).should().selectCode(any(), any());
     }
 
     @Test
@@ -97,7 +98,7 @@ class CommonControllerTest {
                 .andExpect(status().isOk());
 
         //then
-        then(commonService).should().createCode(any());
+        then(codeService).should().createCode(any());
     }
 
     @Test
@@ -115,7 +116,7 @@ class CommonControllerTest {
                 .andExpect(status().isOk());
 
         //then
-        then(commonService).should().updateCode(any());
+        then(codeService).should().updateCode(any());
     }
 
     @Test
@@ -133,7 +134,7 @@ class CommonControllerTest {
                 .andExpect(status().isBadRequest());
 
         //then
-        then(commonService).should(never()).updateCode(any());
+        then(codeService).should(never()).updateCode(any());
     }
 
     @Test
@@ -146,7 +147,7 @@ class CommonControllerTest {
                 .andExpect(status().isOk());
 
         //then
-        then(commonService).should().deleteCode(eq(codeId));
+        then(codeService).should().deleteCode(eq(codeId));
     }
 
     Code createResourceCd() {
