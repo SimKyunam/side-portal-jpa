@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,13 +31,13 @@ public class MenuService {
     private EntityManager entityManager;
 
     @Transactional(readOnly = true)
-    @Cacheable(value = CacheProperties.MENU)
+    @Cacheable(value = CacheProperties.MENU, unless = "#result == null")
     public List<Menu> listMenu() {
         return menuRepository.findMenuAll();
     }
 
     @Transactional(readOnly = true)
-    @Cacheable(value = CacheProperties.MENU, key = "#menuId.concat(':').concat(#childMenuId)", unless = "#result == null")
+    @Cacheable(value = CacheProperties.MENU, key = "#menuId + ':' + #childMenuId", unless = "#result == null")
     public Menu selectMenu(Long menuId, Long childMenuId) {
         return menuRepository.findMenuDetail(menuId, childMenuId);
     }
@@ -45,11 +46,10 @@ public class MenuService {
     public Menu createMenu(ReqCommon.Menu reqMenu) {
         int depth = 1, ord = 1;
         Long parentId = reqMenu.getParentId();
-        Long menuId = reqMenu.getMenuId();
         Menu parentMenu = null;
 
         if (parentId != null) {
-            MenuDto parent = Optional.ofNullable(menuRepository.findParentMenu(parentId, menuId)).orElseThrow(ResultNotFoundException::new);
+            MenuDto parent = Optional.ofNullable(menuRepository.findParentMenu(parentId)).orElseThrow(ResultNotFoundException::new);
 
             depth = parent.getDepth() + 1;
             ord = parent.getChildCount().intValue() + 1;
@@ -62,7 +62,7 @@ public class MenuService {
                     .ord(parent.getOrd())
                     .build();
         } else {
-            long parentCnt = menuRepository.countByParentIsNullAndIdNot(menuId);
+            long parentCnt = menuRepository.countByParentIsNull();
             ord = (int) parentCnt + 1;
         }
 
@@ -94,6 +94,7 @@ public class MenuService {
 
     @CacheEvict(value = CacheProperties.MENU, allEntries = true)
     public void deleteMenu(Long menuId) {
-        menuRepository.deleteById(menuId);
+        Menu menu = menuRepository.findById(menuId).orElseThrow(ResultNotFoundException::new);
+        menu.setDeleted(LocalDateTime.now());
     }
 }

@@ -1,9 +1,8 @@
 package com.mile.portal.rest.common.model.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -14,7 +13,9 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Getter @Setter
+@Getter
+@Setter
+@Where(clause = "deleted is null")
 public class Code extends BaseEntity implements Serializable {
 
     @Id
@@ -30,11 +31,11 @@ public class Code extends BaseEntity implements Serializable {
 
     private int depth;
 
-    @ManyToOne(cascade = { CascadeType.REMOVE }, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
     @JsonIgnore
     private Code parent;
 
-    @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
     private List<Code> child = new ArrayList<>();
 }

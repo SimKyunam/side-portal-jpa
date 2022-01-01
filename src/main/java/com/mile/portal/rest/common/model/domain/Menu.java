@@ -2,6 +2,7 @@ package com.mile.portal.rest.common.model.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -14,6 +15,7 @@ import java.util.List;
 @Builder
 @Getter
 @Setter
+@Where(clause = "deleted is null")
 public class Menu extends BaseEntity implements Serializable {
 
     @Id
@@ -30,11 +32,11 @@ public class Menu extends BaseEntity implements Serializable {
 
     private int depth;
 
-    @ManyToOne(cascade = {CascadeType.REMOVE}, fetch = FetchType.LAZY)
-    @JoinColumn(name = "menu_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id")
     @JsonIgnore
     private Menu parent;
 
-    @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
     private List<Menu> child = new ArrayList<>();
 }

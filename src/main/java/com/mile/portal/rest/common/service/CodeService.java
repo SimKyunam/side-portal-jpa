@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,15 +31,15 @@ public class CodeService {
     private EntityManager entityManager;
 
     @Transactional(readOnly = true)
-    @Cacheable(value = CacheProperties.CODE)
+    @Cacheable(value = CacheProperties.CODE, unless = "#result == null")
     public List<Code> listCode() {
-        return codeRepository.findTreeAll();
+        return codeRepository.findCodeAll();
     }
 
     @Transactional(readOnly = true)
-    @Cacheable(value = CacheProperties.CODE, key = "#codeId.concat(':').concat(#childCode)", unless = "#result == null")
+    @Cacheable(value = CacheProperties.CODE, key = "#codeId + ':' + #childCode", unless = "#result == null")
     public Code selectCode(String codeId, String childCode) {
-        return codeRepository.findTreeCode(codeId, childCode);
+        return codeRepository.findCodeDetail(codeId, childCode);
     }
 
     @CacheEvict(value = CacheProperties.CODE, allEntries = true)
@@ -96,6 +97,7 @@ public class CodeService {
 
     @CacheEvict(value = CacheProperties.CODE, allEntries = true)
     public void deleteCode(String codeId) {
-        codeRepository.deleteById(codeId);
+        Code code = codeRepository.findById(codeId).orElseThrow(ResultNotFoundException::new);
+        code.setDeleted(LocalDateTime.now());
     }
 }

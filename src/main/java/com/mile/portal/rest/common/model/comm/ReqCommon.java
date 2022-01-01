@@ -69,7 +69,6 @@ public class ReqCommon {
     public static class Code {
         @NotBlank
         private String codeId;
-        @NotBlank
         private String codeName;
         private String codeValue;
         private String parentId;
@@ -80,9 +79,7 @@ public class ReqCommon {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Menu {
-        @NotBlank
         private Long menuId;
-        @NotBlank
         private String menuName;
         private String menuValue;
         private Long parentId;

@@ -85,6 +85,7 @@ public class RedisCacheConfig {
         cacheMap.put(CacheProperties.BOARD_FAQ, CacheProperties.BOARD_FAQ_EXPIRE_SEC);
         cacheMap.put(CacheProperties.BOARD_QNA, CacheProperties.BOARD_QNA_EXPIRE_SEC);
         cacheMap.put(CacheProperties.CODE, CacheProperties.CODE_EXPIRE_SEC);
+        cacheMap.put(CacheProperties.MENU, CacheProperties.MENU_EXPIRE_SEC);
 
         Map<String, RedisCacheConfiguration> cacheConfigurations = new HashMap<>();
 
@@ -98,7 +99,6 @@ public class RedisCacheConfig {
     // RedisCacheConfiguration 공통처리
     public RedisCacheConfiguration redisCacheConfiguration(int expireSec) {
         return RedisCacheConfiguration.defaultCacheConfig()
-                .disableCachingNullValues() // null 캐시 제외
                 .entryTtl(Duration.ofSeconds(expireSec)) // 유지 시간 설정
                 .computePrefixWith(CacheKeyPrefix.simple())
                 .serializeKeysWith(RedisSerializationContext

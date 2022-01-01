@@ -10,5 +10,5 @@ public interface MenuRepositoryCustom {
 
     Menu findMenuDetail(Long menuId, Long childMenuId);
 
-    MenuDto findParentMenu(Long parentId, Long childMenuId);
+    MenuDto findParentMenu(Long parentId);
 }

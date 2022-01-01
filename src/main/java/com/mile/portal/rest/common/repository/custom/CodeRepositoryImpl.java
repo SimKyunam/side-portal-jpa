@@ -22,7 +22,7 @@ public class CodeRepositoryImpl implements CodeRepositoryCustom {
     private final JPAQueryFactory query;
 
     @Override
-    public List<Code> findTreeAll() {
+    public List<Code> findCodeAll() {
         QCode parent = new QCode("parent");
         QCode child = new QCode("child");
 
@@ -36,7 +36,7 @@ public class CodeRepositoryImpl implements CodeRepositoryCustom {
     }
 
     @Override
-    public Code findTreeCode(String code, String childCode) {
+    public Code findCodeDetail(String code, String childCode) {
         QCode parent = new QCode("parent");
         QCode child = new QCode("child");
 

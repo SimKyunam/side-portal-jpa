@@ -50,7 +50,7 @@ public class MenuRepositoryImpl implements MenuRepositoryCustom {
     }
 
     @Override
-    public MenuDto findParentMenu(Long parentId, Long childMenuId) {
+    public MenuDto findParentMenu(Long parentId) {
         QMenu parent = new QMenu("parent");
         QMenu child = new QMenu("child");
 
@@ -60,7 +60,7 @@ public class MenuRepositoryImpl implements MenuRepositoryCustom {
                         ExpressionUtils.as(
                                 JPAExpressions.select(count(child.id))
                                         .from(child)
-                                        .where(child.parent.eq(parent), childMenuIdNe(childMenuId)),
+                                        .where(child.parent.eq(parent)),
                                 "childCount")
                 ))
                 .from(parent)

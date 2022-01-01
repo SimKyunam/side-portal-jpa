@@ -21,8 +21,8 @@ public class MenuController {
 
     @GetMapping("/menu")
     public ResBody listMenu() {
-        List<Menu> codeList = menuService.listMenu();
-        return new ResBody(ResBody.CODE_SUCCESS, "", codeList);
+        List<Menu> menuList = menuService.listMenu();
+        return new ResBody(ResBody.CODE_SUCCESS, "", menuList);
     }
 
     @GetMapping("/menu/{menuId}")
