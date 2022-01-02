@@ -3,7 +3,7 @@ package com.mile.portal.rest.mng.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mile.portal.rest.common.model.domain.board.BoardNotice;
 import com.mile.portal.rest.common.model.dto.board.BoardNoticeDto;
-import com.mile.portal.rest.mng.service.MngBoardService;
+import com.mile.portal.rest.mng.service.MngBoardNoticeService;
 import com.mile.portal.rest.user.model.comm.ReqBoard;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -39,7 +39,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @WithMockUser(roles = {"ADMIN"})
-class MngBoardControllerTest {
+class MngBoardNoticeControllerTest {
 
     private MockMvc mvc;
 
@@ -50,7 +50,7 @@ class MngBoardControllerTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private MngBoardService mngBoardService;
+    private MngBoardNoticeService mngBoardNoticeService;
 
     @BeforeEach
     public void setUp() {
@@ -68,7 +68,7 @@ class MngBoardControllerTest {
         Page<BoardNoticeDto> noticePaging = createNoticePaging();
 
         //given
-        given(mngBoardService.listBoardNotice(any(), any())).willReturn(noticePaging);
+        given(mngBoardNoticeService.listBoardNotice(any(), any())).willReturn(noticePaging);
 
         //when
         mvc.perform(get("/api/v1/mng/board/notice"))
@@ -76,13 +76,13 @@ class MngBoardControllerTest {
                 .andExpect(jsonPath("$.data.content[0].title").value("테스트 타이틀"));
 
         //then
-        then(mngBoardService).should().listBoardNotice(any(), any());
+        then(mngBoardNoticeService).should().listBoardNotice(any(), any());
     }
 
     @Test
     @DisplayName("2. 공지사항 등록")
     void test2() throws Exception {
-        ReqBoard.BoardNotice reqBoardNotice = ReqBoard.BoardNotice.builder()
+        ReqBoard.BoardFaq reqBoardNotice = ReqBoard.BoardFaq.builder()
                 .title("테스트").content("내용").ntcType("NTC")
                 .beginDate(LocalDateTime.now())
                 .endDate(LocalDateTime.now().plusDays(10))
@@ -97,13 +97,13 @@ class MngBoardControllerTest {
                 .andExpect(status().isOk());
 
         //then
-        then(mngBoardService).should().createBoardNotice(any(), any(), any());
+        then(mngBoardNoticeService).should().createBoardNotice(any(), any(), any());
     }
 
     @Test
     @DisplayName("3. 공지사항 수정")
     void test3() throws Exception {
-        ReqBoard.BoardNotice reqBoardNotice = ReqBoard.BoardNotice.builder()
+        ReqBoard.BoardFaq reqBoardNotice = ReqBoard.BoardFaq.builder()
                 .title("테스트 수정").content("내용 수정").ntcType("NTC")
                 .beginDate(LocalDateTime.now().plusDays(1))
                 .endDate(LocalDateTime.now().plusDays(12))
@@ -118,14 +118,14 @@ class MngBoardControllerTest {
                 .andExpect(status().isOk());
 
         //then
-        then(mngBoardService).should().updateBoardNotice(any(), any(), any());
+        then(mngBoardNoticeService).should().updateBoardNotice(any(), any(), any());
     }
 
     @Test
     @DisplayName("4. 공지사항 상세")
     void test4() throws Exception {
         //given
-        given(mngBoardService.selectBoardNotice(any())).willReturn(createNoticeDto());
+        given(mngBoardNoticeService.selectBoardNotice(any())).willReturn(createNoticeDto());
 
         //when
         mvc.perform(get("/api/v1/mng/board/notice/1"))
@@ -133,7 +133,7 @@ class MngBoardControllerTest {
                 .andExpect(status().isOk());
 
         //then
-        then(mngBoardService).should().selectBoardNotice(any());
+        then(mngBoardNoticeService).should().selectBoardNotice(any());
     }
 
     @Test
@@ -144,7 +144,7 @@ class MngBoardControllerTest {
                 .andExpect(status().isOk());
 
         //then
-        then(mngBoardService).should().deleteBoardNotice(any());
+        then(mngBoardNoticeService).should().deleteBoardNotice(any());
     }
 
     BoardNotice createNotice() {

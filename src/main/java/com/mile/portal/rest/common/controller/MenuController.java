@@ -13,19 +13,19 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/common")
+@RequestMapping("/api/v1/common/menu")
 @RequiredArgsConstructor
 public class MenuController {
 
     private final MenuService menuService;
 
-    @GetMapping("/menu")
+    @GetMapping("")
     public ResBody listMenu() {
         List<Menu> menuList = menuService.listMenu();
         return new ResBody(ResBody.CODE_SUCCESS, "", menuList);
     }
 
-    @GetMapping("/menu/{menuId}")
+    @GetMapping("/{menuId}")
     public ResBody selectMenu(@PathVariable Long menuId,
                               @RequestParam(required = false, defaultValue = "") Long childMenuId) {
 
@@ -33,19 +33,19 @@ public class MenuController {
         return new ResBody(ResBody.CODE_SUCCESS, "", menuList);
     }
 
-    @PostMapping("/menu/create")
+    @PostMapping("/create")
     public ResBody createMenu(@Valid @RequestBody ReqCommon.Menu reqMenu) {
         Menu menu = menuService.createMenu(reqMenu);
         return new ResBody(ResBody.CODE_SUCCESS, "", null);
     }
 
-    @PutMapping("/menu/update")
+    @PutMapping("/update")
     public ResBody updateMenu(@Valid @RequestBody ReqCommon.Menu reqMenu) {
         Menu menu = menuService.updateMenu(reqMenu);
         return new ResBody(ResBody.CODE_SUCCESS, "", null);
     }
 
-    @DeleteMapping("/menu/{menuId}")
+    @DeleteMapping("/{menuId}")
     public ResBody deleteMenu(@PathVariable Long menuId) {
         menuService.deleteMenu(menuId);
         return new ResBody(ResBody.CODE_SUCCESS, "", null);

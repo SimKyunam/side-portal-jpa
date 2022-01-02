@@ -13,19 +13,19 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/common")
+@RequestMapping("/api/v1/common/code")
 @RequiredArgsConstructor
 public class CodeController {
 
     private final CodeService codeService;
 
-    @GetMapping("/code")
+    @GetMapping("")
     public ResBody listCode() {
         List<Code> codeList = codeService.listCode();
         return new ResBody(ResBody.CODE_SUCCESS, "", codeList);
     }
 
-    @GetMapping("/code/{codeId}")
+    @GetMapping("/{codeId}")
     public ResBody selectCode(@PathVariable String codeId,
                               @RequestParam(required = false, defaultValue = "") String childCode) {
 
@@ -33,19 +33,19 @@ public class CodeController {
         return new ResBody(ResBody.CODE_SUCCESS, "", codeList);
     }
 
-    @PostMapping("/code/create")
+    @PostMapping("/create")
     public ResBody createCode(@Valid @RequestBody ReqCommon.Code reqCode) {
         Code code = codeService.createCode(reqCode);
         return new ResBody(ResBody.CODE_SUCCESS, "", null);
     }
 
-    @PutMapping("/code/update")
+    @PutMapping("/update")
     public ResBody updateCode(@Valid @RequestBody ReqCommon.Code reqCode) {
         Code code = codeService.updateCode(reqCode);
         return new ResBody(ResBody.CODE_SUCCESS, "", null);
     }
 
-    @DeleteMapping("/code/{codeId}")
+    @DeleteMapping("/{codeId}")
     public ResBody deleteCode(@PathVariable(name = "codeId") String codeId) {
         codeService.deleteCode(codeId);
         return new ResBody(ResBody.CODE_SUCCESS, "", null);

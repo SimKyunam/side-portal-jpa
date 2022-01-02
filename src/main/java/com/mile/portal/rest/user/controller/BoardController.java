@@ -17,22 +17,20 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/user/board")
+@RequestMapping("/api/v1/user/board/notice")
 public class BoardController {
 
     private final BoardService boardService;
 
-    @GetMapping("/notice")
+    @GetMapping("")
     public ResBody listBoardNotice(@AuthenticationPrincipal Account account,
                                    @RequestParam(required = false) ReqBoard.BoardNotice reqBoardNotice,
                                    @PageableDefault(sort = "id", size = 100, direction = Sort.Direction.DESC) Pageable pageable) {
-        log.info(String.valueOf(account));
-
         Page<BoardNoticeDto> boardNoticeList = boardService.listBoardNotice(reqBoardNotice, pageable);
         return new ResBody(ResBody.CODE_SUCCESS, "", boardNoticeList);
     }
 
-    @GetMapping("/notice/{id}")
+    @GetMapping("/{id}")
     public ResBody selectBoardNotice(@AuthenticationPrincipal Account account,
                                      @PathVariable(name = "id") Long id) {
         BoardNoticeDto boardNotice = boardService.selectBoardNotice(id);

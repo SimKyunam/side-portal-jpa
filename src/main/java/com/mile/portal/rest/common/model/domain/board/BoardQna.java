@@ -22,7 +22,8 @@ public class BoardQna extends Board {
     @Lob
     private String answerContent;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "client_id")
     @JsonIgnore
     private Client client;
 

@@ -18,9 +18,9 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
 @SpringBootTest
-class MngBoardServiceTest {
+class MngBoardNoticeServiceTest {
     @Autowired
-    MngBoardService mngBoardService;
+    MngBoardNoticeService mngBoardNoticeService;
 
     @MockBean
     BoardNoticeRepository boardNoticeRepository;
@@ -34,7 +34,7 @@ class MngBoardServiceTest {
         given(boardNoticeRepository.save(any())).willReturn(notice);
 
         //when
-        BoardNotice boardNotice = mngBoardService.createBoardNotice(reqNotice, null, 1L);
+        BoardNotice boardNotice = mngBoardNoticeService.createBoardNotice(reqNotice, null, 1L);
 
         //then
         assertEquals(boardNotice.getTitle(), reqNotice.getTitle());
@@ -44,10 +44,10 @@ class MngBoardServiceTest {
     @Test
     @DisplayName("2. 공지사항 삭제")
     void test2() {
-        IntStream.range(0, 5).forEach(i -> mngBoardService.createBoardNotice(createReqNotice(), null, 1L));
+        IntStream.range(0, 5).forEach(i -> mngBoardNoticeService.createBoardNotice(createReqNotice(), null, 1L));
 
         String ids = "1, 2, ,,";
-        mngBoardService.deleteBoardNotice(ids);
+        mngBoardNoticeService.deleteBoardNotice(ids);
     }
 
     private ReqBoard.BoardNotice createReqNotice() {

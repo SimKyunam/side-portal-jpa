@@ -5,11 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -79,6 +76,8 @@ public class ReqBoard {
         private String content;
         private String answerContent;
 
-        private List<MultipartFile> files;
+        //첨부 파일
+        private String fileModifiedYn = "N";
+        private List<String> deleteUploadNames = new ArrayList<>();
     }
 }

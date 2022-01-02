@@ -4,9 +4,7 @@ import com.mile.portal.config.cache.CacheProperties;
 import com.mile.portal.config.exception.exceptions.ResultNotFoundException;
 import com.mile.portal.rest.common.model.domain.board.BoardNotice;
 import com.mile.portal.rest.common.model.dto.board.BoardNoticeDto;
-import com.mile.portal.rest.common.repository.BoardFaqRepository;
 import com.mile.portal.rest.common.repository.BoardNoticeRepository;
-import com.mile.portal.rest.common.repository.BoardQnaRepository;
 import com.mile.portal.rest.common.service.BoardAttachService;
 import com.mile.portal.rest.mng.repository.ManagerRepository;
 import com.mile.portal.rest.user.model.comm.ReqBoard;
@@ -31,13 +29,11 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class MngBoardService {
+public class MngBoardNoticeService {
     private final BoardAttachService boardAttachService; // 게시판 첨부 파일
-    private final ManagerRepository managerRepository;
 
+    private final ManagerRepository managerRepository;
     private final BoardNoticeRepository boardNoticeRepository;
-    private final BoardQnaRepository boardQnaRepository;
-    private final BoardFaqRepository boardFaqRepository;
 
     @Transactional(readOnly = true)
     @Cacheable(value = CacheProperties.BOARD_NOTICE, unless = "#result == null")

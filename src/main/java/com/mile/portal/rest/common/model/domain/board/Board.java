@@ -39,7 +39,7 @@ public class Board extends BaseEntity {
     private int readCnt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "account_id")
+    @JoinColumn(name = "manager_id")
     @JsonIgnore
     private Manager manager;
 
