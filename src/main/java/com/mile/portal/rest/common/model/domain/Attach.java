@@ -1,6 +1,10 @@
 package com.mile.portal.rest.common.model.domain;
 
-import lombok.*;
+import com.mile.portal.rest.common.model.domain.base.BaseEntity;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import javax.persistence.*;

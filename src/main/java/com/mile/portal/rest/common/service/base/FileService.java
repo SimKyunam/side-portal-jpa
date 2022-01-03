@@ -1,4 +1,4 @@
-package com.mile.portal.rest.common.service;
+package com.mile.portal.rest.common.service.base;
 
 import com.mile.portal.rest.common.model.domain.Attach;
 import com.mile.portal.util.DateTimeUtil;

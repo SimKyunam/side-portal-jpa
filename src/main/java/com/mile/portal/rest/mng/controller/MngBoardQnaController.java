@@ -1,10 +1,10 @@
 package com.mile.portal.rest.mng.controller;
 
+import com.mile.portal.rest.common.model.comm.ReqBoard;
 import com.mile.portal.rest.common.model.comm.ResBody;
 import com.mile.portal.rest.common.model.domain.Account;
 import com.mile.portal.rest.common.model.dto.board.BoardQnaDto;
 import com.mile.portal.rest.mng.service.MngBoardQnaService;
-import com.mile.portal.rest.user.model.comm.ReqBoard;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -36,7 +36,7 @@ public class MngBoardQnaController {
 
     @PostMapping("/update")
     public ResBody updateBoardQna(@AuthenticationPrincipal Account account,
-                                  @Valid ReqBoard.BoardQna reqBoardQna,
+                                  @Valid ReqBoard.BoardQnaAnswer reqBoardQna,
                                   @RequestPart(required = false) List<MultipartFile> files) {
         Long managerId = account.getId();
 

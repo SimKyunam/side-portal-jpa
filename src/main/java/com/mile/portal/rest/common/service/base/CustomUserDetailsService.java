@@ -1,7 +1,7 @@
-package com.mile.portal.rest.common.service;
+package com.mile.portal.rest.common.service.base;
 
-import com.mile.portal.rest.common.model.domain.Account;
 import com.mile.portal.rest.common.model.comm.AccountAdaptor;
+import com.mile.portal.rest.common.model.domain.Account;
 import com.mile.portal.rest.common.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -1,8 +1,8 @@
-package com.mile.portal.rest.user.service;
+package com.mile.portal.rest.client.service;
 
+import com.mile.portal.rest.common.model.comm.ReqBoard;
 import com.mile.portal.rest.common.model.domain.board.BoardNotice;
 import com.mile.portal.rest.common.repository.BoardNoticeRepository;
-import com.mile.portal.rest.user.model.comm.ReqBoard;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 class BoardServiceTest {
 
     @Autowired
-    BoardService boardService;
+    BoardNoticeService boardNoticeService;
 
     @MockBean
     BoardNoticeRepository boardNoticeRepository;

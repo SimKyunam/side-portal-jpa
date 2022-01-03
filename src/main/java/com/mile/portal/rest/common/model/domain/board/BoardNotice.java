@@ -1,13 +1,13 @@
 package com.mile.portal.rest.common.model.domain.board;
 
-import com.mile.portal.rest.common.model.domain.BaseEntity;
 import com.mile.portal.rest.mng.model.domain.Manager;
 import lombok.*;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.Where;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -20,7 +20,8 @@ import java.util.List;
 @Accessors(chain = true)
 public class BoardNotice extends Board {
 
-    @Column(length = 5)
+    @Column(length = 10)
+    @ColumnDefault("'N_SVC'")
     private String ntcType;
 
     private LocalDateTime beginDate;

@@ -16,7 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
@@ -99,5 +101,17 @@ public class CodeService {
     public void deleteCode(String codeId) {
         Code code = codeRepository.findById(codeId).orElseThrow(ResultNotFoundException::new);
         code.setDeleted(LocalDateTime.now());
+    }
+
+    @Cacheable(value = CacheProperties.CODE, key = "'codeMap:' + #codeId", unless = "#result == null")
+    public Map<String, Code> selectCodeMap(String codeId) {
+        Map<String, Code> codeMap = new HashMap<>();
+        this.selectCode(codeId, "")
+                .getChild()
+                .forEach(code -> {
+                    codeMap.put(code.getCode(), code);
+                });
+
+        return codeMap;
     }
 }

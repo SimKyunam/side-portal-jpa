@@ -1,7 +1,7 @@
-package com.mile.portal.rest.user.repository;
+package com.mile.portal.rest.client.repository;
 
+import com.mile.portal.rest.client.model.domain.Client;
 import com.mile.portal.rest.common.model.enums.Authority;
-import com.mile.portal.rest.user.model.domain.Client;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ class ClientRepositoryTest {
 
     @DisplayName("1. 사용자 저장")
     @Test
-    void test_1(){
+    void test_1() {
         Client client = createClient();
 
         Client newClient = clientRepository.save(client);
@@ -36,7 +36,7 @@ class ClientRepositoryTest {
 
     @DisplayName("2. 사용자 Empty 값 저장")
     @Test
-    void test_2(){
+    void test_2() {
         Client client = createClient();
         client.setLoginId(null);
         client.setLoginPwd(null);

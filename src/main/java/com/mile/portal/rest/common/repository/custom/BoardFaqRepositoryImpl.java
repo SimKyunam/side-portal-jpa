@@ -1,10 +1,8 @@
 package com.mile.portal.rest.common.repository.custom;
 
+import com.mile.portal.rest.common.model.comm.ReqBoard;
 import com.mile.portal.rest.common.model.dto.board.BoardFaqDto;
-import com.mile.portal.rest.user.model.comm.ReqBoard;
-import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
-import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -14,10 +12,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
-import static com.mile.portal.rest.common.model.domain.board.QBoardAttach.boardAttach;
-import static com.mile.portal.rest.common.model.domain.board.QBoardNotice.boardNotice;
+import static com.mile.portal.rest.common.model.domain.board.QBoardFaq.boardFaq;
 import static com.mile.portal.rest.mng.model.domain.QManager.manager;
-import static com.querydsl.core.types.ExpressionUtils.count;
 
 @Repository
 @RequiredArgsConstructor
@@ -27,8 +23,8 @@ public class BoardFaqRepositoryImpl implements BoardFaqRepositoryCustom {
 
     @Override
     public List<BoardFaqDto> faqSearchList(ReqBoard.BoardFaq reqBoardFaq, Pageable pageable) {
-        return noticeSelectFrom()
-                .innerJoin(boardNotice.manager, manager)
+        return faqSelectFrom()
+                .innerJoin(boardFaq.manager, manager)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -36,33 +32,32 @@ public class BoardFaqRepositoryImpl implements BoardFaqRepositoryCustom {
 
     @Override
     public Long faqSearchListCnt(ReqBoard.BoardFaq reqBoardFaq) {
-        return query.selectFrom(boardNotice)
-                .innerJoin(boardNotice.manager, manager)
+        return query.selectFrom(boardFaq)
+                .innerJoin(boardFaq.manager, manager)
                 .fetchCount();
     }
 
     @Override
     public Optional<BoardFaqDto> faqSelect(Long id) {
-        BoardFaqDto selectNotice = noticeSelectFrom()
-                .where(boardNotice.id.eq(id))
-                .innerJoin(boardNotice.manager, manager)
+        BoardFaqDto selectNotice = faqSelectFrom()
+                .where(boardFaq.id.eq(id))
+                .innerJoin(boardFaq.manager, manager)
                 .fetchOne();
 
         return Optional.ofNullable(selectNotice);
     }
 
-    public JPAQuery<BoardFaqDto> noticeSelectFrom() {
+    public JPAQuery<BoardFaqDto> faqSelectFrom() {
         return query.select(
                 Projections.fields(BoardFaqDto.class,
-                        boardNotice.id, boardNotice.title, boardNotice.content, boardNotice.readCnt,
-                        boardNotice.ntcType, boardNotice.beginDate, boardNotice.endDate, boardNotice.hotYn, boardNotice.pubYn,
-                        manager.id.as("managerId"), manager.name.as("managerName"),
-                        ExpressionUtils.as(
-                                JPAExpressions.select(count(boardAttach.id))
-                                        .from(boardAttach)
-                                        .where(boardAttach.board.id.eq(boardNotice.id)), "fileCnt")
+                        boardFaq.id, boardFaq.title, boardFaq.content, boardFaq.readCnt, boardFaq.faqType,
+                        boardFaq.created, boardFaq.updated,
+                        manager.id.as("managerId"), manager.name.as("managerName")
                 )
-        ).from(boardNotice);
+        ).from(boardFaq);
     }
 
+//    public StringTemplate dateFormat(DateTimePath<LocalDateTime> qDate, String format) {
+//        return Expressions.stringTemplate("FORMATDATETIME({0}, {1})", qDate, ConstantImpl.create(format));
+//    }
 }

@@ -1,10 +1,10 @@
 package com.mile.portal.rest.mng.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mile.portal.rest.common.model.comm.ReqBoard;
 import com.mile.portal.rest.common.model.domain.board.BoardNotice;
 import com.mile.portal.rest.common.model.dto.board.BoardNoticeDto;
 import com.mile.portal.rest.mng.service.MngBoardNoticeService;
-import com.mile.portal.rest.user.model.comm.ReqBoard;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

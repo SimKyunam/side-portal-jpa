@@ -1,10 +1,10 @@
-package com.mile.portal.rest.mng.controller;
+package com.mile.portal.rest.client.controller;
 
+import com.mile.portal.rest.client.service.BoardQnaService;
 import com.mile.portal.rest.common.model.comm.ReqBoard;
 import com.mile.portal.rest.common.model.comm.ResBody;
 import com.mile.portal.rest.common.model.domain.Account;
-import com.mile.portal.rest.common.model.dto.board.BoardNoticeDto;
-import com.mile.portal.rest.mng.service.MngBoardNoticeService;
+import com.mile.portal.rest.common.model.dto.board.BoardQnaDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -21,51 +21,56 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/mng/board/notice")
-public class MngBoardNoticeController {
+@RequestMapping("/api/v1/client/board/qna")
+public class BoardQnaController {
 
-    private final MngBoardNoticeService mngBoardNoticeService;
+    private final BoardQnaService boardQnaService;
 
     @GetMapping("")
-    public ResBody listBoardNotice(@AuthenticationPrincipal Account account,
-                                   @RequestParam(required = false) ReqBoard.BoardNotice reqBoardNotice,
-                                   @PageableDefault(sort = "id", size = 100, direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<BoardNoticeDto> boardNoticeList = mngBoardNoticeService.listBoardNotice(reqBoardNotice, pageable);
-        return new ResBody(ResBody.CODE_SUCCESS, "", boardNoticeList);
+    public ResBody listBoardQna(@AuthenticationPrincipal Account account,
+                                @RequestParam(required = false) ReqBoard.BoardQna reqBoardQna,
+                                @PageableDefault(sort = "id", size = 100, direction = Sort.Direction.DESC) Pageable pageable) {
+        Long clientId = account.getId();
+
+        Page<BoardQnaDto> boardQnaList = boardQnaService.listBoardQna(reqBoardQna, pageable, clientId);
+        return new ResBody(ResBody.CODE_SUCCESS, "", boardQnaList);
     }
 
     @PostMapping("/create")
     public ResBody createBoardNotice(@AuthenticationPrincipal Account account,
-                                     @ModelAttribute @Valid ReqBoard.BoardNotice reqBoardNotice,
+                                     @ModelAttribute @Valid ReqBoard.BoardQna reqBoardQna,
                                      @RequestPart(required = false) List<MultipartFile> files) {
         Long managerId = account.getId();
 
-        mngBoardNoticeService.createBoardNotice(reqBoardNotice, files, managerId);
+        boardQnaService.createBoardQna(reqBoardQna, files, managerId);
         return new ResBody(ResBody.CODE_SUCCESS, "", null);
     }
 
     @PostMapping("/update")
     public ResBody updateBoardNotice(@AuthenticationPrincipal Account account,
-                                     @Valid ReqBoard.BoardNotice reqBoardNotice,
+                                     @Valid ReqBoard.BoardQna reqBoardQna,
                                      @RequestPart(required = false) List<MultipartFile> files) {
         Long managerId = account.getId();
 
-        mngBoardNoticeService.updateBoardNotice(reqBoardNotice, files, managerId);
+        boardQnaService.updateBoardQna(reqBoardQna, files, managerId);
         return new ResBody(ResBody.CODE_SUCCESS, "", null);
     }
 
     @GetMapping("/{id}")
-    public ResBody selectBoardNotice(@AuthenticationPrincipal Account account,
-                                     @PathVariable(name = "id") Long id) {
-        BoardNoticeDto boardNotice = mngBoardNoticeService.selectBoardNotice(id);
-        return new ResBody(ResBody.CODE_SUCCESS, "", boardNotice);
+    public ResBody selectBoardQna(@AuthenticationPrincipal Account account,
+                                  @PathVariable(name = "id") Long id) {
+        Long clientId = account.getId();
+
+        BoardQnaDto boardQna = boardQnaService.selectBoardQna(id, clientId);
+        return new ResBody(ResBody.CODE_SUCCESS, "", boardQna);
     }
 
     @DeleteMapping("/delete")
     public ResBody deleteBoardNotice(@AuthenticationPrincipal Account account,
                                      @RequestParam String ids) {
-        mngBoardNoticeService.deleteBoardNotice(ids);
+        Long clientId = account.getId();
+
+        boardQnaService.deleteBoardQna(ids, clientId);
         return new ResBody(ResBody.CODE_SUCCESS, "", null);
     }
-
 }

@@ -1,7 +1,7 @@
 package com.mile.portal.rest.common.repository.custom;
 
+import com.mile.portal.rest.common.model.comm.ReqBoard;
 import com.mile.portal.rest.common.model.dto.board.BoardNoticeDto;
-import com.mile.portal.rest.user.model.comm.ReqBoard;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPAExpressions;
@@ -56,6 +56,7 @@ public class BoardNoticeRepositoryImpl implements BoardNoticeRepositoryCustom {
                 Projections.fields(BoardNoticeDto.class,
                         boardNotice.id, boardNotice.title, boardNotice.content, boardNotice.readCnt,
                         boardNotice.ntcType, boardNotice.beginDate, boardNotice.endDate, boardNotice.hotYn, boardNotice.pubYn,
+                        boardNotice.created, boardNotice.updated,
                         manager.id.as("managerId"), manager.name.as("managerName"),
                         ExpressionUtils.as(
                                 JPAExpressions.select(count(boardAttach.id))

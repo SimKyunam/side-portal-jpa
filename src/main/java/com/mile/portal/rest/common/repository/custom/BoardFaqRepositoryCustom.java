@@ -1,7 +1,7 @@
 package com.mile.portal.rest.common.repository.custom;
 
+import com.mile.portal.rest.common.model.comm.ReqBoard;
 import com.mile.portal.rest.common.model.dto.board.BoardFaqDto;
-import com.mile.portal.rest.user.model.comm.ReqBoard;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;

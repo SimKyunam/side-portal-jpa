@@ -1,5 +1,7 @@
 package com.mile.portal.rest.common.service;
 
+import com.mile.portal.rest.client.model.domain.Client;
+import com.mile.portal.rest.client.repository.ClientRepository;
 import com.mile.portal.rest.common.model.comm.ReqCommon;
 import com.mile.portal.rest.common.model.comm.ReqLogin;
 import com.mile.portal.rest.common.model.comm.ReqToken;
@@ -8,8 +10,6 @@ import com.mile.portal.rest.common.model.enums.Authority;
 import com.mile.portal.rest.common.repository.UserRepository;
 import com.mile.portal.rest.mng.model.domain.Manager;
 import com.mile.portal.rest.mng.repository.ManagerRepository;
-import com.mile.portal.rest.user.model.domain.Client;
-import com.mile.portal.rest.user.repository.ClientRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional
 public class AuthService {
-    
+
     private final LoginService loginService;
     private final PasswordEncoder passwordEncoder;
 

@@ -1,5 +1,6 @@
 package com.mile.portal.rest.common.model.dto.board;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.mile.portal.rest.common.model.domain.Attach;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,10 +21,16 @@ public class BoardNoticeDto implements Serializable {
     private String content;
     private int readCnt;
     private String ntcType;
+    private String ntcTypeName;
     private LocalDateTime beginDate;
     private LocalDateTime endDate;
     private String hotYn;
     private String pubYn;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
+    private LocalDateTime created;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
+    private LocalDateTime updated;
 
     //첨부파일 카운트
     private Long fileCnt;

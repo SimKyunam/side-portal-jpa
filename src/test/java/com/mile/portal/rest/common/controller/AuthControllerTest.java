@@ -1,10 +1,10 @@
 package com.mile.portal.rest.common.controller;
 
+import com.mile.portal.rest.client.model.domain.Client;
 import com.mile.portal.rest.common.model.comm.ReqToken;
 import com.mile.portal.rest.common.model.enums.Authority;
 import com.mile.portal.rest.common.service.AuthService;
 import com.mile.portal.rest.mng.model.domain.Manager;
-import com.mile.portal.rest.user.model.domain.Client;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,7 +25,6 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class AuthControllerTest {
@@ -36,12 +35,12 @@ class AuthControllerTest {
 
     @Autowired
     private WebApplicationContext webApplicationContext;
-    
+
     @MockBean
     private AuthService authService;
 
     @BeforeEach
-    public void setUp(){
+    public void setUp() {
         passwordEncoder = new BCryptPasswordEncoder();
 
         mvc = MockMvcBuilders
@@ -70,7 +69,7 @@ class AuthControllerTest {
                         "}"))
                 .andExpect(status().isOk());
     }
-    
+
     @DisplayName("2. 사용자 로그인")
     @Test
     void test_2() throws Exception {
@@ -84,7 +83,7 @@ class AuthControllerTest {
                         "}"))
                 .andExpect(status().isOk());
     }
-    
+
     @DisplayName("3. 관리자 생성")
     @Test
     void test_3() throws Exception {
@@ -102,7 +101,7 @@ class AuthControllerTest {
                         "}"))
                 .andExpect(status().isOk());
     }
-    
+
     @DisplayName("4. 관리자 로그인")
     @Test
     void test_4() throws Exception {

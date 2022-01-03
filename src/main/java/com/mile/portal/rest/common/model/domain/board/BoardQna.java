@@ -1,9 +1,10 @@
 package com.mile.portal.rest.common.model.domain.board;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.mile.portal.rest.client.model.domain.Client;
 import com.mile.portal.rest.mng.model.domain.Manager;
-import com.mile.portal.rest.user.model.domain.Client;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.util.List;
@@ -16,7 +17,8 @@ import java.util.List;
 @DiscriminatorValue("Q")
 public class BoardQna extends Board {
 
-    @Column(length = 5)
+    @Column(length = 10)
+    @ColumnDefault("'Q_ETC'")
     private String qnaType;
 
     @Lob

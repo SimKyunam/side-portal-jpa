@@ -1,9 +1,9 @@
-package com.mile.portal.rest.user.controller;
+package com.mile.portal.rest.client.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mile.portal.rest.client.service.BoardNoticeService;
 import com.mile.portal.rest.common.model.domain.board.BoardNotice;
 import com.mile.portal.rest.common.model.dto.board.BoardNoticeDto;
-import com.mile.portal.rest.user.service.BoardService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -37,7 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @WithMockUser
-class BoardControllerTest {
+class BoardNoticeControllerTest {
     private MockMvc mvc;
 
     @Autowired
@@ -47,7 +47,7 @@ class BoardControllerTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private BoardService boardService;
+    private BoardNoticeService boardNoticeService;
 
     @BeforeEach
     public void setUp() {
@@ -66,7 +66,7 @@ class BoardControllerTest {
         Page<BoardNoticeDto> noticePaging = createNoticePaging();
 
         //given
-        given(boardService.listBoardNotice(any(), any())).willReturn(noticePaging);
+        given(boardNoticeService.listBoardNotice(any(), any())).willReturn(noticePaging);
 
         //when
         mvc.perform(get("/api/v1/board/notice"))
@@ -74,14 +74,14 @@ class BoardControllerTest {
                 .andExpect(jsonPath("$.data.content[0].title").value("테스트 타이틀"));
 
         //then
-        then(boardService).should().listBoardNotice(any(), any());
+        then(boardNoticeService).should().listBoardNotice(any(), any());
     }
 
     @Test
     @DisplayName("2. 공지사항 상세")
     void test2() throws Exception {
         //given
-        given(boardService.selectBoardNotice(any())).willReturn(createNoticeDto());
+        given(boardNoticeService.selectBoardNotice(any())).willReturn(createNoticeDto());
 
         //when
         mvc.perform(get("/api/v1/board/notice/1"))
@@ -89,7 +89,7 @@ class BoardControllerTest {
                 .andExpect(status().isOk());
 
         //then
-        then(boardService).should().selectBoardNotice(any());
+        then(boardNoticeService).should().selectBoardNotice(any());
     }
 
     BoardNotice createNotice() {

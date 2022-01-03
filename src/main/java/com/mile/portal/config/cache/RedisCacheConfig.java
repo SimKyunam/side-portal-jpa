@@ -99,6 +99,7 @@ public class RedisCacheConfig {
     // RedisCacheConfiguration 공통처리
     public RedisCacheConfiguration redisCacheConfiguration(int expireSec) {
         return RedisCacheConfiguration.defaultCacheConfig()
+                .disableCachingNullValues()
                 .entryTtl(Duration.ofSeconds(expireSec)) // 유지 시간 설정
                 .computePrefixWith(CacheKeyPrefix.simple())
                 .serializeKeysWith(RedisSerializationContext
@@ -107,5 +108,7 @@ public class RedisCacheConfig {
                 .serializeValuesWith(RedisSerializationContext
                         .SerializationPair
                         .fromSerializer(redisJsonRedisSerializer()));
+//                        .fromSerializer(new JdkSerializationRedisSerializer()));
+
     }
 }

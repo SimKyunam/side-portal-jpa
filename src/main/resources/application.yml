@@ -8,7 +8,7 @@ spring:
   jpa:
     show-sql: false
     hibernate:
-      ddl-auto: create  # none / create-drop / create / update / validate
+      ddl-auto: update  # none / create-drop / create / update / validate
     properties:
       hibernate:
         format_sql: true
@@ -53,7 +53,7 @@ spring:
     database-platform: org.hibernate.dialect.H2Dialect
   sql:
     init:
-      mode: always
+      mode: never
   h2:
     console:
       enabled: true
@@ -74,7 +74,7 @@ decorator:
     p6spy:
       enable-logging: true
 file:
-  upload-dir: C:\Users\Sim\Desktop\folder\attach\SIDE\HCMP\UPLOAD_FILES
+  upload-dir: D:\attach\SIDE\HCMP\UPLOAD_FILES
 
 ---
 # 개발

@@ -13,7 +13,7 @@ public interface BoardAttachRepository extends JpaRepository<BoardAttach, Long>,
 
     Optional<BoardAttach> findFirstByBoardIdAndBoardType(Long boardId, String boardType);
 
-    Optional<BoardAttach> findByBoardIdInAndBoardType(List<Long> boardId, String boardType);
+    Optional<List<BoardAttach>> findByBoardIdAndBoardType(Long boardId, String boardType);
 
     Optional<List<BoardAttach>> findByBoardId(Long boardId);
 }

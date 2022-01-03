@@ -1,7 +1,7 @@
-package com.mile.portal.rest.user.repository;
+package com.mile.portal.rest.client.repository;
 
-import com.mile.portal.rest.common.repository.BoardNoticeRepository;
 import com.mile.portal.rest.common.model.domain.board.BoardNotice;
+import com.mile.portal.rest.common.repository.BoardNoticeRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Random;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 class BoardNoticeRepositoryTest {

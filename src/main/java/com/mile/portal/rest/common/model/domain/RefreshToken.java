@@ -1,5 +1,6 @@
 package com.mile.portal.rest.common.model.domain;
 
+import com.mile.portal.rest.common.model.domain.base.BaseTimeEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,14 +25,14 @@ public class RefreshToken extends BaseTimeEntity {
     @Column(length = 1000)
     private String value;
 
-    public RefreshToken updateValue(String token) {
-        this.value = token;
-        return this;
-    }
-
     @Builder
     public RefreshToken(String key, String value) {
         this.key = key;
         this.value = value;
+    }
+
+    public RefreshToken updateValue(String token) {
+        this.value = token;
+        return this;
     }
 }

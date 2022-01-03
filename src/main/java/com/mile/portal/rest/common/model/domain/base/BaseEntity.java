@@ -1,4 +1,4 @@
-package com.mile.portal.rest.common.model.domain;
+package com.mile.portal.rest.common.model.domain.base;
 
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedBy;

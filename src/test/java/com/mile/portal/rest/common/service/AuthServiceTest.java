@@ -1,13 +1,13 @@
 package com.mile.portal.rest.common.service;
 
-import com.mile.portal.rest.common.model.domain.Account;
+import com.mile.portal.rest.client.model.domain.Client;
+import com.mile.portal.rest.client.repository.ClientRepository;
 import com.mile.portal.rest.common.model.comm.ReqCommon;
 import com.mile.portal.rest.common.model.comm.ReqLogin;
 import com.mile.portal.rest.common.model.comm.ReqToken;
+import com.mile.portal.rest.common.model.domain.Account;
 import com.mile.portal.rest.common.model.enums.Authority;
 import com.mile.portal.rest.common.repository.UserRepository;
-import com.mile.portal.rest.user.model.domain.Client;
-import com.mile.portal.rest.user.repository.ClientRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,11 +19,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
 
 
 @SpringBootTest
@@ -47,7 +48,7 @@ class AuthServiceTest {
 
     @DisplayName("1. 사용자 등록")
     @Test
-    void test_1(){
+    void test_1() {
         //given
         ReqLogin reqLogin = createReqLogin();
         Client client = createClient();
@@ -65,7 +66,7 @@ class AuthServiceTest {
 
     @DisplayName("2. 중복 사용자 등록")
     @Test
-    void test_2(){
+    void test_2() {
         //given
         ReqLogin reqLogin = createReqLogin();
         Client client = createClient();
@@ -83,7 +84,7 @@ class AuthServiceTest {
     @DisplayName("3. 로그인 재시도")
     @Test
     @WithMockUser
-    void test_3(){
+    void test_3() {
         //given
         ReqCommon.UserLogin userLogin = createUserLogin();
         given(loginService.loginAuthenticate(any())).willReturn(new ReqToken());
@@ -131,7 +132,7 @@ class AuthServiceTest {
     }
 
     //로그인
-    public Account createAccount(){
+    public Account createAccount() {
         Account account = new Account();
         account.setLoginId("test");
         account.setLoginPwd(passwordEncoder.encode("1111"));
@@ -140,7 +141,7 @@ class AuthServiceTest {
         return account;
     }
 
-    public UsernamePasswordAuthenticationToken createAuthentication(){
+    public UsernamePasswordAuthenticationToken createAuthentication() {
         Account user = this.createAccount();
         return user.toAuthentication();
     }

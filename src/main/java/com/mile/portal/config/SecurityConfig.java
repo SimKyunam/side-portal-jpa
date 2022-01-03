@@ -49,7 +49,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         , "/api/v1/auth/**", "/api/v1/attach/**"
                 ).permitAll()
                 .antMatchers("/api/v1/mng/**").hasRole("ADMIN") // 관리자
-                .antMatchers("/api/v1/user/**").hasRole("USER") // 사용자
+                .antMatchers("/api/v1/client/**").hasRole("USER") // 사용자
                 .anyRequest().authenticated() // 토큰있는 경우
                 .and().exceptionHandling()
                 .and().headers().frameOptions().disable() // 없으면 h2 console 안됌

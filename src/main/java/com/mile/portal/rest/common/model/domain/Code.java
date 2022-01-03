@@ -1,6 +1,7 @@
 package com.mile.portal.rest.common.model.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.mile.portal.rest.common.model.domain.base.BaseEntity;
 import lombok.*;
 import org.hibernate.annotations.Where;
 

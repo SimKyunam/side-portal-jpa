@@ -1,7 +1,7 @@
 package com.mile.portal.rest.common.model.domain.board;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.mile.portal.rest.common.model.domain.BaseEntity;
+import com.mile.portal.rest.common.model.domain.base.BaseEntity;
 import com.mile.portal.rest.mng.model.domain.Manager;
 import lombok.*;
 import lombok.experimental.Accessors;

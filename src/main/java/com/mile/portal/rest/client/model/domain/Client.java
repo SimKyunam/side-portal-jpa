@@ -1,4 +1,4 @@
-package com.mile.portal.rest.user.model.domain;
+package com.mile.portal.rest.client.model.domain;
 
 import com.mile.portal.rest.common.model.domain.Account;
 import com.mile.portal.rest.common.model.domain.board.BoardQna;

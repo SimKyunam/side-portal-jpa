@@ -1,7 +1,8 @@
-package com.mile.portal.rest.mng.service;
+package com.mile.portal.rest.client.service;
 
 import com.mile.portal.config.cache.CacheProperties;
 import com.mile.portal.config.exception.exceptions.ResultNotFoundException;
+import com.mile.portal.rest.client.repository.ClientRepository;
 import com.mile.portal.rest.common.model.comm.ReqBoard;
 import com.mile.portal.rest.common.model.domain.Code;
 import com.mile.portal.rest.common.model.domain.board.BoardQna;
@@ -9,7 +10,6 @@ import com.mile.portal.rest.common.model.dto.board.BoardQnaDto;
 import com.mile.portal.rest.common.repository.BoardQnaRepository;
 import com.mile.portal.rest.common.service.BoardAttachService;
 import com.mile.portal.rest.common.service.CodeService;
-import com.mile.portal.rest.mng.repository.ManagerRepository;
 import com.mile.portal.util.CommonUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,19 +32,19 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class MngBoardQnaService {
+public class BoardQnaService {
     private final CodeService codeService;
-    private final BoardAttachService boardAttachService; // 게시판 첨부 파일
+    private final BoardAttachService boardAttachService;
 
-    private final ManagerRepository managerRepository;
     private final BoardQnaRepository boardQnaRepository;
+    private final ClientRepository clientRepository;
 
     @Transactional(readOnly = true)
-    public Page<BoardQnaDto> listBoardQna(ReqBoard.BoardQna reqBoardQna, Pageable pageable) {
+    public Page<BoardQnaDto> listBoardQna(ReqBoard.BoardQna reqBoardQna, Pageable pageable, Long clientId) {
         Map<String, Code> qnaType = codeService.selectCodeMap("qnaType"); //공통코드
 
         // 컨텐츠 쿼리
-        List<BoardQnaDto> boardQnaList = boardQnaRepository.qnaSearchList(reqBoardQna, pageable, null);
+        List<BoardQnaDto> boardQnaList = boardQnaRepository.qnaSearchList(reqBoardQna, pageable, clientId);
         boardQnaList = boardQnaList.stream().map(qna -> {
             if (qnaType.containsKey(qna.getQnaType()))
                 qna.setQnaTypeName(qnaType.get(qna.getQnaType()).getCodeName());
@@ -53,24 +53,49 @@ public class MngBoardQnaService {
         }).collect(Collectors.toList());
 
         // count 하는 쿼리
-        long total = boardQnaRepository.qnaSearchListCnt(reqBoardQna, null);
+        long total = boardQnaRepository.qnaSearchListCnt(reqBoardQna, clientId);
 
         return PageableExecutionUtils.getPage(boardQnaList, pageable, () -> total);
     }
 
     @CacheEvict(value = CacheProperties.BOARD_QNA, allEntries = true)
-    public BoardQna updateBoardQna(ReqBoard.BoardQnaAnswer reqBoardQna, List<MultipartFile> files, Long managerId) {
-        // TODO : 답안 파일 저장확인
+    public BoardQna createBoardQna(ReqBoard.BoardQna reqBoardQna, List<MultipartFile> files, Long clientId) {
+        BoardQna boardQna = BoardQna.builder()
+                .title(reqBoardQna.getTitle())
+                .content(reqBoardQna.getContent())
+                .qnaType(reqBoardQna.getQnaType())
+                .client(clientRepository.findById(clientId).orElseThrow(ResultNotFoundException::new))
+                .build();
 
+        BoardQna qna = boardQnaRepository.save(boardQna);
+
+        //첨부파일 체크
+        if (files != null) {
+            files = files.stream()
+                    .filter(n -> !Objects.equals(n.getOriginalFilename(), ""))
+                    .collect(Collectors.toList());
+
+            if (files.size() > 0) {
+                boardAttachService.boardAttachProcess(qna, "QNA", files);
+            }
+        }
+
+        return qna;
+    }
+
+    @CacheEvict(value = CacheProperties.BOARD_QNA, allEntries = true)
+    public BoardQna updateBoardQna(ReqBoard.BoardQna reqBoardQna, List<MultipartFile> files, Long clientId) {
         BoardQna boardQna = boardQnaRepository.findById(reqBoardQna.getId()).orElseThrow(ResultNotFoundException::new);
 
-        boardQna.setAnswerContent(reqBoardQna.getAnswerContent());
-        boardQna.setManager(managerRepository.findById(managerId).orElseThrow(ResultNotFoundException::new));
+        boardQna.setTitle(reqBoardQna.getTitle());
+        boardQna.setContent(reqBoardQna.getContent());
+        boardQna.setQnaType(reqBoardQna.getQnaType());
+        boardQna.setClient(clientRepository.findById(clientId).orElseThrow(ResultNotFoundException::new));
 
         BoardQna qna = boardQnaRepository.save(boardQna);
 
         if (reqBoardQna.getFileModifiedYn().equals("Y")) { //첨부파일을 수정한 경우
-            boardAttachService.deleteBoardAttachFile(qna, "ANS", reqBoardQna.getDeleteUploadNames());
+            boardAttachService.deleteBoardAttachFile(qna, "QNA", reqBoardQna.getDeleteUploadNames());
 
             //첨부파일 체크
             if (files != null) {
@@ -79,7 +104,7 @@ public class MngBoardQnaService {
                         .collect(Collectors.toList());
 
                 if (files.size() > 0) {
-                    boardAttachService.boardAttachProcess(qna, "ANS", files);
+                    boardAttachService.boardAttachProcess(qna, "QNA", files);
                 }
             }
         }
@@ -89,10 +114,10 @@ public class MngBoardQnaService {
 
     @Transactional(readOnly = true)
     @Cacheable(value = CacheProperties.BOARD_QNA, key = "#id", unless = "#result == null")
-    public BoardQnaDto selectBoardQna(Long id) {
+    public BoardQnaDto selectBoardQna(Long id, Long clientId) {
         Map<String, Code> qnaType = codeService.selectCodeMap("qnaType"); //공통코드
 
-        BoardQnaDto boardQnaDto = boardQnaRepository.qnaSelect(id, null).orElseThrow(ResultNotFoundException::new);
+        BoardQnaDto boardQnaDto = boardQnaRepository.qnaSelect(id, clientId).orElseThrow(ResultNotFoundException::new);
         if (qnaType.containsKey(boardQnaDto.getQnaType()))
             boardQnaDto.setQnaTypeName(qnaType.get(boardQnaDto.getQnaType()).getCodeName());
 
@@ -110,13 +135,12 @@ public class MngBoardQnaService {
     }
 
     @CacheEvict(value = CacheProperties.BOARD_QNA, allEntries = true)
-    public void deleteBoardQna(String ids) {
+    public void deleteBoardQna(String ids, Long clientId) {
         List<Long> boardIdList = CommonUtil.stringNotEmptyIdConvertToList(ids);
 
-        List<BoardQna> boardQna = boardQnaRepository.findAllById(boardIdList);
-        boardAttachService.deleteBoardAttachFiles(boardQna, "QNA"); // 첨부파일 삭제
-        boardAttachService.deleteBoardAttachFiles(boardQna, "ANS"); // 첨부파일 삭제
+        List<BoardQna> boardQnas = boardQnaRepository.findByIdInAndClientId(boardIdList, clientId);
+        boardAttachService.deleteBoardAttachFiles(boardQnas, "QNA"); // 첨부파일 삭제
 
-        boardQna.forEach(qna -> qna.setDeleted(LocalDateTime.now())); // 소프트 삭제
+        boardQnas.forEach(qna -> qna.setDeleted(LocalDateTime.now())); // 소프트 삭제
     }
 }

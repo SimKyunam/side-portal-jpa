@@ -1,10 +1,10 @@
 package com.mile.portal.rest.mng.controller;
 
+import com.mile.portal.rest.common.model.comm.ReqBoard;
 import com.mile.portal.rest.common.model.comm.ResBody;
 import com.mile.portal.rest.common.model.domain.Account;
 import com.mile.portal.rest.common.model.dto.board.BoardFaqDto;
 import com.mile.portal.rest.mng.service.MngBoardFaqService;
-import com.mile.portal.rest.user.model.comm.ReqBoard;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -13,10 +13,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -36,21 +34,19 @@ public class MngBoardFaqController {
 
     @PostMapping("/create")
     public ResBody createBoardFaq(@AuthenticationPrincipal Account account,
-                                  @ModelAttribute @Valid ReqBoard.BoardFaq reqBoardFaq,
-                                  @RequestPart(required = false) List<MultipartFile> files) {
+                                  @ModelAttribute @Valid ReqBoard.BoardFaq reqBoardFaq) {
         Long managerId = account.getId();
 
-        mngBoardFaqService.createBoardFaq(reqBoardFaq, files, managerId);
+        mngBoardFaqService.createBoardFaq(reqBoardFaq, managerId);
         return new ResBody(ResBody.CODE_SUCCESS, "", null);
     }
 
     @PostMapping("/update")
     public ResBody updateBoardFaq(@AuthenticationPrincipal Account account,
-                                  @Valid ReqBoard.BoardFaq reqBoardFaq,
-                                  @RequestPart(required = false) List<MultipartFile> files) {
+                                  @Valid ReqBoard.BoardFaq reqBoardFaq) {
         Long managerId = account.getId();
 
-        mngBoardFaqService.updateBoardFaq(reqBoardFaq, files, managerId);
+        mngBoardFaqService.updateBoardFaq(reqBoardFaq, managerId);
         return new ResBody(ResBody.CODE_SUCCESS, "", null);
     }
 

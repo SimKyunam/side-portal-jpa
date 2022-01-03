@@ -4,6 +4,7 @@ import com.mile.portal.config.exception.exceptions.ResultNotFoundException;
 import com.mile.portal.rest.common.model.domain.board.Board;
 import com.mile.portal.rest.common.model.domain.board.BoardAttach;
 import com.mile.portal.rest.common.repository.BoardAttachRepository;
+import com.mile.portal.rest.common.service.base.FileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -116,5 +117,9 @@ public class BoardAttachService extends FileService {
 
     public List<BoardAttach> listBoardAttach(Long id) {
         return boardAttachRepository.findByBoardId(id).orElseThrow(ResultNotFoundException::new);
+    }
+
+    public List<BoardAttach> listBoardAttachAndBoardType(Long id, String boardType) {
+        return boardAttachRepository.findByBoardIdAndBoardType(id, boardType).orElseThrow(ResultNotFoundException::new);
     }
 }
