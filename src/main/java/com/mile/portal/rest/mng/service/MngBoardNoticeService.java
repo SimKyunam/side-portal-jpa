@@ -2,60 +2,43 @@ package com.mile.portal.rest.mng.service;
 
 import com.mile.portal.config.cache.CacheProperties;
 import com.mile.portal.config.exception.exceptions.ResultNotFoundException;
+import com.mile.portal.rest.base.service.BaseBoardNoticeService;
 import com.mile.portal.rest.common.model.comm.ReqBoard;
-import com.mile.portal.rest.common.model.domain.Code;
 import com.mile.portal.rest.common.model.domain.board.BoardNotice;
-import com.mile.portal.rest.common.model.dto.board.BoardNoticeDto;
 import com.mile.portal.rest.common.repository.BoardNoticeRepository;
 import com.mile.portal.rest.common.service.BoardAttachService;
 import com.mile.portal.rest.common.service.CodeService;
 import com.mile.portal.rest.mng.repository.ManagerRepository;
 import com.mile.portal.util.CommonUtil;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 @Transactional
-public class MngBoardNoticeService {
-    private final CodeService codeService;
+public class MngBoardNoticeService extends BaseBoardNoticeService {
     private final BoardAttachService boardAttachService; // 게시판 첨부 파일
 
     private final ManagerRepository managerRepository;
     private final BoardNoticeRepository boardNoticeRepository;
 
-    @Transactional(readOnly = true)
-    public Page<BoardNoticeDto> listBoardNotice(ReqBoard.BoardNotice reqBoardNotice, Pageable pageable) {
-        Map<String, Code> noticeType = codeService.selectCodeMap("noticeType"); //공통코드
+    public MngBoardNoticeService(CodeService codeService,
+                                 BoardAttachService boardAttachService,
+                                 BoardNoticeRepository boardNoticeRepository,
+                                 ManagerRepository managerRepository) {
+        super(codeService, boardAttachService, boardNoticeRepository);
 
-        // 컨텐츠 쿼리
-        List<BoardNoticeDto> boardNoticeList = boardNoticeRepository.noticeSearchList(reqBoardNotice, pageable);
-        boardNoticeList = boardNoticeList.stream().map(notice -> {
-            if (noticeType.containsKey(notice.getNtcType()))
-                notice.setNtcTypeName(noticeType.get(notice.getNtcType()).getCodeName());
-
-            return notice;
-        }).collect(Collectors.toList());
-
-        // count 하는 쿼리
-        long total = boardNoticeRepository.noticeSearchListCnt(reqBoardNotice);
-
-        return PageableExecutionUtils.getPage(boardNoticeList, pageable, () -> total);
+        this.boardAttachService = boardAttachService;
+        this.managerRepository = managerRepository;
+        this.boardNoticeRepository = boardNoticeRepository;
     }
 
     @CacheEvict(value = CacheProperties.BOARD_NOTICE, allEntries = true)
@@ -118,22 +101,6 @@ public class MngBoardNoticeService {
         }
 
         return notice;
-    }
-
-    @Transactional(readOnly = true)
-    @Cacheable(value = CacheProperties.BOARD_NOTICE, key = "#id", unless = "#result == null")
-    public BoardNoticeDto selectBoardNotice(Long id) {
-        Map<String, Code> noticeType = codeService.selectCodeMap("noticeType"); //공통코드
-
-        BoardNoticeDto boardNoticeDto = boardNoticeRepository.noticeSelect(id).orElseThrow(ResultNotFoundException::new);
-        if (noticeType.containsKey(boardNoticeDto.getNtcType()))
-            boardNoticeDto.setNtcTypeName(noticeType.get(boardNoticeDto.getNtcType()).getCodeName());
-
-        if (boardNoticeDto.getFileCnt() > 0) {
-            boardNoticeDto.setFiles(boardAttachService.listBoardAttach(id));
-        }
-
-        return boardNoticeDto;
     }
 
     @CacheEvict(value = CacheProperties.BOARD_NOTICE, allEntries = true)

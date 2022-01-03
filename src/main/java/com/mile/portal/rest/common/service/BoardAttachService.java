@@ -1,10 +1,10 @@
 package com.mile.portal.rest.common.service;
 
 import com.mile.portal.config.exception.exceptions.ResultNotFoundException;
+import com.mile.portal.rest.base.service.BaseFileService;
 import com.mile.portal.rest.common.model.domain.board.Board;
 import com.mile.portal.rest.common.model.domain.board.BoardAttach;
 import com.mile.portal.rest.common.repository.BoardAttachRepository;
-import com.mile.portal.rest.common.service.base.FileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class BoardAttachService extends FileService {
+public class BoardAttachService extends BaseFileService {
 
     private final BoardAttachRepository boardAttachRepository;
 

@@ -1,4 +1,4 @@
-package com.mile.portal.rest.common.service.base;
+package com.mile.portal.rest.base.service;
 
 import com.mile.portal.rest.common.model.domain.Attach;
 import com.mile.portal.util.DateTimeUtil;
@@ -22,7 +22,7 @@ import java.util.stream.Stream;
 
 @Slf4j
 @Component
-public class FileService {
+public class BaseFileService {
 
     @Value("${file.upload-dir}")
     private String uploadPath;

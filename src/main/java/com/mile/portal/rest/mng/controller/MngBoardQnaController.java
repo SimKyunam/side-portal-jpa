@@ -30,7 +30,7 @@ public class MngBoardQnaController {
     public ResBody listBoardQna(@AuthenticationPrincipal Account account,
                                 @RequestParam(required = false) ReqBoard.BoardQna reqBoardQna,
                                 @PageableDefault(sort = "id", size = 100, direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<BoardQnaDto> boardNoticeList = mngBoardQnaService.listBoardQna(reqBoardQna, pageable);
+        Page<BoardQnaDto> boardNoticeList = mngBoardQnaService.listBoardQna(reqBoardQna, pageable, null);
         return new ResBody(ResBody.CODE_SUCCESS, "", boardNoticeList);
     }
 
@@ -47,7 +47,7 @@ public class MngBoardQnaController {
     @GetMapping("/{id}")
     public ResBody selectBoardQna(@AuthenticationPrincipal Account account,
                                   @PathVariable(name = "id") Long id) {
-        BoardQnaDto boardQna = mngBoardQnaService.selectBoardQna(id);
+        BoardQnaDto boardQna = mngBoardQnaService.selectBoardQna(id, null);
         return new ResBody(ResBody.CODE_SUCCESS, "", boardQna);
     }
 

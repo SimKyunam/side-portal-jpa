@@ -1,4 +1,4 @@
-package com.mile.portal.rest.common.service.base;
+package com.mile.portal.rest.base.service;
 
 import com.mile.portal.rest.common.model.comm.AccountAdaptor;
 import com.mile.portal.rest.common.model.domain.Account;

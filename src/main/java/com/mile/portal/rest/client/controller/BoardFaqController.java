@@ -34,6 +34,8 @@ public class BoardFaqController {
     public ResBody selectBoardFaq(@AuthenticationPrincipal Account account,
                                   @PathVariable(name = "id") Long id) {
         BoardFaqDto boardFaq = boardFaqService.selectBoardFaq(id);
+        boardFaq.setReadCnt(boardFaqService.updateReadCnt(id)); // 조회수 증가 (캐싱 때문에 밖에서 처리)
+
         return new ResBody(ResBody.CODE_SUCCESS, "", boardFaq);
     }
 }

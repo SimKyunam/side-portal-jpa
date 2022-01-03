@@ -34,6 +34,8 @@ public class BoardNoticeController {
     public ResBody selectBoardNotice(@AuthenticationPrincipal Account account,
                                      @PathVariable(name = "id") Long id) {
         BoardNoticeDto boardNotice = boardNoticeService.selectBoardNotice(id);
+        boardNotice.setReadCnt(boardNoticeService.updateReadCnt(id)); // 조회수 증가 (캐싱 때문에 밖에서 처리)
+
         return new ResBody(ResBody.CODE_SUCCESS, "", boardNotice);
     }
 }

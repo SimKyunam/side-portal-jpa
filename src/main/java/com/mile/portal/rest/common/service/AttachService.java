@@ -1,9 +1,9 @@
 package com.mile.portal.rest.common.service;
 
 import com.mile.portal.config.exception.exceptions.ResultNotFoundException;
+import com.mile.portal.rest.base.service.BaseFileService;
 import com.mile.portal.rest.common.model.domain.Attach;
 import com.mile.portal.rest.common.repository.AttachRepository;
-import com.mile.portal.rest.common.service.base.FileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class AttachService extends FileService {
+public class AttachService extends BaseFileService {
 
     private final AttachRepository attachRepository;
 
