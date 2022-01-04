@@ -8,7 +8,7 @@ spring:
   jpa:
     show-sql: false
     hibernate:
-      ddl-auto: update  # none / create-drop / create / update / validate
+      ddl-auto: create  # none / create-drop / create / update / validate
     properties:
       hibernate:
         format_sql: true
@@ -23,6 +23,19 @@ spring:
 #      config: classpath:ehcache.xml
 #  jackson:
 #    property-naming-strategy: SNAKE_CASE
+
+  mail:
+    host: smtp.naver.com
+    port: 465
+    username: ppp9026@naver.com
+    password: 
+    properties:
+      mail:
+        smtp:
+          auth: true
+          ssl:
+            enable: true
+            trust: smtp.naver.com
 
 server:
   servlet:

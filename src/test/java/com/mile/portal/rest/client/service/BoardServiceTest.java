@@ -22,11 +22,7 @@ class BoardServiceTest {
         return ReqBoard.BoardFaq.builder()
                 .title("테스트 제목")
                 .content("테스트 내용")
-                .ntcType("NOT")
-                .beginDate(LocalDateTime.now())
-                .endDate(LocalDateTime.now())
-                .hotYn("N")
-                .pubYn("Y")
+                .faqType("NOT")
                 .build();
     }
 

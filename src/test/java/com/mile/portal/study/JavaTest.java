@@ -1,15 +1,17 @@
 package com.mile.portal.study;
 
+import com.mile.portal.util.CommonUtil;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 public class JavaTest {
     @Test
@@ -29,11 +31,6 @@ public class JavaTest {
         stringList.parallelStream().forEach(str -> {
             System.out.println("Starting " + Thread.currentThread().getName()
                     + ", String=" + str + ", " + new Date());
-
-//            try{
-//                Thread.sleep(1000);
-//            } catch (InterruptedException e){
-//            }
         });
     }
 
@@ -87,7 +84,7 @@ public class JavaTest {
 
     @Test
     @DisplayName("6. 싱글 더하기")
-    void test6(){
+    void test6() {
         long start = System.currentTimeMillis();
         long sum = LongStream.range(0, 1_000_000_000)
                 .sum();
@@ -97,13 +94,22 @@ public class JavaTest {
         System.out.println(end - start);
     }
 
+    @Test
+    @DisplayName("7. 문자열 생성 테스트")
+    void test7() {
+        System.out.println(createString(10));
+
+        System.out.println(CommonUtil.createStringByLowerAlphabet(20));
+
+        System.out.println(CommonUtil.createCode(20));
+    }
 
     String createString(int strLength) {
         StringBuilder stringBuilder = new StringBuilder();
         Random random = new Random();
 
         for (int i = 0; i < strLength; i++) {
-            stringBuilder.append((char) (random.nextInt(26) + 'a'));
+            stringBuilder.append((char) (random.nextInt(26) + '0'));
         }
 
         return stringBuilder.toString();

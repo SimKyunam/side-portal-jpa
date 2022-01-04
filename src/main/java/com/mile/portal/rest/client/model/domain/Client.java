@@ -2,10 +2,13 @@ package com.mile.portal.rest.client.model.domain;
 
 import com.mile.portal.rest.common.model.domain.Account;
 import com.mile.portal.rest.common.model.domain.board.BoardQna;
-import com.mile.portal.rest.common.model.enums.Authority;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -21,21 +24,5 @@ public class Client extends Account {
     private String icisNo;
 
     @OneToMany(mappedBy = "client", fetch = FetchType.LAZY)
-    private List<BoardQna> boardFaqs;
-
-    @Builder
-    public Client(Long id, String name, String loginPwd,
-                  String loginId, Authority permission, String status,
-                  String tokenId, String tokenExprDt, String lastLoginDt,
-                  String lastLoginIp, String loginFails,
-                  String loginExprDt, String icisNo) {
-
-        super(id, name, loginPwd,
-                loginId, permission, status,
-                tokenId, tokenExprDt, lastLoginDt,
-                lastLoginIp, loginFails,
-                loginExprDt);
-
-        this.icisNo = icisNo;
-    }
+    private List<BoardQna> boardFaqs = new ArrayList<>();
 }

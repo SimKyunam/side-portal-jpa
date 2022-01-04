@@ -82,7 +82,7 @@ class MngBoardNoticeControllerTest {
     @Test
     @DisplayName("2. 공지사항 등록")
     void test2() throws Exception {
-        ReqBoard.BoardFaq reqBoardNotice = ReqBoard.BoardFaq.builder()
+        ReqBoard.BoardNotice reqBoardNotice = ReqBoard.BoardNotice.builder()
                 .title("테스트").content("내용").ntcType("NTC")
                 .beginDate(LocalDateTime.now())
                 .endDate(LocalDateTime.now().plusDays(10))
@@ -103,7 +103,7 @@ class MngBoardNoticeControllerTest {
     @Test
     @DisplayName("3. 공지사항 수정")
     void test3() throws Exception {
-        ReqBoard.BoardFaq reqBoardNotice = ReqBoard.BoardFaq.builder()
+        ReqBoard.BoardNotice reqBoardNotice = ReqBoard.BoardNotice.builder()
                 .title("테스트 수정").content("내용 수정").ntcType("NTC")
                 .beginDate(LocalDateTime.now().plusDays(1))
                 .endDate(LocalDateTime.now().plusDays(12))

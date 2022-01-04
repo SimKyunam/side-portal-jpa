@@ -17,6 +17,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Map;
 
@@ -54,20 +55,27 @@ public class Account extends BaseEntity {
     @Column(length = 5)
     private String status;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    @Column(length = 1000)
-    private String tokenId;
-
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private String tokenExprDt;
-
-    private String lastLoginDt;
+    private LocalDateTime lastLoginDt;
     private String lastLoginIp;
+
     @Column(columnDefinition = "int(11) default 0")
     private String loginFails;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String loginExprDt;
+
+    @Column(length = 20)
+    private String phone;
+
+    @Column(length = 50)
+    private String email;
+
+    @Column(length = 1)
+    private String emailCheckYn = "N";
+
+    @Column(length = 50)
+    private String emailCode;
+
 
     public Account(Claims claims) {
         ObjectMapper mapper = new ObjectMapper();

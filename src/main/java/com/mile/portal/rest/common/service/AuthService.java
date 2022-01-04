@@ -1,5 +1,6 @@
 package com.mile.portal.rest.common.service;
 
+import com.mile.portal.config.exception.exceptions.ResultNotFoundException;
 import com.mile.portal.rest.client.model.domain.Client;
 import com.mile.portal.rest.client.repository.ClientRepository;
 import com.mile.portal.rest.common.model.comm.ReqCommon;
@@ -10,18 +11,23 @@ import com.mile.portal.rest.common.model.enums.Authority;
 import com.mile.portal.rest.common.repository.UserRepository;
 import com.mile.portal.rest.mng.model.domain.Manager;
 import com.mile.portal.rest.mng.repository.ManagerRepository;
+import com.mile.portal.util.CommonUtil;
+import com.mile.portal.util.MailUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class AuthService {
-
+    private final MailUtil mailUtil;
     private final LoginService loginService;
     private final PasswordEncoder passwordEncoder;
 
@@ -31,15 +37,17 @@ public class AuthService {
 
     public Client createUser(ReqLogin userLogin) {
         this.existsUserCheck(userLogin);
+        String email = userLogin.getEmail();
+        String loginId = userLogin.getLoginId();
 
-        Client user = Client.builder()
-                .loginId(userLogin.getLoginId())
-                .loginPwd(passwordEncoder.encode(userLogin.getLoginPwd()))
-                .name(userLogin.getUserName())
-                .permission(userLogin.getUserType())
-                .status(userLogin.getStatus())
-                .icisNo(userLogin.getIcisNo())
-                .build();
+        Client user = new Client();
+        user.setLoginId(loginId);
+        user.setLoginPwd(passwordEncoder.encode(userLogin.getLoginPwd()));
+        user.setName(userLogin.getUserName());
+        user.setPermission(userLogin.getUserType());
+        user.setStatus(userLogin.getStatus());
+        user.setEmail(email);
+        user.setEmailCode(accountSendEmail("사용자 메일 인증", email, loginId));
 
         return clientRepository.save(user);
     }
@@ -50,16 +58,18 @@ public class AuthService {
 
     public Manager createMng(ReqLogin userLogin) {
         this.existsUserCheck(userLogin);
+        String email = userLogin.getEmail();
+        String loginId = userLogin.getLoginId();
 
-        Manager manager = Manager.builder()
-                .loginId(userLogin.getLoginId())
-                .loginPwd(passwordEncoder.encode(userLogin.getLoginPwd()))
-                .name(userLogin.getUserName())
-                .permission(userLogin.getUserType())
-                .status(userLogin.getStatus())
-                .email(userLogin.getEmail())
-                .phone(userLogin.getPhone())
-                .build();
+        Manager manager = new Manager();
+        manager.setLoginId(loginId);
+        manager.setLoginPwd(passwordEncoder.encode(userLogin.getLoginPwd()));
+        manager.setName(userLogin.getUserName());
+        manager.setPermission(userLogin.getUserType());
+        manager.setStatus(userLogin.getStatus());
+        manager.setEmail(email);
+        manager.setPhone(userLogin.getPhone());
+        manager.setEmailCode(accountSendEmail("관리자 메일 인증", email, loginId));
 
         return managerRepository.save(manager);
     }
@@ -71,7 +81,20 @@ public class AuthService {
     public void existsUserCheck(ReqLogin userLogin) {
         if (userRepository.existsByLoginId(userLogin.getLoginId())) {
             throw new RuntimeException("이미 가입되어 있는 유저입니다.");
+        } else if (userRepository.existsByEmail(userLogin.getEmail())) {
+            throw new RuntimeException("이미 가입되어 있는 이메일입니다.");
         }
+    }
+
+    public String accountSendEmail(String title, String email, String loginId) {
+        String emailCode = CommonUtil.convertToBase64(CommonUtil.createCode(10));
+
+        Map<String, Object> mailProperty = new HashMap<>();
+        mailProperty.put("emailCode", emailCode);
+        mailProperty.put("loginId", CommonUtil.convertToBase64(loginId));
+
+        mailUtil.sendTemplateMail(email, title, "Mile", mailProperty, "mail/login");
+        return emailCode;
     }
 
     public ReqToken loginProc(ReqCommon.UserLogin userLogin, Authority authority) {
@@ -81,5 +104,13 @@ public class AuthService {
                 .setPermission(authority);
 
         return loginService.loginAuthenticate(account);
+    }
+
+    public void emailCodeCheck(String loginId, String emailCode) {
+        Account account = userRepository.findByLoginIdAndEmailCode(loginId, emailCode)
+                .orElseThrow(() -> new ResultNotFoundException("받아온 정보와 동일한 결과가 없습니다."));
+
+        account.setEmailCheckYn("Y");
+        userRepository.save(account);
     }
 }

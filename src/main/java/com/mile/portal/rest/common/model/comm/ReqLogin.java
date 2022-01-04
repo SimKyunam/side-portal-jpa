@@ -25,7 +25,6 @@ public class ReqLogin {
     private String icisNo;
     private String status;
 
-    //관리자용
     private String phone;
     private String email;
 }

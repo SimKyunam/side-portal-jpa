@@ -118,27 +118,25 @@ class AuthControllerTest {
 
     //사용자 생성
     public Client createClient() {
-        Client build = Client.builder()
-                .loginId("test")
-                .loginPwd(passwordEncoder.encode("1111"))
-                .name("홍길동")
-                .permission(Authority.ROLE_USER)
-                .icisNo("A12345678")
-                .status("ACT")
-                .build();
+        Client client = new Client();
+        client.setLoginId("test");
+        client.setLoginPwd(passwordEncoder.encode("1111"));
+        client.setName("홍길동");
+        client.setPermission(Authority.ROLE_USER);
+        client.setIcisNo("A12345678");
+        client.setStatus("ACT");
 
-        return build;
+        return client;
     }
 
     //관리자 생성
     public Manager createManager() {
-        Manager manager = Manager.builder()
-                .loginId("admin")
-                .loginPwd(passwordEncoder.encode("1111"))
-                .name("관리자")
-                .permission(Authority.ROLE_ADMIN)
-                .status("ACT")
-                .build();
+        Manager manager = new Manager();
+        manager.setLoginId("admin");
+        manager.setLoginPwd(passwordEncoder.encode("1111"));
+        manager.setName("관리자");
+        manager.setPermission(Authority.ROLE_ADMIN);
+        manager.setStatus("ACT");
 
         return manager;
     }

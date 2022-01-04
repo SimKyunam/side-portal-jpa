@@ -111,16 +111,15 @@ class AuthServiceTest {
 
     //사용자 생성
     public Client createClient() {
-        Client build = Client.builder()
-                .loginId("test")
-                .loginPwd(passwordEncoder.encode("1111"))
-                .name("홍길동")
-                .permission(Authority.ROLE_USER)
-                .icisNo("A12345678")
-                .status("ACT")
-                .build();
+        Client client = new Client();
+        client.setLoginId("test");
+        client.setLoginPwd(passwordEncoder.encode("1111"));
+        client.setName("홍길동");
+        client.setPermission(Authority.ROLE_USER);
+        client.setIcisNo("A12345678");
+        client.setStatus("ACT");
 
-        return build;
+        return client;
     }
 
     //사용자 로그인
