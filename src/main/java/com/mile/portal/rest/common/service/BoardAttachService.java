@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -30,10 +31,15 @@ public class BoardAttachService extends BaseFileService {
      * @param board
      * @param boardType
      * @param fileList
-     * @return
      */
-    public List<BoardAttach> boardAttachProcess(Board board, String boardType, List<MultipartFile> fileList) {
-        return boardAttachProcess(board, boardType, fileList, "Y");
+    public void boardAttachCheckAndUseUuidProcess(Board board, String boardType, List<MultipartFile> fileList) {
+        if (fileList != null) {
+            fileList = fileList.stream()
+                    .filter(n -> !Objects.equals(n.getOriginalFilename(), ""))
+                    .collect(Collectors.toList());
+
+            boardAttachProcess(board, boardType, fileList, "Y");
+        }
     }
 
     /**
@@ -43,27 +49,25 @@ public class BoardAttachService extends BaseFileService {
      * @param boardType
      * @param fileList
      * @param useUuid
-     * @return
      */
     @Transactional
-    public List<BoardAttach> boardAttachProcess(Board board, String boardType, List<MultipartFile> fileList, String useUuid) {
-        return fileList
+    public void boardAttachProcess(Board board, String boardType, List<MultipartFile> fileList, String useUuid) {
+        fileList
                 .stream()
                 .map(file -> super.store(file, boardType + "_" + board.getId(), useUuid)) //물리 파일 저장
-                .map(fileInfo -> {
+                .forEach(fileInfo -> {
                     BoardAttach boardAttach = BoardAttach.builder()
                             .board(board)
                             .boardType(boardType)
                             .build();
                     boardAttach.setAttachParam(fileInfo);
-                    return this.createBoardAttachFile(boardAttach); // DB에 데이터 저장
-                })
-                .collect(Collectors.toList());
+                    this.createBoardAttachFile(boardAttach); // DB에 데이터 저장
+                });
     }
 
     //첨부파일 생성
-    public BoardAttach createBoardAttachFile(BoardAttach boardAttach) {
-        return boardAttachRepository.save(boardAttach);
+    public void createBoardAttachFile(BoardAttach boardAttach) {
+        boardAttachRepository.save(boardAttach);
     }
 
     // 첨부파일 단일 삭제

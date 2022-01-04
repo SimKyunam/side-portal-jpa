@@ -4,12 +4,15 @@ import com.mile.portal.config.cache.CacheProperties;
 import com.mile.portal.config.exception.exceptions.ResultNotFoundException;
 import com.mile.portal.rest.common.model.comm.ReqBoard;
 import com.mile.portal.rest.common.model.domain.Code;
+import com.mile.portal.rest.common.model.domain.board.BoardQna;
 import com.mile.portal.rest.common.model.dto.board.BoardQnaDto;
 import com.mile.portal.rest.common.repository.BoardQnaRepository;
 import com.mile.portal.rest.common.service.BoardAttachService;
 import com.mile.portal.rest.common.service.CodeService;
+import com.mile.portal.util.CommonUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +20,7 @@ import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -25,7 +29,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class BaseBoardQnaService {
+public abstract class BaseBoardQnaService {
     private final CodeService codeService;
     private final BoardAttachService boardAttachService;
 
@@ -67,4 +71,16 @@ public class BaseBoardQnaService {
 
         return boardQnaDto;
     }
+
+    @CacheEvict(value = CacheProperties.BOARD_QNA, allEntries = true)
+    public void deleteBoardQna(String ids, Long clientId) {
+        List<Long> boardIdList = CommonUtil.stringNotEmptyIdConvertToList(ids);
+
+        List<BoardQna> boardQnas = boardDeleteProc(boardIdList, clientId);
+
+        boardQnas.forEach(qna -> qna.setDeleted(LocalDateTime.now())); // 소프트 삭제
+    }
+
+    public abstract List<BoardQna> boardDeleteProc(List<Long> boardIdList, Long clientId);
+
 }

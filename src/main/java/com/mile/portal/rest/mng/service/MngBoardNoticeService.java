@@ -18,8 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -57,15 +55,7 @@ public class MngBoardNoticeService extends BaseBoardNoticeService {
         BoardNotice notice = boardNoticeRepository.save(boardNotice);
 
         //첨부파일 체크
-        if (files != null) {
-            files = files.stream()
-                    .filter(n -> !Objects.equals(n.getOriginalFilename(), ""))
-                    .collect(Collectors.toList());
-
-            if (files.size() > 0) {
-                boardAttachService.boardAttachProcess(notice, "NTC", files);
-            }
-        }
+        boardAttachService.boardAttachCheckAndUseUuidProcess(notice, "NTC", files);
 
         return notice;
     }
@@ -87,17 +77,7 @@ public class MngBoardNoticeService extends BaseBoardNoticeService {
 
         if (reqBoardNotice.getFileModifiedYn().equals("Y")) { //첨부파일을 수정한 경우
             boardAttachService.deleteBoardAttachFile(notice, "NTC", reqBoardNotice.getDeleteUploadNames());
-
-            //첨부파일 체크
-            if (files != null) {
-                files = files.stream()
-                        .filter(n -> !Objects.equals(n.getOriginalFilename(), ""))
-                        .collect(Collectors.toList());
-
-                if (files.size() > 0) {
-                    boardAttachService.boardAttachProcess(notice, "NTC", files);
-                }
-            }
+            boardAttachService.boardAttachCheckAndUseUuidProcess(notice, "NTC", files);
         }
 
         return notice;

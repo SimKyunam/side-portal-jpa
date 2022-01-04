@@ -13,6 +13,7 @@ spring:
       hibernate:
         format_sql: true
         default_batch_fetch_size: 20
+
   redis: #redis cache 사용
     host: localhost
     port: 6379
@@ -22,6 +23,7 @@ spring:
 #      config: classpath:ehcache.xml
 #  jackson:
 #    property-naming-strategy: SNAKE_CASE
+
 server:
   servlet:
     encoding:

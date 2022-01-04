@@ -54,7 +54,7 @@ public class MngBoardQnaController {
     @DeleteMapping("/delete")
     public ResBody deleteBoardQna(@AuthenticationPrincipal Account account,
                                   @RequestParam String ids) {
-        mngBoardQnaService.deleteBoardQna(ids);
+        mngBoardQnaService.deleteBoardQna(ids, null);
         return new ResBody(ResBody.CODE_SUCCESS, "", null);
     }
 
