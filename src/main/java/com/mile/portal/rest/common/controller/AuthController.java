@@ -56,8 +56,7 @@ public class AuthController {
                                   @RequestParam String loginId,
                                   HttpServletResponse response) throws IOException {
         authService.emailCodeCheck(CommonUtil.convertToBase64Decode(loginId), emailCode);
-        response.sendRedirect("https://naver.com");
-
+//        response.sendRedirect("https://naver.com");
         return new ResBody(ResBody.CODE_SUCCESS, "", null);
     }
 }

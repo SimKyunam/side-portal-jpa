@@ -91,6 +91,18 @@ decorator:
 file:
   upload-dir: D:\attach\SIDE\HCMP\UPLOAD_FILES
 
+#외부 연동
+naver:
+  url:
+    search:
+      local: https://openapi.naver.com/v1/search/local.json
+      image: https://openapi.naver.com/v1/search/image
+  client:
+    id: G9P3uJxUcQQFXQRi4QcL
+    secret: 3l0JhUci6o
+hcmp:
+  url: http://localhost:8080
+
 ---
 # 개발
 spring:
