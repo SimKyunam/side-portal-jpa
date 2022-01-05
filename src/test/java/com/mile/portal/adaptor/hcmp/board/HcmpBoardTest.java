@@ -17,4 +17,10 @@ class HcmpBoardTest {
         System.out.println(hcmpBoard.getBoardNotices());
     }
 
+    @Test
+    @DisplayName("2. 게시판 상세조회")
+    void test2() {
+        System.out.println(hcmpBoard.getBoardNoticeDetail(327));
+    }
+
 }

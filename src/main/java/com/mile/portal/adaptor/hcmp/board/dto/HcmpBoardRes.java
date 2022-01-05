@@ -1,6 +1,7 @@
 package com.mile.portal.adaptor.hcmp.board.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -35,6 +36,46 @@ public class HcmpBoardRes {
         private String manName;
         private Integer fileCnt;
         private List<BoardAttachFile> fileInfos;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class BoardQna {
+        private Integer id;
+        private String qnaType;
+        private String qnaTypeNm;
+        private String qTitle;
+        private String qContent;
+
+        @JsonInclude(JsonInclude.Include.NON_NULL)
+        private String qPhone;
+
+        @JsonInclude(JsonInclude.Include.NON_NULL)
+        private String qEmail;
+
+        private Integer userId;
+
+        @JsonIgnore
+        private String aTitle;
+
+        private String aContent;
+        private Integer managerId;
+
+        private String created;
+        private String updated;
+        private String deleted;
+
+        //추가정보
+        private String loginId;
+        private String userName;
+        private String manName;
+
+        private Integer qFileCnt;
+        private Integer aFileCnt;
+
+        private List<BoardAttachFile> qFileInfos;
+        private List<BoardAttachFile> aFileInfos;
     }
 
     @Data
