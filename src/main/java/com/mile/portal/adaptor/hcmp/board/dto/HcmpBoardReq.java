@@ -1,6 +1,7 @@
 package com.mile.portal.adaptor.hcmp.board.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.util.LinkedMultiValueMap;
@@ -12,6 +13,7 @@ import java.util.List;
 public class HcmpBoardReq {
 
     @Data
+    @Builder
     @NoArgsConstructor
     @AllArgsConstructor
     public static class BoardNotice {
@@ -33,6 +35,7 @@ public class HcmpBoardReq {
     }
 
     @Data
+    @Builder
     @NoArgsConstructor
     @AllArgsConstructor
     public static class BoardFaq {
@@ -43,6 +46,7 @@ public class HcmpBoardReq {
     }
 
     @Data
+    @Builder
     @NoArgsConstructor
     @AllArgsConstructor
     public static class BoardQna {

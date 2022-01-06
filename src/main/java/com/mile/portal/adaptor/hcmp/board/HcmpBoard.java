@@ -90,15 +90,11 @@ public class HcmpBoard {
         headers.set("Authorization", "Bearer c50cbb0b080d4f149820faromRoot");
         headers.set("Calling", "user");
         headers.set("MenuId", "44");
-        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
         HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(boardQna.toMultiValueMap(), headers);
 
         ResponseEntity<String> exchange = retryableRestTemplate.exchange(uri, HttpMethod.POST, httpEntity, String.class);
-
-//        RestTemplate restTemplate = new RestTemplate();
-//        ResponseEntity<String> stringResponseEntity = restTemplate.postForEntity(uri, httpEntity, String.class);
-//        stringResponseEntity.getBody();
 
         return exchange.getBody();
     }
