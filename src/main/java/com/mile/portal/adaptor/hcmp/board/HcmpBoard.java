@@ -1,5 +1,6 @@
 package com.mile.portal.adaptor.hcmp.board;
 
+import com.mile.portal.adaptor.hcmp.board.dto.HcmpBoardReq;
 import com.mile.portal.adaptor.hcmp.board.dto.HcmpBoardRes;
 import com.mile.portal.adaptor.hcmp.board.dto.comm.ResBody;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -78,5 +80,26 @@ public class HcmpBoard {
         return body.getData();
     }
 
+    public String createBoardQna(HcmpBoardReq.BoardQna boardQna) {
+        URI uri = UriComponentsBuilder.fromUriString(hcmpUrl + "/api/v1/board/createBoardQna")
+                .build()
+                .encode()
+                .toUri();
 
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer c50cbb0b080d4f149820faromRoot");
+        headers.set("Calling", "user");
+        headers.set("MenuId", "44");
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(boardQna.toMultiValueMap(), headers);
+
+        ResponseEntity<String> exchange = retryableRestTemplate.exchange(uri, HttpMethod.POST, httpEntity, String.class);
+
+//        RestTemplate restTemplate = new RestTemplate();
+//        ResponseEntity<String> stringResponseEntity = restTemplate.postForEntity(uri, httpEntity, String.class);
+//        stringResponseEntity.getBody();
+
+        return exchange.getBody();
+    }
 }
