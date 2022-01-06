@@ -68,7 +68,7 @@ public class HcmpBoardReq {
         private String fileModifiedYn = "N";
 
         public MultiValueMap<String, Object> toMultiValueMap() {
-            LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
+            MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
 
             map.add("boardId", boardId);
             map.add("title", title);
