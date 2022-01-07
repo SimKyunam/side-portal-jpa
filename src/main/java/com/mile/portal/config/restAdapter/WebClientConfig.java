@@ -1,4 +1,4 @@
-package com.mile.portal.config;
+package com.mile.portal.config.restAdapter;
 
 import io.netty.channel.ChannelOption;
 import io.netty.handler.timeout.ReadTimeoutHandler;
@@ -22,7 +22,6 @@ import java.util.concurrent.TimeUnit;
 public class WebClientConfig {
     @Bean
     public WebClient webClient() {
-
         ExchangeStrategies exchangeStrategies = ExchangeStrategies.builder()
                 .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(1024 * 1024 * 50))
                 .build();

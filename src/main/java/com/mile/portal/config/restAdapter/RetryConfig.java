@@ -1,4 +1,4 @@
-package com.mile.portal.config;
+package com.mile.portal.config.restAdapter;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -24,7 +24,7 @@ public class RetryConfig {
     public RestTemplate retryableRestTemplate() {
         SimpleClientHttpRequestFactory clientHttpRequestFactory = new SimpleClientHttpRequestFactory(); // 1
         clientHttpRequestFactory.setReadTimeout(2000);
-        clientHttpRequestFactory.setConnectTimeout(500);
+        clientHttpRequestFactory.setConnectTimeout(2000);
 
         return new RestTemplate(clientHttpRequestFactory) {
             @Override
