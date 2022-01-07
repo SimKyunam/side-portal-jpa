@@ -9,8 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.MediaType;
+import org.springframework.http.client.MultipartBodyBuilder;
 import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -28,11 +31,17 @@ public class WebClientTest {
     @Test
     @DisplayName("1. 게시판 등록")
     void test1() {
-        HcmpBoardReq.BoardQna boardQna = HcmpBoardReq.BoardQna.builder()
+        HcmpBoardReq.BoardQna build = HcmpBoardReq.BoardQna.builder()
                 .qnaType("LGN")
-                .title("게게시시판판")
-                .content("내내요용")
+                .title("게게시시파판")
+                .content("내요요오옹")
                 .build();
+
+        MultipartBodyBuilder builder = new MultipartBodyBuilder();
+        builder.part("qnaType", "LGN");
+        builder.part("title", "게게시시파판");
+        builder.part("content", "내내요용");
+        MultiValueMap<String, HttpEntity<?>> parts = builder.build();
 
         LinkedMultiValueMap<String, String> headerMap = new LinkedMultiValueMap<>();
         headerMap.set("Authorization", "Bearer c50cbb0b080d4f149820faromRoot");
@@ -48,7 +57,7 @@ public class WebClientTest {
                 .headers(httpHeaders -> {
                     httpHeaders.addAll(headerMap);
                 })
-                .body(BodyInserters.fromMultipartData(boardQna.toMultiValueMap()))
+                .body(BodyInserters.fromMultipartData(parts))
                 .retrieve()
                 .bodyToMono(String.class)
                 .flux()
