@@ -7,17 +7,18 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.*;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
-
-import java.net.URI;
+import org.springframework.web.reactive.function.client.WebClient;
 
 @Component
 @RequiredArgsConstructor
 @Slf4j
 public class NaverSearch {
+    private final WebClient webClient;
     private final RestTemplate retryableRestTemplate;
 
     @Value("${naver.client.id}")
@@ -33,53 +34,40 @@ public class NaverSearch {
     private String naverImageSearchUrl;
 
     public SearchLocalRes searchLocal(SearchReq.SearchLocalReq searchLocalReq) {
-        URI uri = UriComponentsBuilder.fromUriString(naverLocalSearchUrl)
-                .queryParams(searchLocalReq.toMultiValueMap())
-                .build()
-                .encode()
-                .toUri();
-
-        HttpEntity httpEntity = new HttpEntity<>(naverCreateHeader());
         ParameterizedTypeReference<SearchLocalRes> responseType = new ParameterizedTypeReference<SearchLocalRes>() {
         };
 
-        ResponseEntity<SearchLocalRes> responseEntity = retryableRestTemplate.exchange(
-                uri,
-                HttpMethod.GET,
-                httpEntity,
-                responseType
-        );
-
-        return responseEntity.getBody();
+        return webClient.get()
+                .uri(naverLocalSearchUrl, uriBuilder -> uriBuilder.queryParams(searchLocalReq.toMultiValueMap()).build())
+                .accept(MediaType.APPLICATION_JSON)
+                .headers(headers -> {
+                    headers.addAll(naverCreateHeader());
+                })
+                .retrieve()
+                .bodyToFlux(responseType)
+                .blockFirst();
     }
 
     public SearchImageRes searchImage(SearchReq.SearchImageReq searchImageReq) {
-        URI uri = UriComponentsBuilder.fromUriString(naverImageSearchUrl)
-                .queryParams(searchImageReq.toMultiValueMap())
-                .build()
-                .encode()
-                .toUri();
-
-        HttpEntity httpEntity = new HttpEntity<>(naverCreateHeader());
         ParameterizedTypeReference<SearchImageRes> responseType = new ParameterizedTypeReference<SearchImageRes>() {
         };
 
-        ResponseEntity<SearchImageRes> responseEntity = retryableRestTemplate.exchange(
-                uri,
-                HttpMethod.GET,
-                httpEntity,
-                responseType
-        );
-
-        return responseEntity.getBody();
+        return webClient.get()
+                .uri(naverImageSearchUrl, uriBuilder -> uriBuilder.queryParams(searchImageReq.toMultiValueMap()).build())
+                .accept(MediaType.APPLICATION_JSON)
+                .headers(headers -> {
+                    headers.addAll(naverCreateHeader());
+                })
+                .retrieve()
+                .bodyToFlux(responseType)
+                .blockFirst();
     }
 
-    public HttpHeaders naverCreateHeader() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("X-Naver-Client-Id", naverClientId);
-        headers.set("X-Naver-Client-Secret", naverClientSecret);
-        headers.setContentType(MediaType.APPLICATION_JSON);
+    public MultiValueMap<String, String> naverCreateHeader() {
+        MultiValueMap<String, String> headerMap = new LinkedMultiValueMap<>();
+        headerMap.set("X-Naver-Client-Id", naverClientId);
+        headerMap.set("X-Naver-Client-Secret", naverClientSecret);
 
-        return headers;
+        return headerMap;
     }
 }
