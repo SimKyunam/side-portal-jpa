@@ -4,7 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.client.MultipartBodyBuilder;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -67,19 +68,26 @@ public class HcmpBoardReq {
         private List<String> nameUps;
         private String fileModifiedYn = "N";
 
-        public MultiValueMap<String, Object> toMultiValueMap() {
-            MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
+        public MultiValueMap<String, HttpEntity<?>> toMultiValueMap() {
+            MultipartBodyBuilder builder = new MultipartBodyBuilder();
+            if (boardId != null && boardId > 0)
+                builder.part("boardId", boardId);
+            if (title != null && !title.isEmpty())
+                builder.part("title", title);
+            if (content != null && !content.isEmpty())
+                builder.part("content", content);
+            if (qnaType != null && !qnaType.isEmpty())
+                builder.part("qnaType", qnaType);
+            if (phone != null && !phone.isEmpty())
+                builder.part("phone", phone);
+            if (email != null && !email.isEmpty())
+                builder.part("email", email);
+            if (aTitle != null && !aTitle.isEmpty())
+                builder.part("aTitle", aTitle);
+            if (aContent != null && !aContent.isEmpty())
+                builder.part("aContent", aContent);
 
-            map.add("boardId", boardId);
-            map.add("title", title);
-            map.add("content", content);
-            map.add("qnaType", qnaType);
-            map.add("phone", phone);
-            map.add("email", email);
-            map.add("aTitle", aTitle);
-            map.add("aContent", aContent);
-
-            return map;
+            return builder.build();
         }
     }
 }

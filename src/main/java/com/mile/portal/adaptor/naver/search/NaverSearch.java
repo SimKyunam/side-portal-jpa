@@ -36,7 +36,8 @@ public class NaverSearch {
         };
 
         return webClient.get()
-                .uri(naverLocalSearchUrl, uriBuilder -> uriBuilder.queryParams(searchLocalReq.toMultiValueMap()).build())
+                .uri(naverLocalSearchUrl,
+                        uriBuilder -> uriBuilder.queryParams(searchLocalReq.toMultiValueMap()).build())
                 .accept(MediaType.APPLICATION_JSON)
                 .headers(headers -> {
                     headers.addAll(naverCreateHeader());
@@ -51,7 +52,8 @@ public class NaverSearch {
         };
 
         return webClient.get()
-                .uri(naverImageSearchUrl, uriBuilder -> uriBuilder.queryParams(searchImageReq.toMultiValueMap()).build())
+                .uri(naverImageSearchUrl,
+                        uriBuilder -> uriBuilder.queryParams(searchImageReq.toMultiValueMap()).build())
                 .accept(MediaType.APPLICATION_JSON)
                 .headers(headers -> {
                     headers.addAll(naverCreateHeader());

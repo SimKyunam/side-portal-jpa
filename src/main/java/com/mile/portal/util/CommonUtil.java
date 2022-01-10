@@ -1,6 +1,8 @@
 package com.mile.portal.util;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -72,5 +74,14 @@ public class CommonUtil {
     public static String convertToBase64Decode(String str) {
         Base64.Decoder decoder = Base64.getDecoder();
         return new String(decoder.decode(str));
+    }
+
+    public static MultiValueMap<String, String> createHeaderByHcmp(String authorization, String calling, String menuId) {
+        MultiValueMap<String, String> headerMap = new LinkedMultiValueMap<>();
+        headerMap.set("Authorization", "Bearer " + authorization);
+        headerMap.set("Calling", calling);
+        headerMap.set("MenuId", menuId);
+
+        return headerMap;
     }
 }

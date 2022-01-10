@@ -1,4 +1,4 @@
-package com.mile.portal.config.restAdapter;
+package com.mile.portal.config;
 
 import io.netty.channel.ChannelOption;
 import io.netty.handler.timeout.ReadTimeoutHandler;

@@ -4,22 +4,13 @@ import com.mile.portal.adaptor.hcmp.board.dto.HcmpBoardReq;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.web.reactive.function.client.WebClient;
 
 @SpringBootTest
 class HcmpBoardTest {
 
-    @Value("${hcmp.url}")
-    private String hcmpUrl;
-
     @Autowired
     private HcmpBoard hcmpBoard;
-
-    @Autowired
-    private WebClient webClient;
-
 
     @Test
     @DisplayName("1. 게시판 조회")
@@ -38,10 +29,11 @@ class HcmpBoardTest {
     void test3() {
         HcmpBoardReq.BoardQna boardQna = HcmpBoardReq.BoardQna.builder()
                 .qnaType("LGN")
-                .title("게게시시판판")
-                .content("내내요용")
+                .title("테스트 게시판")
+                .content("테스트 내내요용")
                 .build();
 
-        hcmpBoard.createBoardQna(boardQna);
+        String boardQna1 = hcmpBoard.createBoardQna(boardQna);
+        System.out.println(boardQna1);
     }
 }
