@@ -11,7 +11,6 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Component
@@ -19,7 +18,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Slf4j
 public class NaverSearch {
     private final WebClient webClient;
-    private final RestTemplate retryableRestTemplate;
 
     @Value("${naver.client.id}")
     private String naverClientId;
