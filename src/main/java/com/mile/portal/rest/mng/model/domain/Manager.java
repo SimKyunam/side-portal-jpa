@@ -25,4 +25,7 @@ public class Manager extends Account {
 
     @OneToMany(mappedBy = "manager", fetch = FetchType.LAZY)
     private List<Board> boards = new ArrayList<>();
+
+    @OneToMany(mappedBy = "manager", fetch = FetchType.LAZY)
+    private List<ManagerQna> managerQnas = new ArrayList<>();
 }
