@@ -1,20 +1,18 @@
 package com.mile.portal.rest.common.model.dto;
 
+import com.mile.portal.rest.base.dto.BaseDto;
 import com.mile.portal.rest.common.model.domain.Menu;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class MenuDto implements Serializable {
+public class MenuDto extends BaseDto {
     private Long id;
     private String menuName;
     private String menuValue;

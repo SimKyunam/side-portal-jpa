@@ -1,19 +1,17 @@
 package com.mile.portal.rest.common.model.dto.board;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.mile.portal.rest.base.dto.BaseDto;
+import lombok.*;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class BoardFaqDto implements Serializable {
+public class BoardFaqDto extends BaseDto {
     private Long id;
     private String title;
     private String content;

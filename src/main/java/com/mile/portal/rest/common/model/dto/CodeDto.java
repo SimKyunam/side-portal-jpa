@@ -1,20 +1,18 @@
 package com.mile.portal.rest.common.model.dto;
 
+import com.mile.portal.rest.base.dto.BaseDto;
 import com.mile.portal.rest.common.model.domain.Code;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CodeDto implements Serializable {
+public class CodeDto extends BaseDto {
     private String code;
     private String codeName;
     private String codeValue;

@@ -63,5 +63,4 @@ public class MngBoardFaqController {
         mngBoardFaqService.deleteBoardFaq(ids);
         return new ResBody(ResBody.CODE_SUCCESS, "", null);
     }
-
 }
