@@ -1,4 +1,4 @@
-package com.mile.portal.config;
+package com.mile.portal.config.aop;
 
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;

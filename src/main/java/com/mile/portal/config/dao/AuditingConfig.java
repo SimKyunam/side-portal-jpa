@@ -1,4 +1,4 @@
-package com.mile.portal.config;
+package com.mile.portal.config.dao;
 
 import com.mile.portal.rest.common.model.domain.Account;
 import org.springframework.context.annotation.Bean;
@@ -15,17 +15,17 @@ import java.util.Optional;
 public class AuditingConfig {
 
     @Bean
-    public AuditorAware<Long> auditorProvider(){
+    public AuditorAware<Long> auditorProvider() {
         return new AuditorAwareImpl();
     }
 
-    public static class AuditorAwareImpl implements AuditorAware<Long>{
+    public static class AuditorAwareImpl implements AuditorAware<Long> {
         @Override
         public Optional<Long> getCurrentAuditor() {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-            if(authentication != null) {
-                if(authentication.getPrincipal() instanceof Account) {
+            if (authentication != null) {
+                if (authentication.getPrincipal() instanceof Account) {
                     Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
                     return Optional.of(account.getId());
                 }

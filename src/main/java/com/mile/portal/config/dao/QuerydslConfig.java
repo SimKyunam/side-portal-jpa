@@ -1,4 +1,4 @@
-package com.mile.portal.config;
+package com.mile.portal.config.dao;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.context.annotation.Bean;

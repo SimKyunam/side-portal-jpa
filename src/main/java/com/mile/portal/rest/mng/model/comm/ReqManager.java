@@ -19,8 +19,7 @@ public class ReqManager {
         @NotBlank
         private String qnaType;
 
-        @NotBlank
-        private String mailSendYn;
+        private String mailSendYn = "Y";
 
         @Positive(message = "managerId 값은 0보다 커야합니다.")
         private Long managerId;

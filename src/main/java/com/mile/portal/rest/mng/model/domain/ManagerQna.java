@@ -25,7 +25,7 @@ public class ManagerQna extends BaseEntity {
     private String qnaType;
 
     @Column(length = 1)
-    private String mailSendYn = "Y";
+    private String mailSendYn;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "manager_id")

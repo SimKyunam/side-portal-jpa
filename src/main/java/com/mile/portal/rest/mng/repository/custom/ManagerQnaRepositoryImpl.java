@@ -13,8 +13,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
-import static com.mile.portal.rest.client.model.domain.QClient.client;
-import static com.mile.portal.rest.common.model.domain.board.QBoardQna.boardQna;
 import static com.mile.portal.rest.mng.model.domain.QManager.manager;
 import static com.mile.portal.rest.mng.model.domain.QManagerQna.managerQna;
 
@@ -30,8 +28,9 @@ public class ManagerQnaRepositoryImpl implements ManagerQnaRepositoryCustom {
     @Override
     public List<ManagerQnaDto> mngQnaSearchList(ReqManager.Qna reqBoardQna, Pageable pageable) {
         return mngQnaSelectFrom()
-                .innerJoin(boardQna.client, client)
-                .leftJoin(boardQna.manager, manager)
+                .innerJoin(managerQna.manager, manager)
+                .innerJoin(createdManager).on(managerQna.createdBy.eq(createdManager.id))
+                .leftJoin(updatedManager).on(managerQna.updatedBy.eq(updatedManager.id))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -39,9 +38,10 @@ public class ManagerQnaRepositoryImpl implements ManagerQnaRepositoryCustom {
 
     @Override
     public Long mngQnaSearchListCnt(ReqManager.Qna reqBoardQna) {
-        return query.selectFrom(boardQna)
-                .innerJoin(boardQna.client, client)
-                .leftJoin(boardQna.manager, manager)
+        return query.selectFrom(managerQna)
+                .innerJoin(managerQna.manager, manager)
+                .innerJoin(createdManager).on(managerQna.createdBy.eq(createdManager.id))
+                .leftJoin(updatedManager).on(managerQna.updatedBy.eq(updatedManager.id))
                 .fetchCount();
     }
 
@@ -49,8 +49,9 @@ public class ManagerQnaRepositoryImpl implements ManagerQnaRepositoryCustom {
     public Optional<ManagerQnaDto> mngQnaSelect(Long id) {
         ManagerQnaDto selectQna = mngQnaSelectFrom()
                 .innerJoin(managerQna.manager, manager)
-                .leftJoin(boardQna.manager, manager)
-                .where(boardQna.id.eq(id))
+                .innerJoin(createdManager).on(managerQna.createdBy.eq(createdManager.id))
+                .leftJoin(updatedManager).on(managerQna.updatedBy.eq(updatedManager.id))
+                .where(managerQna.id.eq(id))
                 .fetchOne();
 
         return Optional.ofNullable(selectQna);
@@ -59,8 +60,9 @@ public class ManagerQnaRepositoryImpl implements ManagerQnaRepositoryCustom {
     public JPAQuery<ManagerQnaDto> mngQnaSelectFrom() {
         return query.select(
                 Projections.fields(ManagerQnaDto.class,
-                        managerQna.id, managerQna.qnaType, managerQna.created, managerQna.updated,
+                        managerQna.id, managerQna.qnaType, managerQna.mailSendYn,
                         manager.id.as("managerId"), manager.name.as("managerName"),
+                        managerQna.created, managerQna.updated,
                         createdManager.id.as("createdManagerId"), createdManager.name.as("createdManagerName"),
                         updatedManager.id.as("updatedManagerId"), updatedManager.name.as("updatedManagerName")
                 )

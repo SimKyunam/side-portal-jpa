@@ -1,4 +1,4 @@
-package com.mile.portal.config;
+package com.mile.portal.config.security;
 
 import com.mile.portal.jwt.JwtAuthenticationFilter;
 import com.mile.portal.jwt.JwtTokenProvider;

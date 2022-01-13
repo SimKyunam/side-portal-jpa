@@ -1,8 +1,9 @@
-package com.mile.portal.rest.common.model.comm;
+package com.mile.portal.config.security;
 
 import com.mile.portal.rest.common.model.domain.Account;
 import lombok.Getter;
 import org.springframework.security.core.userdetails.User;
+
 import java.util.Collections;
 
 @Getter

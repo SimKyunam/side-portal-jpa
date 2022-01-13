@@ -1,6 +1,5 @@
-package com.mile.portal.config;
+package com.mile.portal.config.p6spy;
 
-import com.mile.portal.config.p6spy.P6spySqlFormat;
 import com.p6spy.engine.spy.P6SpyOptions;
 import org.springframework.context.annotation.Configuration;
 

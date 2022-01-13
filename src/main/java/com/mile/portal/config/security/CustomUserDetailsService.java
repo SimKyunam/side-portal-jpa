@@ -1,6 +1,5 @@
-package com.mile.portal.rest.base.service;
+package com.mile.portal.config.security;
 
-import com.mile.portal.rest.common.model.comm.AccountAdaptor;
 import com.mile.portal.rest.common.model.domain.Account;
 import com.mile.portal.rest.common.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

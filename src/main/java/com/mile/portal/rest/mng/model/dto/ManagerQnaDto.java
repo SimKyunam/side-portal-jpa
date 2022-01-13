@@ -13,6 +13,11 @@ public class ManagerQnaDto extends BaseDto {
 
     private String qnaType;
 
+    private String qnaTypeName;
+
+    private String mailSendYn;
+
     private Long managerId;
-    private Long managerName;
+
+    private String managerName;
 }
