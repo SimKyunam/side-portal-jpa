@@ -27,4 +27,5 @@ public class ReqLogin {
 
     private String phone;
     private String email;
+    private String emailPassYn;
 }

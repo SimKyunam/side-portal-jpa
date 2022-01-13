@@ -36,7 +36,7 @@ public class MngBoardNoticeController {
 
     @PostMapping("/create")
     public ResBody createBoardNotice(@AuthenticationPrincipal Account account,
-                                     @ModelAttribute @Valid ReqBoard.BoardNotice reqBoardNotice,
+                                     @Valid ReqBoard.BoardNotice reqBoardNotice,
                                      @RequestPart(required = false) List<MultipartFile> files) {
         Long managerId = account.getId();
 

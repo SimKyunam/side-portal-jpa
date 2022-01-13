@@ -38,7 +38,7 @@ public class BoardQnaController {
 
     @PostMapping("/create")
     public ResBody createBoardNotice(@AuthenticationPrincipal Account account,
-                                     @ModelAttribute @Valid ReqBoard.BoardQna reqBoardQna,
+                                     @Valid ReqBoard.BoardQna reqBoardQna,
                                      @RequestPart(required = false) List<MultipartFile> files) {
         Long managerId = account.getId();
 

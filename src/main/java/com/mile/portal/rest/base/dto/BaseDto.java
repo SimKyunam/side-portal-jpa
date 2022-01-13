@@ -14,10 +14,10 @@ public abstract class BaseDto implements Serializable {
     private LocalDateTime updated;
 
     //등록한 관리자
-    private Long createdByManagerId;
-    private String createdByManagerName;
+    private Long createdManagerId;
+    private String createdManagerName;
 
     //수정한 관리자
-    private Long updatedByManagerId;
-    private String updatedByManagerName;
+    private Long updatedManagerId;
+    private String updatedManagerName;
 }

@@ -34,7 +34,7 @@ public class MngBoardFaqController {
 
     @PostMapping("/create")
     public ResBody createBoardFaq(@AuthenticationPrincipal Account account,
-                                  @ModelAttribute @Valid ReqBoard.BoardFaq reqBoardFaq) {
+                                  @Valid ReqBoard.BoardFaq reqBoardFaq) {
         Long managerId = account.getId();
 
         mngBoardFaqService.createBoardFaq(reqBoardFaq, managerId);

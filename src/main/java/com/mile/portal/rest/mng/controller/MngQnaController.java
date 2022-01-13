@@ -12,10 +12,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @Slf4j
 @RestController
@@ -30,5 +29,33 @@ public class MngQnaController {
                               @PageableDefault(sort = "id", size = 100, direction = Sort.Direction.DESC) Pageable pageable) {
         Page<ManagerQnaDto> boardNoticeList = mngQnaService.listMngQna(reqManagerQna, pageable);
         return new ResBody(ResBody.CODE_SUCCESS, "", boardNoticeList);
+    }
+
+    @PostMapping("/create")
+    public ResBody createMngQna(@AuthenticationPrincipal Account account,
+                                @RequestBody @Valid ReqManager.Qna reqManagerQna) {
+        mngQnaService.createMngQna(reqManagerQna);
+        return new ResBody(ResBody.CODE_SUCCESS, "", null);
+    }
+
+    @GetMapping("/{id}")
+    public ResBody selectMngQna(@AuthenticationPrincipal Account account,
+                                @PathVariable(name = "id") Long id) {
+        ManagerQnaDto managerQna = mngQnaService.selectMngQna(id);
+        return new ResBody(ResBody.CODE_SUCCESS, "", managerQna);
+    }
+
+    @PutMapping("/update")
+    public ResBody updateMngQna(@AuthenticationPrincipal Account account,
+                                @RequestBody @Valid ReqManager.Qna reqManagerQna) {
+        mngQnaService.updateMngQna(reqManagerQna);
+        return new ResBody(ResBody.CODE_SUCCESS, "", null);
+    }
+
+    @DeleteMapping("/delete")
+    public ResBody deleteMngQna(@AuthenticationPrincipal Account account,
+                                @RequestParam String ids) {
+        mngQnaService.deleteMngQna(ids);
+        return new ResBody(ResBody.CODE_SUCCESS, "", null);
     }
 }

@@ -2,16 +2,14 @@ package com.mile.portal.rest.mng.model.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mile.portal.rest.common.model.domain.base.BaseEntity;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 
 @Entity
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
@@ -25,6 +23,9 @@ public class ManagerQna extends BaseEntity {
 
     @Column(length = 10)
     private String qnaType;
+
+    @Column(length = 1)
+    private String mailSendYn = "Y";
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "manager_id")

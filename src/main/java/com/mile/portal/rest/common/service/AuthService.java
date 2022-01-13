@@ -47,7 +47,11 @@ public class AuthService {
         user.setPermission(userLogin.getUserType());
         user.setStatus(userLogin.getStatus());
         user.setEmail(email);
-        user.setEmailCode(accountSendEmail("사용자 메일 인증", email, loginId));
+        if (userLogin.getEmailPassYn().equals("Y")) {
+            user.setEmailCheckYn("Y");
+        } else {
+            user.setEmailCode(accountSendEmail("사용자 메일 인증", email, loginId));
+        }
 
         return clientRepository.save(user);
     }
@@ -69,7 +73,11 @@ public class AuthService {
         manager.setStatus(userLogin.getStatus());
         manager.setEmail(email);
         manager.setPhone(userLogin.getPhone());
-        manager.setEmailCode(accountSendEmail("관리자 메일 인증", email, loginId));
+        if (userLogin.getEmailPassYn().equals("Y")) {
+            manager.setEmailCheckYn("Y");
+        } else {
+            manager.setEmailCode(accountSendEmail("관리자 메일 인증", email, loginId));
+        }
 
         return managerRepository.save(manager);
     }

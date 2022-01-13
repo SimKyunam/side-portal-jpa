@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
 
 public class ReqManager {
     @Data
@@ -21,7 +22,7 @@ public class ReqManager {
         @NotBlank
         private String mailSendYn;
 
-        @NotBlank
+        @Positive(message = "managerId 값은 0보다 커야합니다.")
         private Long managerId;
     }
 }
