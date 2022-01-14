@@ -20,4 +20,6 @@ public class ManagerQnaDto extends BaseDto {
     private Long managerId;
 
     private String managerName;
+
+    private String email;
 }

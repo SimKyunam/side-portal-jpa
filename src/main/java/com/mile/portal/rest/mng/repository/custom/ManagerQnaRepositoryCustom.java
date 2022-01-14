@@ -14,4 +14,6 @@ public interface ManagerQnaRepositoryCustom {
     Long mngQnaSearchListCnt(ReqManager.Qna reqManagerQna);
 
     Optional<ManagerQnaDto> mngQnaSelect(Long id);
+
+    List<ManagerQnaDto> findAllByQnaType(String qnaType);
 }

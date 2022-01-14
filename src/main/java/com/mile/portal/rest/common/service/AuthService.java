@@ -102,7 +102,7 @@ public class AuthService {
         mailProperty.put("emailCode", emailCode);
         mailProperty.put("loginId", CommonUtil.convertToBase64(loginId));
 
-        mailUtil.sendTemplateMail(email, title, "Mile", mailProperty, "mail/login");
+        mailUtil.sendTemplateMail(email, title, "포털 관리자", mailProperty, "mail/login");
         return emailCode;
     }
 

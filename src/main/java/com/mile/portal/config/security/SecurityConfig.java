@@ -53,10 +53,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated() // 토큰있는 경우
                 .and().exceptionHandling()
                 .and().headers().frameOptions().disable() // 없으면 h2 console 안됌
-                .and().addFilterBefore(
-                jwtAuthenticationFilter,
-                UsernamePasswordAuthenticationFilter.class
-        ).sessionManagement()
+                .and().addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 

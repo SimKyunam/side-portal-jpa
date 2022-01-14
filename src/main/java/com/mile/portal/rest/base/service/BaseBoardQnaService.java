@@ -35,8 +35,12 @@ public abstract class BaseBoardQnaService {
 
     private final BoardQnaRepository boardQnaRepository;
 
+    public Map<String, Code> selectCode(String codeId) {
+        return codeService.selectCodeMap(codeId);
+    }
+
     public Page<BoardQnaDto> listBoardQna(ReqBoard.BoardQna reqBoardQna, Pageable pageable, Long clientId) {
-        Map<String, Code> qnaType = codeService.selectCodeMap("qnaType"); //공통코드
+        Map<String, Code> qnaType = this.selectCode("qnaType"); //공통코드
 
         // 컨텐츠 쿼리
         List<BoardQnaDto> boardQnaList = boardQnaRepository.qnaSearchList(reqBoardQna, pageable, clientId);
@@ -53,7 +57,7 @@ public abstract class BaseBoardQnaService {
 
     @Cacheable(value = CacheProperties.BOARD_QNA, key = "#id + ':' + #clientId", unless = "#result == null")
     public BoardQnaDto selectBoardQna(Long id, Long clientId) {
-        Map<String, Code> qnaType = codeService.selectCodeMap("qnaType"); //공통코드
+        Map<String, Code> qnaType = this.selectCode("qnaType"); //공통코드
 
         BoardQnaDto boardQnaDto = boardQnaRepository.qnaSelect(id, clientId).orElseThrow(ResultNotFoundException::new);
         if (qnaType.containsKey(boardQnaDto.getQnaType()))

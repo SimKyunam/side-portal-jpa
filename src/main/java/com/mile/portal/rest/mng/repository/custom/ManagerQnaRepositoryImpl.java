@@ -57,11 +57,25 @@ public class ManagerQnaRepositoryImpl implements ManagerQnaRepositoryCustom {
         return Optional.ofNullable(selectQna);
     }
 
+    @Override
+    public List<ManagerQnaDto> findAllByQnaType(String qnaType) {
+        return query.select(
+                Projections.fields(ManagerQnaDto.class,
+                        managerQna.id, managerQna.qnaType, managerQna.mailSendYn,
+                        manager.id.as("managerId"), manager.name.as("managerName"), manager.email,
+                        managerQna.created, managerQna.updated
+                ))
+                .from(managerQna)
+                .innerJoin(managerQna.manager, manager)
+                .where(managerQna.qnaType.eq(qnaType), managerQna.mailSendYn.eq("Y"))
+                .fetch();
+    }
+
     public JPAQuery<ManagerQnaDto> mngQnaSelectFrom() {
         return query.select(
                 Projections.fields(ManagerQnaDto.class,
                         managerQna.id, managerQna.qnaType, managerQna.mailSendYn,
-                        manager.id.as("managerId"), manager.name.as("managerName"),
+                        manager.id.as("managerId"), manager.name.as("managerName"), manager.email,
                         managerQna.created, managerQna.updated,
                         createdManager.id.as("createdManagerId"), createdManager.name.as("createdManagerName"),
                         updatedManager.id.as("updatedManagerId"), updatedManager.name.as("updatedManagerName")
