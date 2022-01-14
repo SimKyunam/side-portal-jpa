@@ -1,5 +1,6 @@
 package com.mile.portal.rest.common.service;
 
+import com.mile.portal.config.exception.exceptions.ExistsDataException;
 import com.mile.portal.config.exception.exceptions.ResultNotFoundException;
 import com.mile.portal.rest.client.model.domain.Client;
 import com.mile.portal.rest.client.repository.ClientRepository;
@@ -88,9 +89,9 @@ public class AuthService {
 
     public void existsUserCheck(ReqLogin userLogin) {
         if (userRepository.existsByLoginId(userLogin.getLoginId())) {
-            throw new RuntimeException("이미 가입되어 있는 유저입니다.");
+            throw new ExistsDataException("이미 가입되어 있는 유저입니다.");
         } else if (userRepository.existsByEmail(userLogin.getEmail())) {
-            throw new RuntimeException("이미 가입되어 있는 이메일입니다.");
+            throw new ExistsDataException("이미 가입되어 있는 이메일입니다.");
         }
     }
 

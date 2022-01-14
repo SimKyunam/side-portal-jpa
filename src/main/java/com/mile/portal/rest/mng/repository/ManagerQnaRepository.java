@@ -5,4 +5,6 @@ import com.mile.portal.rest.mng.repository.custom.ManagerQnaRepositoryCustom;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ManagerQnaRepository extends JpaRepository<ManagerQna, Long>, ManagerQnaRepositoryCustom {
+
+    boolean existsByManagerIdAndQnaType(Long managerId, String qnaType);
 }

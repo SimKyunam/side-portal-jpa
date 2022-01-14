@@ -8,4 +8,6 @@ public class ExceptionMessage {
     public static String TOKEN_EXPIRE_MESSAGE = "토큰이 만료 되었습니다.";
     public static String RESULT_NOT_FOUND_MESSAGE = "결과가 존재하지 않습니다.";
     public static String CONSTRAINT_VIOLATION_MESSAGE = "데이터베이스에 동일한 키 값이 존재합니다.";
+
+    public static String RESULT_DATA_EXISTS_MESSAGE = "동일한 정보가 등록 되어있습니다.";
 }

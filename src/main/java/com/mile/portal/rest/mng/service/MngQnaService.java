@@ -1,5 +1,6 @@
 package com.mile.portal.rest.mng.service;
 
+import com.mile.portal.config.exception.exceptions.ExistsDataException;
 import com.mile.portal.config.exception.exceptions.ResultNotFoundException;
 import com.mile.portal.rest.common.model.domain.Code;
 import com.mile.portal.rest.common.service.CodeService;
@@ -49,6 +50,10 @@ public class MngQnaService {
     }
 
     public ManagerQna createMngQna(ReqManager.Qna reqManagerQna) {
+        if (managerQnaRepository.existsByManagerIdAndQnaType(reqManagerQna.getManagerId(), reqManagerQna.getQnaType())) {
+            throw new ExistsDataException();
+        }
+
         ManagerQna managerQna = ManagerQna.builder()
                 .qnaType(reqManagerQna.getQnaType())
                 .mailSendYn(reqManagerQna.getMailSendYn())

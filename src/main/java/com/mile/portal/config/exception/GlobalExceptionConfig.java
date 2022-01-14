@@ -1,6 +1,7 @@
 package com.mile.portal.config.exception;
 
 import com.mile.portal.config.exception.exceptions.BadRequestException;
+import com.mile.portal.config.exception.exceptions.ExistsDataException;
 import com.mile.portal.config.exception.exceptions.ResultNotFoundException;
 import com.mile.portal.config.exception.exceptions.TokenExpireException;
 import com.mile.portal.config.exception.exceptions.message.ExceptionMessage;
@@ -114,12 +115,26 @@ public class GlobalExceptionConfig {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(resbody);
     }
 
-    @ExceptionHandler(value = {ResultNotFoundException.class})
+    @ExceptionHandler(value = ResultNotFoundException.class)
     public ResponseEntity<ResBody> resultNotFoundException(ResultNotFoundException exception, HttpServletRequest httpServletRequest) {
         log.error(exception.getMessage(), exception);
 
         ErrorResponse errorResponse = createErrorResponse(null,
                 ExceptionMessage.RESULT_NOT_FOUND_MESSAGE,
+                httpServletRequest.getRequestURI(),
+                HttpStatus.BAD_REQUEST.toString()
+        );
+
+        ResBody resbody = new ResBody(ResBody.CODE_ERROR, exception.getMessage(), errorResponse);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(resbody);
+    }
+
+    @ExceptionHandler(value = ExistsDataException.class)
+    public ResponseEntity<ResBody> existsDataException(ExistsDataException exception, HttpServletRequest httpServletRequest) {
+        log.error(exception.getMessage(), exception);
+
+        ErrorResponse errorResponse = createErrorResponse(null,
+                ExceptionMessage.RESULT_DATA_EXISTS_MESSAGE,
                 httpServletRequest.getRequestURI(),
                 HttpStatus.BAD_REQUEST.toString()
         );
