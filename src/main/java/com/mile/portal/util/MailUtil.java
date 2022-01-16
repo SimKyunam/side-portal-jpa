@@ -21,6 +21,7 @@ public class MailUtil {
 
     private final TemplateEngine htmlTemplateEngine;
     private final JavaMailSender mailSender;
+
     @Value("${spring.mail.username}")
     private String from;
 
@@ -46,6 +47,8 @@ public class MailUtil {
 
             mailSender.send(mimeMessage);
             log.info(toMail + " / 메일 발송 성공");
+
+            Thread.sleep(300); //여러건 발송시 문제 발생
         } catch (Exception exception) {
             log.error(exception.getMessage(), exception);
             throw new RuntimeException("메일 발송에 실패했습니다.");

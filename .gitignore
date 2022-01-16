@@ -35,3 +35,36 @@ out/
 
 ### VS Code ###
 .vscode/
+/logs/app.2022-01-02.0.gz
+/logs/app.2022-01-07.0.gz
+/logs/app.2022-01-09.0.gz
+/logs/app.2022-01-10.0.gz
+/logs/app.log
+/logs/error.log
+/logs/error-2021-12-25.0.gz
+/logs/error-2022-01-01.0.gz
+/logs/error-2022-01-02.0.gz
+/logs/hcmp-logs-json.log
+/logs/hcmp-logs_2022-01-01.0.log
+/logs/hcmp-logs_2022-01-02.0.log
+/logs/hcmp-logs_2022-01-07.0.log
+/logs/hcmp-logs_2022-01-09.0.log
+/logs/hcmp-logs_2022-01-10.0.log
+/memoryDb.mv.db
+/memoryDb.trace.db
+/src/main/generated/com/mile/portal/rest/common/model/domain/QAccount.java
+/src/main/generated/com/mile/portal/rest/common/model/domain/QAttach.java
+/src/main/generated/com/mile/portal/rest/common/model/domain/base/QBaseEntity.java
+/src/main/generated/com/mile/portal/rest/common/model/domain/base/QBaseTimeEntity.java
+/src/main/generated/com/mile/portal/rest/common/model/domain/base/QBaseUserEntity.java
+/src/main/generated/com/mile/portal/rest/common/model/domain/board/QBoard.java
+/src/main/generated/com/mile/portal/rest/common/model/domain/board/QBoardAttach.java
+/src/main/generated/com/mile/portal/rest/common/model/domain/board/QBoardFaq.java
+/src/main/generated/com/mile/portal/rest/common/model/domain/board/QBoardNotice.java
+/src/main/generated/com/mile/portal/rest/common/model/domain/board/QBoardQna.java
+/src/main/generated/com/mile/portal/rest/client/model/domain/QClient.java
+/src/main/generated/com/mile/portal/rest/common/model/domain/QCode.java
+/src/main/generated/com/mile/portal/rest/mng/model/domain/QManager.java
+/src/main/generated/com/mile/portal/rest/mng/model/domain/QManagerQna.java
+/src/main/generated/com/mile/portal/rest/common/model/domain/QMenu.java
+/src/main/generated/com/mile/portal/rest/common/model/domain/QRefreshToken.java

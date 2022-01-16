@@ -21,7 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
 @Service
@@ -65,11 +64,9 @@ public class BoardQnaService extends BaseBoardQnaService {
 
         //문의내역 담당자 메일 발송
         Code code = selectCode("qnaType").get(reqBoardQna.getQnaType()); //공통코드에서 이름 가져오기
-        AtomicInteger indexCnt = new AtomicInteger();
         managerQnaRepository.findAllByQnaType(reqBoardQna.getQnaType())
                 .forEach(managerQna -> {
-                    int index = indexCnt.incrementAndGet();
-                    sendEmail(managerQna.getEmail(), qna.getId(), reqBoardQna.getTitle(), reqBoardQna.getContent(), code.getCodeName(), index);
+                    sendEmail(managerQna.getEmail(), qna.getId(), reqBoardQna.getTitle(), reqBoardQna.getContent(), code.getCodeName());
                 });
 
         return qna;
@@ -102,14 +99,7 @@ public class BoardQnaService extends BaseBoardQnaService {
         return boardQnas;
     }
 
-    public void sendEmail(String email, Long id, String title, String content, String codeName, int index) {
-        try {
-            if (index > 1) {
-                Thread.sleep(200);
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    public void sendEmail(String email, Long id, String title, String content, String codeName) {
         Map<String, Object> mailProperty = new HashMap<>();
         mailProperty.put("id", id);
         mailProperty.put("title", title);
