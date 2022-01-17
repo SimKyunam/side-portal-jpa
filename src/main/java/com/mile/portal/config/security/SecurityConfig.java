@@ -64,7 +64,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .headers().frameOptions().disable() // 없으면 h2 console 안됌
                 .and()
-                .oauth2Login().userInfoEndpoint().userService(customOAuth2UserService);
+                .oauth2Login()
+                .userInfoEndpoint().userService(customOAuth2UserService);
 
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }

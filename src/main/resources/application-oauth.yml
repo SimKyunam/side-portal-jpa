@@ -6,7 +6,7 @@ spring:
           google:
             client-id: 421744983543-4rfn2hh9nbcjg40m5h3em0l4d1869hl1.apps.googleusercontent.com
             client-secret: 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
-            scope: profile, email
+            scope: profile,email
           naver:
             client-id: 7cqtCmKzS89yh7xsd2cM
             client-secret: In1oWkaODx

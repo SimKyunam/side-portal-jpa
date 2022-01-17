@@ -1,7 +1,7 @@
 package com.mile.portal.config.security;
 
-import com.mile.portal.rest.common.model.domain.Account;
-import com.mile.portal.rest.common.repository.UserRepository;
+import com.mile.portal.rest.client.model.domain.Client;
+import com.mile.portal.rest.client.repository.ClientRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -17,7 +17,7 @@ import java.util.Collections;
 @RequiredArgsConstructor
 @Service
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
-    private final UserRepository userRepository;
+    private final ClientRepository clientRepository;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -42,20 +42,20 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
         // SessionUser
         // 세션에 사용자 정보를 저장하기 위한 따로 만든 Dto 클래스이다.
-        Account account = saveOrUpdate(attributes);
+        Client client = saveOrUpdate(attributes);
 
         return new DefaultOAuth2User(
-                Collections.singleton(new SimpleGrantedAuthority(account.getPermissionKey())),
+                Collections.singleton(new SimpleGrantedAuthority(client.getPermissionKey())),
                 attributes.getAttributes(),
                 attributes.getNameAttributeKey()
         );
     }
 
-    private Account saveOrUpdate(OAuthAttributes attributes) {
-        Account user = userRepository.findByEmail(attributes.getEmail())
+    private Client saveOrUpdate(OAuthAttributes attributes) {
+        Client client = clientRepository.findByEmail(attributes.getEmail())
                 .map(entity -> entity.oauth2Update(attributes.getName(), attributes.getPicture()))
                 .orElse(attributes.toEntity());
 
-        return userRepository.save(user);
+        return clientRepository.save(client);
     }
 }

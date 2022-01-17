@@ -1,12 +1,12 @@
 package com.mile.portal.config.security;
 
-import com.mile.portal.rest.common.model.domain.Account;
+import com.mile.portal.rest.client.model.domain.Client;
 import lombok.Builder;
 import lombok.Getter;
 
 import java.util.Map;
 
-import static com.mile.portal.rest.common.model.enums.Authority.ROLE_GUEST;
+import static com.mile.portal.rest.common.model.enums.Authority.ROLE_USER;
 
 @Getter
 public class OAuthAttributes {
@@ -62,11 +62,17 @@ public class OAuthAttributes {
     // User 엔티티를 생성한다.
     // OAuthAttributes 에서 엔티티를 생성하는 시점 == 처음 가입할 때
     // 가입할 떄의 기본 권한을 GUEST로 주기 위해서 role 빌더 값에는 Role.GUEST를 설정한다.
-    public Account toEntity() {
-        return new Account()
-                .setName(name)
-                .setEmail(email)
-                .setPicture(picture)
-                .setPermission(ROLE_GUEST);
+    public Client toEntity() {
+        Client client = new Client();
+        client.setName(name);
+        client.setEmail(email);
+        client.setPicture(picture);
+        client.setPermission(ROLE_USER);
+        client.setLoginId(email);
+        client.setLoginPwd("OAuth Login");
+        client.setEmailCheckYn("Y");
+        client.setOAuthLoginYn("Y");
+        
+        return client;
     }
 }

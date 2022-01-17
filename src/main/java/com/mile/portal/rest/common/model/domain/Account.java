@@ -79,6 +79,8 @@ public class Account extends BaseEntity {
     @Column
     private String picture;
 
+    private String oAuthLoginYn = "N";
+
     public Account(Claims claims) {
         ObjectMapper mapper = new ObjectMapper();
         Account account = mapper.convertValue(claims.get(JwtTokenProvider.USER_KEY, Map.class), Account.class);
@@ -94,16 +96,8 @@ public class Account extends BaseEntity {
         return new UsernamePasswordAuthenticationToken(loginId, loginPwd, Collections.singleton(grantedAuthority));
     }
 
-    // oauth2
+    // permission Key 조회
     public String getPermissionKey() {
         return this.permission.getAuthority();
-    }
-
-    // oauth2
-    public Account oauth2Update(String name, String picture) {
-        this.name = name;
-        this.picture = picture;
-
-        return this;
     }
 }

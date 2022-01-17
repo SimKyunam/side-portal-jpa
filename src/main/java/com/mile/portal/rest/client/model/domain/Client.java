@@ -25,4 +25,11 @@ public class Client extends Account {
 
     @OneToMany(mappedBy = "client", fetch = FetchType.LAZY)
     private List<BoardQna> boardFaqs = new ArrayList<>();
+
+    // oauth2
+    public Client oauth2Update(String name, String picture) {
+        super.setName(name);
+        super.setPicture(picture);
+        return this;
+    }
 }
