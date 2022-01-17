@@ -40,6 +40,10 @@ spring:
     oauth2:
       client:
         registration:
+          google:
+            client-id: 421744983543-4rfn2hh9nbcjg40m5h3em0l4d1869hl1.apps.googleusercontent.com
+            client-secret: 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
+            scope: profile, email
           naver:
             client-id: 7cqtCmKzS89yh7xsd2cM
             client-secret: In1oWkaODx
@@ -53,10 +57,6 @@ spring:
             token-uri: https://nid.naver.com/oauth2.0/token
             user-info-uri: https://openapi.naver.com/v1/nid/me
             user-name-attribute: response
-          google:
-            client-id: 421744983543-4rfn2hh9nbcjg40m5h3em0l4d1869hl1.apps.googleusercontent.com
-            client-secret: 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
-            scope: profile, email
 
 server:
   servlet:
