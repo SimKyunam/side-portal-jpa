@@ -76,6 +76,8 @@ public class Account extends BaseEntity {
     @Column(length = 50)
     private String emailCode;
 
+    @Column
+    private String picture;
 
     public Account(Claims claims) {
         ObjectMapper mapper = new ObjectMapper();
@@ -90,5 +92,18 @@ public class Account extends BaseEntity {
     public UsernamePasswordAuthenticationToken toAuthentication() {
         GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(permission.getAuthority());
         return new UsernamePasswordAuthenticationToken(loginId, loginPwd, Collections.singleton(grantedAuthority));
+    }
+
+    // oauth2
+    public String getPermissionKey() {
+        return this.permission.getAuthority();
+    }
+
+    // oauth2
+    public Account oauth2Update(String name, String picture) {
+        this.name = name;
+        this.picture = picture;
+
+        return this;
     }
 }

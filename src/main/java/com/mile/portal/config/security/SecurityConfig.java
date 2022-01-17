@@ -2,6 +2,7 @@ package com.mile.portal.config.security;
 
 import com.mile.portal.jwt.JwtAuthenticationFilter;
 import com.mile.portal.jwt.JwtTokenProvider;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -18,7 +19,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
+@RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+    private final CustomOAuth2UserService customOAuth2UserService;
 
     @Value("${jwt.key}")
     private String secretKey;
@@ -41,8 +44,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager(), jwtTokenProvider());
 
         http
-                .cors().and().csrf().disable()
-                .formLogin().disable()
+                .cors()
+                .and()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .csrf()
+                .disable()
+                .formLogin()
+                .disable()
                 .authorizeRequests()
                 .antMatchers(
                         "/exception/**", "/common/**", "/h2-console/**"
@@ -51,11 +61,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/v1/mng/**").hasRole("ADMIN") // 관리자
                 .antMatchers("/api/v1/client/**").hasRole("USER") // 사용자
                 .anyRequest().authenticated() // 토큰있는 경우
-                .and().exceptionHandling()
-                .and().headers().frameOptions().disable() // 없으면 h2 console 안됌
-                .and().addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                .and()
+                .exceptionHandling()
+                .and()
+                .headers()
+                .frameOptions()
+                .disable() // 없으면 h2 console 안됌
+                .and()
+                .oauth2Login()
+                .userInfoEndpoint()
+                .userService(customOAuth2UserService);
+
+        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
     @Override
