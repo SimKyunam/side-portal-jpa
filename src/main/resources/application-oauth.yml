@@ -10,7 +10,7 @@ spring:
           naver:
             client-id: 7cqtCmKzS89yh7xsd2cM
             client-secret: In1oWkaODx
-            redirect_uri: {baseUrl}/{action}/oauth2/code/{registrationId}
+            redirect_uri: "{baseUrl}/{action}/oauth2/code/{registrationId}"
             authorization-grant-type: authorization_code
             scope: name,email,profile_image
             client-name: Naver

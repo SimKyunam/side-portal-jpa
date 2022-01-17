@@ -46,17 +46,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .cors()
                 .and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .csrf()
-                .disable()
-                .formLogin()
-                .disable()
+                .csrf().disable()
+                .formLogin().disable()
                 .authorizeRequests()
                 .antMatchers(
                         "/exception/**", "/common/**", "/h2-console/**"
                         , "/api/v1/auth/**", "/api/v1/attach/**"
+                        , "/main/**"
                 ).permitAll()
                 .antMatchers("/api/v1/mng/**").hasRole("ADMIN") // 관리자
                 .antMatchers("/api/v1/client/**").hasRole("USER") // 사용자
@@ -64,13 +62,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .exceptionHandling()
                 .and()
-                .headers()
-                .frameOptions()
-                .disable() // 없으면 h2 console 안됌
+                .headers().frameOptions().disable() // 없으면 h2 console 안됌
                 .and()
-                .oauth2Login()
-                .userInfoEndpoint()
-                .userService(customOAuth2UserService);
+                .oauth2Login().userInfoEndpoint().userService(customOAuth2UserService);
 
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }
