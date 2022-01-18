@@ -69,6 +69,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .oauth2Login()
 //                .userInfoEndpoint().userService(customOAuth2UserService);
 
+        //TODO jwtFilter + oauth2 연동작업 필요
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
