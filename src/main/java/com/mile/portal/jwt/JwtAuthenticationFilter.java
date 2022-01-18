@@ -38,14 +38,14 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
     ) throws IOException, ServletException {
         Authentication authentication = getAuthentication(request, response);
 
-        if (authentication != null){
+        if (authentication != null) {
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
         chain.doFilter(request, response);
     }
 
-    private Authentication getAuthentication(HttpServletRequest request, HttpServletResponse response){
+    private Authentication getAuthentication(HttpServletRequest request, HttpServletResponse response) {
         String headerAuth = jwtTokenProvider.resolveToken((HttpServletRequest) request);
 
         if (headerAuth != null) { //토큰이 존재하는 경우
@@ -61,8 +61,6 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
                     token = jwtTokenProvider.createToken(account);
                     response.setHeader(JwtTokenProvider.AUTHORITIES_KEY, token);
                 }
-            } else {
-                response.setHeader(JwtTokenProvider.AUTHORITIES_KEY, "invalidation Token");
             }
 
             //인증 처리

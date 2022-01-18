@@ -21,7 +21,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
     private final CustomOAuth2UserService customOAuth2UserService;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
     @Value("${jwt.key}")
     private String secretKey;
@@ -60,12 +62,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/v1/client/**").hasRole("USER") // 사용자
                 .anyRequest().authenticated() // 토큰있는 경우
                 .and()
-                .exceptionHandling()
+                .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .and()
-                .headers().frameOptions().disable() // 없으면 h2 console 안됌
-                .and()
-                .oauth2Login()
-                .userInfoEndpoint().userService(customOAuth2UserService);
+                .headers().frameOptions().disable(); // 없으면 h2 console 안됌
+//                .and()
+//                .oauth2Login()
+//                .userInfoEndpoint().userService(customOAuth2UserService);
 
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }
