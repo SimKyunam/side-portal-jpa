@@ -62,7 +62,6 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
                     response.setHeader(JwtTokenProvider.AUTHORITIES_KEY, token);
                 }
             }
-            //TODO 인증 에러 처리 필요
             //인증 처리
             UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
                     (UsernamePasswordAuthenticationToken) jwtTokenProvider.getAuthentication(token);

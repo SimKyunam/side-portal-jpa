@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class JwtTokenProvider {
 
-    public static final long TOKEN_VALID_TIME = 1000L * 60; // 12시간
+    public static final long TOKEN_VALID_TIME = 1000L * 60 * 60; // 1시간
     public static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 7; // 7일
 
     public static final String AUTHORITIES_KEY = "Authorization";

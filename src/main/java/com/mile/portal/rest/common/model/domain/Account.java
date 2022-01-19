@@ -95,9 +95,4 @@ public class Account extends BaseEntity {
         GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(permission.getAuthority());
         return new UsernamePasswordAuthenticationToken(loginId, loginPwd, Collections.singleton(grantedAuthority));
     }
-
-    // permission Key 조회
-    public String getPermissionKey() {
-        return this.permission.getAuthority();
-    }
 }
