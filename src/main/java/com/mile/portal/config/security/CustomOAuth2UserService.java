@@ -3,6 +3,7 @@ package com.mile.portal.config.security;
 import com.mile.portal.rest.client.model.domain.Client;
 import com.mile.portal.rest.client.repository.ClientRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
@@ -44,6 +46,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         // 세션에 사용자 정보를 저장하기 위한 따로 만든 Dto 클래스이다.
         Client client = saveOrUpdate(attributes);
 
+        log.info("로그인 시도");
         return new DefaultOAuth2User(
                 Collections.singleton(new SimpleGrantedAuthority(client.getPermission().getAuthority())),
                 attributes.getAttributes(),

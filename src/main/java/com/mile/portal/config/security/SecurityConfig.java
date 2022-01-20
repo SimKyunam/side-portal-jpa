@@ -64,10 +64,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .and()
-                .headers().frameOptions().disable(); // 없으면 h2 console 안됌
-//                .and()
-//                .oauth2Login()
-//                .userInfoEndpoint().userService(customOAuth2UserService);
+                .headers().frameOptions().disable() // 없으면 h2 console 안됌
+                .and()
+                .oauth2Login()
+                .userInfoEndpoint().userService(customOAuth2UserService);
 
         //TODO jwtFilter + oauth2 연동작업 필요
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
