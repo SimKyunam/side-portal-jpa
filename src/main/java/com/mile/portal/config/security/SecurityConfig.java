@@ -33,14 +33,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-//    권한 상속을 부여하고 싶은 경우
-//    @Bean
-//    RoleHierarchy roleHierarchy(){
-//        RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
-//        roleHierarchy.setHierarchy("ROLE_ADMIN > ROLE_USER");
-//        return roleHierarchy;
-//    }
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager(), jwtTokenProvider());
