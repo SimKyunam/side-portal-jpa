@@ -27,7 +27,7 @@ public class AttachController {
     private final AttachService attachService;
 
     @GetMapping("/download/{filename}")
-    public ResponseEntity<Resource> listCode(@PathVariable String filename,
+    public ResponseEntity<Resource> download(@PathVariable String filename,
                                              HttpServletRequest request) {
 
         Attach attach = attachService.downloadFile(filename);
