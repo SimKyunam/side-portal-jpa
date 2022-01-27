@@ -56,23 +56,34 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .and()
-                .headers().frameOptions().disable() // 없으면 h2 console 안됌
-                .and()
+                .headers().frameOptions().disable(); // 없으면 h2 console 안됌
+
+        http
                 .oauth2Login()
                 .userInfoEndpoint().userService(customOAuth2UserService);
 
         //TODO jwtFilter + oauth2 연동작업 필요
-        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterAfter(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }
+
 
     @Override
     public void configure(WebSecurity web) {
         web.ignoring()
                 .requestMatchers(
                         PathRequest.toStaticResources().atCommonLocations()
-                ).antMatchers(
-                "/v1/api-docs", "/swagger-resources/**", "/swagger-ui.html",
-                "/webjars/**", "/swagger/**", "/h2-console"
+                ).antMatchers("/v1/api-docs",
+                "/swagger-resources/**",
+                "/swagger-ui.html",
+                "/webjars/**",
+                "/swagger/**",
+                "/h2-console",
+                "/index.html",
+                "/favicon.ico",
+                "/css/**",
+                "/fonts/**",
+                "/img/**",
+                "/js/**"
         );
     }
 
