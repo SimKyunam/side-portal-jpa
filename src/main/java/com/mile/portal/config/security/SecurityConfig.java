@@ -1,5 +1,7 @@
 package com.mile.portal.config.security;
 
+import com.mile.portal.config.security.oauth2.CustomOAuth2SuccessHandler;
+import com.mile.portal.config.security.oauth2.CustomOAuth2UserService;
 import com.mile.portal.jwt.JwtAuthenticationFilter;
 import com.mile.portal.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CustomOAuth2UserService customOAuth2UserService;
+    private final CustomOAuth2SuccessHandler customOAuth2SuccessHandler;
+
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
     @Value("${jwt.key}")
@@ -60,7 +64,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http
                 .oauth2Login()
-                .userInfoEndpoint().userService(customOAuth2UserService);
+                .userInfoEndpoint().userService(customOAuth2UserService)
+                .and()
+                .successHandler(customOAuth2SuccessHandler);
 
         //TODO jwtFilter + oauth2 연동작업 필요
         http.addFilterAfter(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

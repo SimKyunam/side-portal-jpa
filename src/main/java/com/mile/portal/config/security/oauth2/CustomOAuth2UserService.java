@@ -1,5 +1,6 @@
-package com.mile.portal.config.security;
+package com.mile.portal.config.security.oauth2;
 
+import com.mile.portal.config.security.OAuthAttributes;
 import com.mile.portal.rest.client.model.domain.Client;
 import com.mile.portal.rest.client.repository.ClientRepository;
 import lombok.RequiredArgsConstructor;
