@@ -2,6 +2,7 @@ package com.mile.portal.config.security;
 
 import com.mile.portal.config.security.oauth2.CustomOAuth2SuccessHandler;
 import com.mile.portal.config.security.oauth2.CustomOAuth2UserService;
+import com.mile.portal.config.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
 import com.mile.portal.jwt.JwtAuthenticationFilter;
 import com.mile.portal.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +38,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
+    @Bean
+    public JwtTokenProvider jwtTokenProvider() {
+        return new JwtTokenProvider(secretKey);
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
+
+    @Bean
+    public HttpCookieOAuth2AuthorizationRequestRepository cookieAuthorizationRequestRepository() {
+        return new HttpCookieOAuth2AuthorizationRequestRepository();
+    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager(), jwtTokenProvider());
@@ -64,8 +80,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http
                 .oauth2Login()
-                .userInfoEndpoint().userService(customOAuth2UserService)
-                .and()
+                .authorizationEndpoint()
+                    .baseUri("/oauth2/authorization")
+                    .authorizationRequestRepository(cookieAuthorizationRequestRepository())
+                    .and()
+                .userInfoEndpoint()
+                    .userService(customOAuth2UserService)
+                    .and()
                 .successHandler(customOAuth2SuccessHandler);
 
         //TODO jwtFilter + oauth2 연동작업 필요
@@ -93,14 +114,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         );
     }
 
-    @Bean
-    public JwtTokenProvider jwtTokenProvider() {
-        return new JwtTokenProvider(secretKey);
-    }
 
-    @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
-    }
 }
