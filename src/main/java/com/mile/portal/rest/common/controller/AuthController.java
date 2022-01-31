@@ -34,6 +34,12 @@ public class AuthController {
         return new ResBody(ResBody.CODE_SUCCESS, "", reqToken);
     }
 
+    @GetMapping("/oAuth2Login")
+    public ResBody oAuth2Login(@RequestParam String loginId) {
+        ReqToken reqToken = authService.oAuthLogin(loginId);
+        return new ResBody(ResBody.CODE_SUCCESS, "", reqToken);
+    }
+
     @PostMapping("/createMng")
     public ResBody createMng(@Valid @RequestBody ReqLogin userLogin) {
         authService.createMng(userLogin);

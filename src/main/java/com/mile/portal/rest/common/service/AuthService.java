@@ -61,6 +61,14 @@ public class AuthService {
         return loginProc(userLogin, Authority.ROLE_USER);
     }
 
+    public ReqToken oAuthLogin(String loginId) {
+        Account account = new Account()
+                .setLoginId(loginId)
+                .setPermission(Authority.ROLE_USER);
+
+        return loginService.loginAuthenticate(account);
+    }
+
     public Manager createMng(ReqLogin userLogin) {
         this.existsUserCheck(userLogin);
         String email = userLogin.getEmail();

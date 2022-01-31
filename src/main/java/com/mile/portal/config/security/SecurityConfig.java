@@ -1,5 +1,6 @@
 package com.mile.portal.config.security;
 
+import com.mile.portal.config.security.oauth2.CustomOAuth2FailHandler;
 import com.mile.portal.config.security.oauth2.CustomOAuth2SuccessHandler;
 import com.mile.portal.config.security.oauth2.CustomOAuth2UserService;
 import com.mile.portal.config.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
@@ -27,6 +28,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CustomOAuth2UserService customOAuth2UserService;
     private final CustomOAuth2SuccessHandler customOAuth2SuccessHandler;
+    private final CustomOAuth2FailHandler customOAuth2FailHandler;
 
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
@@ -58,13 +60,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager(), jwtTokenProvider());
 
         http
-                .cors()
+            .cors()
                 .and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .csrf().disable()
-                .formLogin().disable()
-                .authorizeRequests()
+            .csrf()
+                .disable()
+            .formLogin()
+                .disable()
+            .httpBasic()
+                .disable()
+            .exceptionHandling()
+                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                .and()
+            .authorizeRequests()
                 .antMatchers(
                         "/exception/**", "/common/**", "/h2-console/**"
                         , "/api/v1/auth/**", "/api/v1/attach/**"
@@ -72,27 +82,27 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 ).permitAll()
                 .antMatchers("/api/v1/mng/**").hasRole("ADMIN") // 관리자
                 .antMatchers("/api/v1/client/**").hasRole("USER") // 사용자
-                .anyRequest().authenticated() // 토큰있는 경우
+                .anyRequest()
+                    .authenticated() // 토큰있는 경우
+            .and()
+            .headers()
+                .frameOptions()
+                .disable()
+            .and()
+            .oauth2Login()
+                    .authorizationEndpoint()
+                    .baseUri("/oauth2/authorize")
                 .and()
-                .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
-                .and()
-                .headers().frameOptions().disable(); // 없으면 h2 console 안됌
-
-        http
-                .oauth2Login()
-                .authorizationEndpoint()
-                    .baseUri("/oauth2/authorization")
-                    .authorizationRequestRepository(cookieAuthorizationRequestRepository())
+                    .redirectionEndpoint()
                     .and()
                 .userInfoEndpoint()
                     .userService(customOAuth2UserService)
                     .and()
-                .successHandler(customOAuth2SuccessHandler);
+                .successHandler(customOAuth2SuccessHandler)
+                .failureHandler(customOAuth2FailHandler);
 
-        //TODO jwtFilter + oauth2 연동작업 필요
-        http.addFilterAfter(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }
-
 
     @Override
     public void configure(WebSecurity web) {
