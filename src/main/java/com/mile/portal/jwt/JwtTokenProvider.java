@@ -6,11 +6,14 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.security.Key;
 import java.util.Arrays;
@@ -20,6 +23,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
+@Component
 public class JwtTokenProvider {
 
     public static final long TOKEN_VALID_TIME = 1000L * 60 * 60; // 1시간
@@ -29,9 +33,12 @@ public class JwtTokenProvider {
     public static final String USER_KEY = "user";
     public static final String BEARER_TYPE = "bearer";
 
+    @Value("${jwt.key}")
+    private String secret;
     private Key key;
 
-    public JwtTokenProvider(String secret) {
+    @PostConstruct
+    public void init () {
         this.key = Keys.hmacShaKeyFor(secret.getBytes());
     }
 

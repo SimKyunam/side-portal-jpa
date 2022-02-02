@@ -67,4 +67,30 @@ public class LoginService {
 
         return tokenDto;
     }
+
+    public ReqToken oAuth2Login(Account user) {
+        UsernamePasswordAuthenticationToken authentication = user.toAuthentication();
+
+        Account account = userRepository.findByLoginId(user.getLoginId())
+                .orElseThrow(() -> new ResultNotFoundException("아이디가 존재하지 않습니다."));
+
+        // 계정 마지막 로그인, IP 수정
+        HttpServletRequest req = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+        account.setLastLoginDt(LocalDateTime.now());
+        account.setLastLoginIp(req.getRemoteAddr());
+        userRepository.save(account);
+
+        // 인증 정보를 기반으로 JWT 토큰 생성
+        ReqToken tokenDto = jwtTokenProvider.generateTokenDto(authentication, account);
+
+        // RefreshToken 저장
+        RefreshToken refreshToken = refreshTokenRepository.findByKey(authentication.getName())
+                .orElseGet(RefreshToken::new);
+
+        refreshToken.setKey(authentication.getName());
+        refreshToken.setValue(tokenDto.getRefreshToken());
+        refreshTokenRepository.save(refreshToken);
+
+        return tokenDto;
+    }
 }

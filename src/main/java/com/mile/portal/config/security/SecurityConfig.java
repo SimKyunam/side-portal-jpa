@@ -5,9 +5,7 @@ import com.mile.portal.config.security.oauth2.CustomOAuth2SuccessHandler;
 import com.mile.portal.config.security.oauth2.CustomOAuth2UserService;
 import com.mile.portal.config.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
 import com.mile.portal.jwt.JwtAuthenticationFilter;
-import com.mile.portal.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,6 +23,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     private final CustomOAuth2UserService customOAuth2UserService;
     private final CustomOAuth2SuccessHandler customOAuth2SuccessHandler;
@@ -32,18 +31,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
-    @Value("${jwt.key}")
-    private String secretKey;
+//    @Value("${jwt.key}")
+//    private String secretKey;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public JwtTokenProvider jwtTokenProvider() {
-        return new JwtTokenProvider(secretKey);
-    }
+//    @Bean
+//    public JwtTokenProvider jwtTokenProvider() {
+//        return new JwtTokenProvider(secretKey);
+//    }
 
     @Bean
     public AuthenticationManager authenticationManagerBean() throws Exception {
@@ -57,7 +56,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager(), jwtTokenProvider());
 
         http
             .cors()
@@ -90,9 +88,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .disable()
             .and()
             .oauth2Login()
-                    .authorizationEndpoint()
-                    .baseUri("/oauth2/authorize")
-                .and()
                     .redirectionEndpoint()
                     .and()
                 .userInfoEndpoint()

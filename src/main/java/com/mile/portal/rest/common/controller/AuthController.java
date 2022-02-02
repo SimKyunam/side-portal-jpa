@@ -35,8 +35,9 @@ public class AuthController {
     }
 
     @GetMapping("/oAuth2Login")
-    public ResBody oAuth2Login(@RequestParam String loginId) {
-        ReqToken reqToken = authService.oAuthLogin(loginId);
+    public ResBody oAuth2Login(@RequestParam String loginId,
+                               @RequestParam String token) {
+        ReqToken reqToken = authService.oAuthLogin(loginId, token);
         return new ResBody(ResBody.CODE_SUCCESS, "", reqToken);
     }
 
