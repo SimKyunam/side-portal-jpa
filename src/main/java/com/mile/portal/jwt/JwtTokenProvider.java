@@ -35,10 +35,11 @@ public class JwtTokenProvider {
 
     @Value("${jwt.key}")
     private String secret;
+
     private Key key;
 
     @PostConstruct
-    public void init () {
+    public void init() {
         this.key = Keys.hmacShaKeyFor(secret.getBytes());
     }
 

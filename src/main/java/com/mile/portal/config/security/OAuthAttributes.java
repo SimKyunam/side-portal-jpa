@@ -69,10 +69,9 @@ public class OAuthAttributes {
         client.setPicture(picture);
         client.setPermission(ROLE_USER);
         client.setLoginId(email);
-        client.setLoginPwd("OAuth Login");
         client.setEmailCheckYn("Y");
         client.setOAuthLoginYn("Y");
-        
+
         return client;
     }
 }

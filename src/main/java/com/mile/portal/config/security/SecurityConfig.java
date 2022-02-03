@@ -31,18 +31,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
-//    @Value("${jwt.key}")
-//    private String secretKey;
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-//    @Bean
-//    public JwtTokenProvider jwtTokenProvider() {
-//        return new JwtTokenProvider(secretKey);
-//    }
 
     @Bean
     public AuthenticationManager authenticationManagerBean() throws Exception {
@@ -58,21 +50,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         http
-            .cors()
+                .cors()
                 .and()
-            .sessionManagement()
+                .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-            .csrf()
+                .csrf()
                 .disable()
-            .formLogin()
+                .formLogin()
                 .disable()
-            .httpBasic()
+                .httpBasic()
                 .disable()
-            .exceptionHandling()
+                .exceptionHandling()
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .and()
-            .authorizeRequests()
+                .authorizeRequests()
                 .antMatchers(
                         "/exception/**", "/common/**", "/h2-console/**"
                         , "/api/v1/auth/**", "/api/v1/attach/**"
@@ -81,18 +73,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/v1/mng/**").hasRole("ADMIN") // 관리자
                 .antMatchers("/api/v1/client/**").hasRole("USER") // 사용자
                 .anyRequest()
-                    .authenticated() // 토큰있는 경우
-            .and()
-            .headers()
+                .authenticated() // 토큰있는 경우
+                .and()
+                .headers()
                 .frameOptions()
                 .disable()
-            .and()
-            .oauth2Login()
-                    .redirectionEndpoint()
-                    .and()
+                .and()
+                .oauth2Login()
+                .redirectionEndpoint()
+                .and()
                 .userInfoEndpoint()
-                    .userService(customOAuth2UserService)
-                    .and()
+                .userService(customOAuth2UserService)
+                .and()
                 .successHandler(customOAuth2SuccessHandler)
                 .failureHandler(customOAuth2FailHandler);
 

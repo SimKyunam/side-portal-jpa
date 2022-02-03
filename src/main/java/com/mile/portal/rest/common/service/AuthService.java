@@ -61,9 +61,10 @@ public class AuthService {
         return loginProc(userLogin, Authority.ROLE_USER);
     }
 
-    public ReqToken oAuthLogin(String loginId, String token) {
+    public ReqToken oAuthLogin(String loginId) {
         Account account = new Account()
                 .setLoginId(loginId)
+                .setLoginPwd("oAuth2 " + loginId)
                 .setPermission(Authority.ROLE_USER);
 
         return loginService.loginAuthenticate(account);
