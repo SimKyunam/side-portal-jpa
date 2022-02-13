@@ -1,5 +1,7 @@
 package com.mile.portal.jwt;
 
+import com.mile.portal.config.security.oauth2.AppProperties;
+import com.mile.portal.config.security.oauth2.UserPrincipal;
 import com.mile.portal.rest.common.model.comm.ReqToken;
 import com.mile.portal.rest.common.model.domain.Account;
 import io.jsonwebtoken.*;
@@ -38,6 +40,8 @@ public class JwtTokenProvider {
 
     private Key key;
 
+    private final AppProperties appProperties;
+
     @PostConstruct
     public void init() {
         this.key = Keys.hmacShaKeyFor(secret.getBytes());
@@ -52,6 +56,18 @@ public class JwtTokenProvider {
                 .claim(USER_KEY, account) //계정
                 .setExpiration(new Date(now.getTime() + TOKEN_VALID_TIME)) // set Expire Time
                 .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    public String createToken(Authentication authentication) {
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+        Date now = new Date();
+        Date expiryDate = new Date(now.getTime() + appProperties.getAuth().getTokenExpirationMsec());
+        return Jwts.builder()
+                .setSubject(Long.toString(userPrincipal.getId()))
+                .setIssuedAt(new Date())
+                .setExpiration(expiryDate)
+                .signWith(SignatureAlgorithm.HS512, appProperties.getAuth().getTokenSecret())
                 .compact();
     }
 
