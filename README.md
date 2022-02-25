@@ -4,9 +4,10 @@ Spring Boot + JWT + JPA를 활용한 게시판
 
 ## 기능
 ### 1.구성
+- Spring Boot
 - Spring Security
 - Spring Validation
-  
+- Spring Data
 - JWT
 - JPA
 - QueryDSL
